@@ -1,7 +1,7 @@
 ---
 name: gsd:list-phase-assumptions
-description: Surface Claude's assumptions about a phase approach before planning
-argument-hint: "[phase]"
+description: 在规划之前展示 Claude 关于阶段方法的假设
+argument-hint: "[阶段]"
 allowed-tools:
   - Read
   - Bash
@@ -10,10 +10,10 @@ allowed-tools:
 ---
 
 <objective>
-Analyze a phase and present Claude's assumptions about technical approach, implementation order, scope boundaries, risk areas, and dependencies.
+分析阶段并展示 Claude 关于技术方法、实现顺序、范围边界、风险区域和依赖关系的假设。
 
-Purpose: Help users see what Claude thinks BEFORE planning begins - enabling course correction early when assumptions are wrong.
-Output: Conversational output only (no file creation) - ends with "What do you think?" prompt
+目的：帮助用户在规划开始前了解 Claude 的想法 - 当假设错误时能够早期进行方向修正。
+输出：仅对话输出（无文件创建）- 以"你怎么看？"提示结束
 </objective>
 
 <execution_context>
@@ -21,30 +21,30 @@ Output: Conversational output only (no file creation) - ends with "What do you t
 </execution_context>
 
 <context>
-Phase number: $ARGUMENTS (required)
+阶段编号: $ARGUMENTS（必需）
 
-**Load project state first:**
+**首先加载项目状态：**
 @.planning/STATE.md
 
-**Load roadmap:**
+**加载路线图：**
 @.planning/ROADMAP.md
 </context>
 
 <process>
-1. Validate phase number argument (error if missing or invalid)
-2. Check if phase exists in roadmap
-3. Follow list-phase-assumptions.md workflow:
-   - Analyze roadmap description
-   - Surface assumptions about: technical approach, implementation order, scope, risks, dependencies
-   - Present assumptions clearly
-   - Prompt "What do you think?"
-4. Gather feedback and offer next steps
+1. 验证阶段编号参数（如果缺失或无效则报错）
+2. 检查阶段是否存在于路线图中
+3. 遵循 list-phase-assumptions.md 工作流：
+   - 分析路线图描述
+   - 展示关于以下方面的假设：技术方法、实现顺序、范围、风险、依赖关系
+   - 清晰呈现假设
+   - 提示"你怎么看？"
+4. 收集反馈并提供后续步骤
 </process>
 
 <success_criteria>
 
-- Phase validated against roadmap
-- Assumptions surfaced across five areas
-- User prompted for feedback
-- User knows next steps (discuss context, plan phase, or correct assumptions)
+- 根据路线图验证阶段
+- 跨五个区域展示假设
+- 提示用户反馈
+- 用户知道后续步骤（讨论上下文、规划阶段或纠正假设）
   </success_criteria>

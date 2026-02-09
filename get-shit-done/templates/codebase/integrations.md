@@ -1,280 +1,280 @@
-# External Integrations Template
+# 外部集成模板
 
-Template for `.planning/codebase/INTEGRATIONS.md` - captures external service dependencies.
+`.planning/codebase/INTEGRATIONS.md` 的模板——捕获外部服务依赖项。
 
-**Purpose:** Document what external systems this codebase communicates with. Focused on "what lives outside our code that we depend on."
+**目的：** 记录此代码库与哪些外部系统通信。重点关注"在我们的代码之外我们依赖什么。"
 
 ---
 
-## File Template
+## 文件模板
 
 ```markdown
-# External Integrations
+# 外部集成
 
-**Analysis Date:** [YYYY-MM-DD]
+**分析日期：** [YYYY-MM-DD]
 
-## APIs & External Services
+## API 和外部服务
 
-**Payment Processing:**
-- [Service] - [What it's used for: e.g., "subscription billing, one-time payments"]
-  - SDK/Client: [e.g., "stripe npm package v14.x"]
-  - Auth: [e.g., "API key in STRIPE_SECRET_KEY env var"]
-  - Endpoints used: [e.g., "checkout sessions, webhooks"]
+**支付处理：**
+- [服务] - [用途：例如，"订阅计费、一次性支付"]
+  - SDK/客户端：[例如，"stripe npm package v14.x"]
+  - 认证：[例如，"STRIPE_SECRET_KEY env var 中的 API 密钥"]
+  - 使用的端点：[例如，"checkout sessions、webhooks"]
 
-**Email/SMS:**
-- [Service] - [What it's used for: e.g., "transactional emails"]
-  - SDK/Client: [e.g., "sendgrid/mail v8.x"]
-  - Auth: [e.g., "API key in SENDGRID_API_KEY env var"]
-  - Templates: [e.g., "managed in SendGrid dashboard"]
+**电子邮件/SMS：**
+- [服务] - [用途：例如，"事务性电子邮件"]
+  - SDK/客户端：[例如，"sendgrid/mail v8.x"]
+  - 认证：[例如，"SENDGRID_API_KEY env var 中的 API 密钥"]
+  - 模板：[例如，"在 SendGrid 仪表板中管理"]
 
-**External APIs:**
-- [Service] - [What it's used for]
-  - Integration method: [e.g., "REST API via fetch", "GraphQL client"]
-  - Auth: [e.g., "OAuth2 token in AUTH_TOKEN env var"]
-  - Rate limits: [if applicable]
+**外部 API：**
+- [服务] - [用途]
+  - 集成方法：[例如，"通过 fetch 的 REST API"、"GraphQL 客户端"]
+  - 认证：[例如，"AUTH_TOKEN env var 中的 OAuth2 令牌"]
+  - 速率限制：[如适用]
 
-## Data Storage
+## 数据存储
 
-**Databases:**
-- [Type/Provider] - [e.g., "PostgreSQL on Supabase"]
-  - Connection: [e.g., "via DATABASE_URL env var"]
-  - Client: [e.g., "Prisma ORM v5.x"]
-  - Migrations: [e.g., "prisma migrate in migrations/"]
+**数据库：**
+- [类型/提供商] - [例如，"Supabase 上的 PostgreSQL"]
+  - 连接：[例如，"通过 DATABASE_URL env var"]
+  - 客户端：[例如，"Prisma ORM v5.x"]
+  - 迁移：[例如，"migrations/ 中的 prisma migrate"]
 
-**File Storage:**
-- [Service] - [e.g., "AWS S3 for user uploads"]
-  - SDK/Client: [e.g., "@aws-sdk/client-s3"]
-  - Auth: [e.g., "IAM credentials in AWS_* env vars"]
-  - Buckets: [e.g., "prod-uploads, dev-uploads"]
+**文件存储：**
+- [服务] - [例如，"用于用户上传的 AWS S3"]
+  - SDK/客户端：[例如，"@aws-sdk/client-s3"]
+  - 认证：[例如，"AWS_* env var 中的 IAM 凭证"]
+  - 存储桶：[例如，"prod-uploads、dev-uploads"]
 
-**Caching:**
-- [Service] - [e.g., "Redis for session storage"]
-  - Connection: [e.g., "REDIS_URL env var"]
-  - Client: [e.g., "ioredis v5.x"]
+**缓存：**
+- [服务] - [例如，"用于会话存储的 Redis"]
+  - 连接：[例如，"REDIS_URL env var"]
+  - 客户端：[例如，"ioredis v5.x"]
 
-## Authentication & Identity
+## 认证和身份
 
-**Auth Provider:**
-- [Service] - [e.g., "Supabase Auth", "Auth0", "custom JWT"]
-  - Implementation: [e.g., "Supabase client SDK"]
-  - Token storage: [e.g., "httpOnly cookies", "localStorage"]
-  - Session management: [e.g., "JWT refresh tokens"]
+**认证提供商：**
+- [服务] - [例如，"Supabase Auth"、"Auth0"、"自定义 JWT"]
+  - 实现：[例如，"Supabase 客户端 SDK"]
+  - 令牌存储：[例如，"httpOnly cookies"、"localStorage"]
+  - 会话管理：[例如，"JWT 刷新令牌"]
 
-**OAuth Integrations:**
-- [Provider] - [e.g., "Google OAuth for sign-in"]
-  - Credentials: [e.g., "GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET"]
-  - Scopes: [e.g., "email, profile"]
+**OAuth 集成：**
+- [提供商] - [例如，"用于登录的 Google OAuth"]
+  - 凭证：[例如，"GOOGLE_CLIENT_ID、GOOGLE_CLIENT_SECRET"]
+  - 范围：[例如，"email、profile"]
 
-## Monitoring & Observability
+## 监控和可观察性
 
-**Error Tracking:**
-- [Service] - [e.g., "Sentry"]
-  - DSN: [e.g., "SENTRY_DSN env var"]
-  - Release tracking: [e.g., "via SENTRY_RELEASE"]
+**错误跟踪：**
+- [服务] - [例如，"Sentry"]
+  - DSN：[例如，"SENTRY_DSN env var"]
+  - 发布跟踪：[例如，"通过 SENTRY_RELEASE"]
 
-**Analytics:**
-- [Service] - [e.g., "Mixpanel for product analytics"]
-  - Token: [e.g., "MIXPANEL_TOKEN env var"]
-  - Events tracked: [e.g., "user actions, page views"]
+**分析：**
+- [服务] - [例如，"用于产品分析的 Mixpanel"]
+  - 令牌：[例如，"MIXPANEL_TOKEN env var"]
+  - 跟踪的事件：[例如，"用户操作、页面浏览"]
 
-**Logs:**
-- [Service] - [e.g., "CloudWatch", "Datadog", "none (stdout only)"]
-  - Integration: [e.g., "AWS Lambda built-in"]
+**日志：**
+- [服务] - [例如，"CloudWatch"、"Datadog"、"无（仅 stdout）"]
+  - 集成：[例如，"AWS Lambda 内置"]
 
-## CI/CD & Deployment
+## CI/CD 和部署
 
-**Hosting:**
-- [Platform] - [e.g., "Vercel", "AWS Lambda", "Docker on ECS"]
-  - Deployment: [e.g., "automatic on main branch push"]
-  - Environment vars: [e.g., "configured in Vercel dashboard"]
+**托管：**
+- [平台] - [例如，"Vercel"、"AWS Lambda"、"ECS 上的 Docker"]
+  - 部署：[例如，"main 分支推送时自动"]
+  - 环境变量：[例如，"在 Vercel 仪表板中配置"]
 
-**CI Pipeline:**
-- [Service] - [e.g., "GitHub Actions"]
-  - Workflows: [e.g., "test.yml, deploy.yml"]
-  - Secrets: [e.g., "stored in GitHub repo secrets"]
+**CI 管道：**
+- [服务] - [例如，"GitHub Actions"]
+  - 工作流：[例如，"test.yml、deploy.yml"]
+  - 密钥：[例如，"存储在 GitHub 存储库密钥中"]
 
-## Environment Configuration
+## 环境配置
 
-**Development:**
-- Required env vars: [List critical vars]
-- Secrets location: [e.g., ".env.local (gitignored)", "1Password vault"]
-- Mock/stub services: [e.g., "Stripe test mode", "local PostgreSQL"]
+**开发：**
+- 所需的 env var：[列出关键变量]
+- 密钥位置：[例如，".env.local（gitignored）、1Password 保险库"]
+- 模拟/存根服务：[例如，"Stripe 测试模式"、"本地 PostgreSQL"]
 
-**Staging:**
-- Environment-specific differences: [e.g., "uses staging Stripe account"]
-- Data: [e.g., "separate staging database"]
+**预发布：**
+- 特定环境的差异：[例如，"使用 staging Stripe 账户"]
+- 数据：[例如，"单独的 staging 数据库"]
 
-**Production:**
-- Secrets management: [e.g., "Vercel environment variables"]
-- Failover/redundancy: [e.g., "multi-region DB replication"]
+**生产：**
+- 密钥管理：[例如，"Vercel 环境变量"]
+- 故障转移/冗余：[例如，"多区域 DB 复制"]
 
-## Webhooks & Callbacks
+## Webhook 和回调
 
-**Incoming:**
-- [Service] - [Endpoint: e.g., "/api/webhooks/stripe"]
-  - Verification: [e.g., "signature validation via stripe.webhooks.constructEvent"]
-  - Events: [e.g., "payment_intent.succeeded, customer.subscription.updated"]
+**传入：**
+- [服务] - [端点：例如，"/api/webhooks/stripe"]
+  - 验证：[例如，"通过 stripe.webhooks.constructEvent 进行签名验证"]
+  - 事件：[例如，"payment_intent.succeeded、customer.subscription.updated"]
 
-**Outgoing:**
-- [Service] - [What triggers it]
-  - Endpoint: [e.g., "external CRM webhook on user signup"]
-  - Retry logic: [if applicable]
+**传出：**
+- [服务] - [触发它的内容]
+  - 端点：[例如，"用户注册时的外部 CRM webhook"]
+  - 重试逻辑：[如适用]
 
 ---
 
-*Integration audit: [date]*
-*Update when adding/removing external services*
+*集成审计：[日期]*
+*添加/删除外部服务时更新*
 ```
 
 <good_examples>
 ```markdown
-# External Integrations
+# 外部集成
 
-**Analysis Date:** 2025-01-20
+**分析日期：** 2025-01-20
 
-## APIs & External Services
+## API 和外部服务
 
-**Payment Processing:**
-- Stripe - Subscription billing and one-time course payments
-  - SDK/Client: stripe npm package v14.8
-  - Auth: API key in STRIPE_SECRET_KEY env var
-  - Endpoints used: checkout sessions, customer portal, webhooks
+**支付处理：**
+- Stripe - 订阅计费和一次性课程支付
+  - SDK/客户端：stripe npm package v14.8
+  - 认证：STRIPE_SECRET_KEY env var 中的 API 密钥
+  - 使用的端点：checkout sessions、customer portal、webhooks
 
-**Email/SMS:**
-- SendGrid - Transactional emails (receipts, password resets)
-  - SDK/Client: @sendgrid/mail v8.1
-  - Auth: API key in SENDGRID_API_KEY env var
-  - Templates: Managed in SendGrid dashboard (template IDs in code)
+**电子邮件/SMS：**
+- SendGrid - 事务性电子邮件（收据、密码重置）
+  - SDK/客户端：@sendgrid/mail v8.1
+  - 认证：SENDGRID_API_KEY env var 中的 API 密钥
+  - 模板：在 SendGrid 仪表板中管理（代码中的模板 ID）
 
-**External APIs:**
-- OpenAI API - Course content generation
-  - Integration method: REST API via openai npm package v4.x
-  - Auth: Bearer token in OPENAI_API_KEY env var
-  - Rate limits: 3500 requests/min (tier 3)
+**外部 API：**
+- OpenAI API - 课程内容生成
+  - 集成方法：通过 openai npm package v4.x 的 REST API
+  - 认证：OPENAI_API_KEY env var 中的不记名令牌
+  - 速率限制：3500 请求/分钟（第 3 层）
 
-## Data Storage
+## 数据存储
 
-**Databases:**
-- PostgreSQL on Supabase - Primary data store
-  - Connection: via DATABASE_URL env var
-  - Client: Prisma ORM v5.8
-  - Migrations: prisma migrate in prisma/migrations/
+**数据库：**
+- Supabase 上的 PostgreSQL - 主数据存储
+  - 连接：通过 DATABASE_URL env var
+  - 客户端：Prisma ORM v5.8
+  - 迁移：prisma/migrations/ 中的 prisma migrate
 
-**File Storage:**
-- Supabase Storage - User uploads (profile images, course materials)
-  - SDK/Client: @supabase/supabase-js v2.x
-  - Auth: Service role key in SUPABASE_SERVICE_ROLE_KEY
-  - Buckets: avatars (public), course-materials (private)
+**文件存储：**
+- Supabase Storage - 用户上传（个人资料图像、课程材料）
+  - SDK/客户端：@supabase/supabase-js v2.x
+  - 认证：SUPABASE_SERVICE_ROLE_KEY 中的服务角色密钥
+  - 存储桶：avatars（公共）、course-materials（私有）
 
-**Caching:**
-- None currently (all database queries, no Redis)
+**缓存：**
+- 当前无（所有数据库查询，无 Redis）
 
-## Authentication & Identity
+## 认证和身份
 
-**Auth Provider:**
-- Supabase Auth - Email/password + OAuth
-  - Implementation: Supabase client SDK with server-side session management
-  - Token storage: httpOnly cookies via @supabase/ssr
-  - Session management: JWT refresh tokens handled by Supabase
+**认证提供商：**
+- Supabase Auth - 电子邮件/密码 + OAuth
+  - 实现：具有服务器端会话管理的 Supabase 客户端 SDK
+  - 令牌存储：通过 @supabase/ssr 的 httpOnly cookies
+  - 会话管理：由 Supabase 处理的 JWT 刷新令牌
 
-**OAuth Integrations:**
-- Google OAuth - Social sign-in
-  - Credentials: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (Supabase dashboard)
-  - Scopes: email, profile
+**OAuth 集成：**
+- Google OAuth - 社交登录
+  - 凭证：GOOGLE_CLIENT_ID、GOOGLE_CLIENT_SECRET（Supabase 仪表板）
+  - 范围：email、profile
 
-## Monitoring & Observability
+## 监控和可观察性
 
-**Error Tracking:**
-- Sentry - Server and client errors
-  - DSN: SENTRY_DSN env var
-  - Release tracking: Git commit SHA via SENTRY_RELEASE
+**错误跟踪：**
+- Sentry - 服务器和客户端错误
+  - DSN：SENTRY_DSN env var
+  - 发布跟踪：通过 SENTRY_RELEASE 的 Git 提交 SHA
 
-**Analytics:**
-- None (planned: Mixpanel)
+**分析：**
+- 无（计划：Mixpanel）
 
-**Logs:**
-- Vercel logs - stdout/stderr only
-  - Retention: 7 days on Pro plan
+**日志：**
+- Vercel 日志 - 仅 stdout/stderr
+  - 保留：Pro 计划 7 天
 
-## CI/CD & Deployment
+## CI/CD 和部署
 
-**Hosting:**
-- Vercel - Next.js app hosting
-  - Deployment: Automatic on main branch push
-  - Environment vars: Configured in Vercel dashboard (synced to .env.example)
+**托管：**
+- Vercel - Next.js 应用托管
+  - 部署：main 分支推送时自动
+  - 环境变量：在 Vercel 仪表板中配置（同步到 .env.example）
 
-**CI Pipeline:**
-- GitHub Actions - Tests and type checking
-  - Workflows: .github/workflows/ci.yml
-  - Secrets: None needed (public repo tests only)
+**CI 管道：**
+- GitHub Actions - 测试和类型检查
+  - 工作流：.github/workflows/ci.yml
+  - 密钥：无（仅公共存储库测试）
 
-## Environment Configuration
+## 环境配置
 
-**Development:**
-- Required env vars: DATABASE_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
-- Secrets location: .env.local (gitignored), team shared via 1Password vault
-- Mock/stub services: Stripe test mode, Supabase local dev project
+**开发：**
+- 所需的 env var：DATABASE_URL、NEXT_PUBLIC_SUPABASE_URL、NEXT_PUBLIC_SUPABASE_ANON_KEY
+- 密钥位置：.env.local（gitignored），通过 1Password 保险库团队共享
+- 模拟/存根服务：Stripe 测试模式、Supabase 本地开发项目
 
-**Staging:**
-- Uses separate Supabase staging project
-- Stripe test mode
-- Same Vercel account, different environment
+**预发布：**
+- 使用单独的 Supabase staging 项目
+- Stripe 测试模式
+- 同一 Vercel 账户，不同环境
 
-**Production:**
-- Secrets management: Vercel environment variables
-- Database: Supabase production project with daily backups
+**生产：**
+- 密钥管理：Vercel 环境变量
+- 数据库：Supabase 生产项目，每日备份
 
-## Webhooks & Callbacks
+## Webhook 和回调
 
-**Incoming:**
+**传入：**
 - Stripe - /api/webhooks/stripe
-  - Verification: Signature validation via stripe.webhooks.constructEvent
-  - Events: payment_intent.succeeded, customer.subscription.updated, customer.subscription.deleted
+  - 验证：通过 stripe.webhooks.constructEvent 进行签名验证
+  - 事件：payment_intent.succeeded、customer.subscription.updated、customer.subscription.deleted
 
-**Outgoing:**
-- None
+**传出：**
+- 无
 
 ---
 
-*Integration audit: 2025-01-20*
-*Update when adding/removing external services*
+*集成审计：2025-01-20*
+*添加/删除外部服务时更新*
 ```
 </good_examples>
 
 <guidelines>
-**What belongs in INTEGRATIONS.md:**
-- External services the code communicates with
-- Authentication patterns (where secrets live, not the secrets themselves)
-- SDKs and client libraries used
-- Environment variable names (not values)
-- Webhook endpoints and verification methods
-- Database connection patterns
-- File storage locations
-- Monitoring and logging services
+**什么属于 INTEGRATIONS.md：**
+- 代码与之通信的外部服务
+- 认证模式（密钥所在位置，而不是密钥本身）
+- 使用的 SDK 和客户端库
+- 环境变量名称（而不是值）
+- Webhook 端点和验证方法
+- 数据库连接模式
+- 文件存储位置
+- 监控和日志记录服务
 
-**What does NOT belong here:**
-- Actual API keys or secrets (NEVER write these)
-- Internal architecture (that's ARCHITECTURE.md)
-- Code patterns (that's PATTERNS.md)
-- Technology choices (that's STACK.md)
-- Performance issues (that's CONCERNS.md)
+**什么不属于这里：**
+- 实际的 API 密钥或密钥（绝不写入这些）
+- 内部架构（那是 ARCHITECTURE.md）
+- 代码模式（那是 PATTERNS.md）
+- 技术选择（那是 STACK.md）
+- 性能问题（那是 CONCERNS.md）
 
-**When filling this template:**
-- Check .env.example or .env.template for required env vars
-- Look for SDK imports (stripe, @sendgrid/mail, etc.)
-- Check for webhook handlers in routes/endpoints
-- Note where secrets are managed (not the secrets)
-- Document environment-specific differences (dev/staging/prod)
-- Include auth patterns for each service
+**填充此模板时：**
+- 检查 .env.example 或 .env.template 以获取所需的 env var
+- 查找 SDK 导入（stripe、@sendgrid/mail 等）
+- 检查路由/端点中的 webhook 处理程序
+- 注意密钥管理的位置（而不是密钥）
+- 记录特定于环境的差异（dev/staging/prod）
+- 包括每个服务的认证模式
 
-**Useful for phase planning when:**
-- Adding new external service integrations
-- Debugging authentication issues
-- Understanding data flow outside the application
-- Setting up new environments
-- Auditing third-party dependencies
-- Planning for service outages or migrations
+**在以下情况下对阶段规划有用：**
+- 添加新的外部服务集成
+- 调试认证问题
+- 理解应用程序外部的数据流
+- 设置新环境
+- 审计第三方依赖项
+- 规划服务中断或迁移
 
-**Security note:**
-Document WHERE secrets live (env vars, Vercel dashboard, 1Password), never WHAT the secrets are.
+**安全说明：**
+记录密钥所在位置（env var、Vercel 仪表板、1Password），绝不是密钥本身。
 </guidelines>

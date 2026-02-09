@@ -1,6 +1,6 @@
 ---
 name: gsd:progress
-description: Check project progress, show context, and route to next action (execute or plan)
+description: 检查项目进度，显示上下文，并路由到下一个操作（执行或规划）
 allowed-tools:
   - Read
   - Bash
@@ -9,9 +9,9 @@ allowed-tools:
   - SlashCommand
 ---
 <objective>
-Check project progress, summarize recent work and what's ahead, then intelligently route to the next action - either executing an existing plan or creating the next one.
+检查项目进度，总结最近的工作和接下来要做的事情，然后智能路由到下一个操作 - 执行现有计划或创建下一个计划。
 
-Provides situational awareness before continuing work.
+在继续工作之前提供态势感知能力。
 </objective>
 
 <execution_context>
@@ -19,6 +19,6 @@ Provides situational awareness before continuing work.
 </execution_context>
 
 <process>
-Execute the progress workflow from @~/.claude/get-shit-done/workflows/progress.md end-to-end.
-Preserve all routing logic (Routes A through F) and edge case handling.
+端到端执行来自 @~/.claude/get-shit-done/workflows/progress.md 的 progress 工作流。
+保留所有路由逻辑（路由 A 到 F）和边缘情况处理。
 </process>

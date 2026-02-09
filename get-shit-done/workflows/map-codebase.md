@@ -1,96 +1,96 @@
 <purpose>
-Orchestrate parallel codebase mapper agents to analyze codebase and produce structured documents in .planning/codebase/
+编排并行代码库映射代理来分析代码库并在 .planning/codebase/ 中生成结构化文档。
 
-Each agent has fresh context, explores a specific focus area, and **writes documents directly**. The orchestrator only receives confirmation + line counts, then writes a summary.
+每个代理都有新鲜的上下文，探索特定的焦点区域，并**直接写入文档**。编排器仅接收确认 + 行数，然后写入摘要。
 
-Output: .planning/codebase/ folder with 7 structured documents about the codebase state.
+输出：.planning/codebase/ 文件夹，包含 7 个关于代码库状态的结构化文档。
 </purpose>
 
 <philosophy>
-**Why dedicated mapper agents:**
-- Fresh context per domain (no token contamination)
-- Agents write documents directly (no context transfer back to orchestrator)
-- Orchestrator only summarizes what was created (minimal context usage)
-- Faster execution (agents run simultaneously)
+**为什么使用专用映射代理：**
+- 每个领域有新鲜上下文（无令牌污染）
+- 代理直接写入文档（无需上下文传回编排器）
+- 编排器仅摘要创建的内容（最小上下文使用）
+- 更快的执行（代理同时运行）
 
-**Document quality over length:**
-Include enough detail to be useful as reference. Prioritize practical examples (especially code patterns) over arbitrary brevity.
+**文档质量优于长度：**
+包含足够的细节以作为参考。优先考虑实际示例（尤其是代码模式）而非任意简洁。
 
-**Always include file paths:**
-Documents are reference material for Claude when planning/executing. Always include actual file paths formatted with backticks: `src/services/user.ts`.
+**始终包括文件路径：**
+文档是 Claude 在规划/执行时的参考材料。始终包括使用反引号格式的实际文件路径：`src/services/user.ts`。
 </philosophy>
 
 <process>
 
 <step name="init_context" priority="first">
-Load codebase mapping context:
+加载代码库映射上下文：
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init map-codebase)
 ```
 
-Extract from init JSON: `mapper_model`, `commit_docs`, `codebase_dir`, `existing_maps`, `has_maps`, `codebase_dir_exists`.
+从 init JSON 提取：`mapper_model`、`commit_docs`、`codebase_dir`、`existing_maps`、`has_maps`、`codebase_dir_exists`。
 </step>
 
 <step name="check_existing">
-Check if .planning/codebase/ already exists using `has_maps` from init context.
+使用 init 上下文中的 `has_maps` 检查 .planning/codebase/ 是否已存在。
 
-If `codebase_dir_exists` is true:
+如果 `codebase_dir_exists` 为 true：
 ```bash
 ls -la .planning/codebase/
 ```
 
-**If exists:**
+**如果存在：**
 
 ```
-.planning/codebase/ already exists with these documents:
-[List files found]
+.planning/codebase/ 已存在，包含以下文档：
+[列出找到的文件]
 
-What's next?
-1. Refresh - Delete existing and remap codebase
-2. Update - Keep existing, only update specific documents
-3. Skip - Use existing codebase map as-is
+接下来做什么？
+1. 刷新 - 删除现有内容并重新映射代码库
+2. 更新 - 保留现有内容，仅更新特定文档
+3. 跳过 - 按原样使用现有代码库映射
 ```
 
-Wait for user response.
+等待用户响应。
 
-If "Refresh": Delete .planning/codebase/, continue to create_structure
-If "Update": Ask which documents to update, continue to spawn_agents (filtered)
-If "Skip": Exit workflow
+如果 "刷新"：删除 .planning/codebase/，继续到 create_structure
+如果 "更新"：询问要更新哪些文档，继续到 spawn_agents（过滤）
+如果 "跳过"：退出工作流程
 
-**If doesn't exist:**
-Continue to create_structure.
+**如果不存在：**
+继续到 create_structure。
 </step>
 
 <step name="create_structure">
-Create .planning/codebase/ directory:
+创建 .planning/codebase/ 目录：
 
 ```bash
 mkdir -p .planning/codebase
 ```
 
-**Expected output files:**
-- STACK.md (from tech mapper)
-- INTEGRATIONS.md (from tech mapper)
-- ARCHITECTURE.md (from arch mapper)
-- STRUCTURE.md (from arch mapper)
-- CONVENTIONS.md (from quality mapper)
-- TESTING.md (from quality mapper)
-- CONCERNS.md (from concerns mapper)
+**预期输出文件：**
+- STACK.md（来自技术映射器）
+- INTEGRATIONS.md（来自技术映射器）
+- ARCHITECTURE.md（来自架构映射器）
+- STRUCTURE.md（来自架构映射器）
+- CONVENTIONS.md（来自质量映射器）
+- TESTING.md（来自质量映射器）
+- CONCERNS.md（来自关注点映射器）
 
-Continue to spawn_agents.
+继续到 spawn_agents。
 </step>
 
 <step name="spawn_agents">
-Spawn 4 parallel gsd-codebase-mapper agents.
+生成 4 个并行 gsd-codebase-mapper 代理。
 
-Use Task tool with `subagent_type="gsd-codebase-mapper"`, `model="{mapper_model}"`, and `run_in_background=true` for parallel execution.
+使用 Task 工具，设置 `subagent_type="gsd-codebase-mapper"`、`model="{mapper_model}"` 和 `run_in_background=true` 以进行并行执行。
 
-**CRITICAL:** Use the dedicated `gsd-codebase-mapper` agent, NOT `Explore`. The mapper agent writes documents directly.
+**关键：** 使用专用的 `gsd-codebase-mapper` 代理，而不是 `Explore`。映射代理直接写入文档。
 
-**Agent 1: Tech Focus**
+**代理 1：技术焦点**
 
-Task tool parameters:
+Task 工具参数：
 ```
 subagent_type: "gsd-codebase-mapper"
 model: "{mapper_model}"
@@ -98,22 +98,22 @@ run_in_background: true
 description: "Map codebase tech stack"
 ```
 
-Prompt:
+提示：
 ```
-Focus: tech
+焦点：tech
 
-Analyze this codebase for technology stack and external integrations.
+分析此代码库的技术栈和外部集成。
 
-Write these documents to .planning/codebase/:
-- STACK.md - Languages, runtime, frameworks, dependencies, configuration
-- INTEGRATIONS.md - External APIs, databases, auth providers, webhooks
+将这些文档写入 .planning/codebase/：
+- STACK.md - 语言、运行时、框架、依赖项、配置
+- INTEGRATIONS.md - 外部 API、数据库、身份验证提供程序、webhooks
 
-Explore thoroughly. Write documents directly using templates. Return confirmation only.
+彻底探索。使用模板直接写入文档。仅返回确认。
 ```
 
-**Agent 2: Architecture Focus**
+**代理 2：架构焦点**
 
-Task tool parameters:
+Task 工具参数：
 ```
 subagent_type: "gsd-codebase-mapper"
 model: "{mapper_model}"
@@ -121,22 +121,22 @@ run_in_background: true
 description: "Map codebase architecture"
 ```
 
-Prompt:
+提示：
 ```
-Focus: arch
+焦点：arch
 
-Analyze this codebase architecture and directory structure.
+分析此代码库架构和目录结构。
 
-Write these documents to .planning/codebase/:
-- ARCHITECTURE.md - Pattern, layers, data flow, abstractions, entry points
-- STRUCTURE.md - Directory layout, key locations, naming conventions
+将这些文档写入 .planning/codebase/：
+- ARCHITECTURE.md - 模式、层、数据流、抽象、入口点
+- STRUCTURE.md - 目录布局、关键位置、命名约定
 
-Explore thoroughly. Write documents directly using templates. Return confirmation only.
+彻底探索。使用模板直接写入文档。仅返回确认。
 ```
 
-**Agent 3: Quality Focus**
+**代理 3：质量焦点**
 
-Task tool parameters:
+Task 工具参数：
 ```
 subagent_type: "gsd-codebase-mapper"
 model: "{mapper_model}"
@@ -144,22 +144,22 @@ run_in_background: true
 description: "Map codebase conventions"
 ```
 
-Prompt:
+提示：
 ```
-Focus: quality
+焦点：quality
 
-Analyze this codebase for coding conventions and testing patterns.
+分析此代码库的编码约定和测试模式。
 
-Write these documents to .planning/codebase/:
-- CONVENTIONS.md - Code style, naming, patterns, error handling
-- TESTING.md - Framework, structure, mocking, coverage
+将这些文档写入 .planning/codebase/：
+- CONVENTIONS.md - 代码风格、命名、模式、错误处理
+- TESTING.md - 框架、结构、模拟、覆盖
 
-Explore thoroughly. Write documents directly using templates. Return confirmation only.
+彻底探索。使用模板直接写入文档。仅返回确认。
 ```
 
-**Agent 4: Concerns Focus**
+**代理 4：关注点焦点**
 
-Task tool parameters:
+Task 工具参数：
 ```
 subagent_type: "gsd-codebase-mapper"
 model: "{mapper_model}"
@@ -167,161 +167,159 @@ run_in_background: true
 description: "Map codebase concerns"
 ```
 
-Prompt:
+提示：
 ```
-Focus: concerns
+焦点：concerns
 
-Analyze this codebase for technical debt, known issues, and areas of concern.
+分析此代码库的技术债务、已知问题和关注点区域。
 
-Write this document to .planning/codebase/:
-- CONCERNS.md - Tech debt, bugs, security, performance, fragile areas
+将此文档写入 .planning/codebase/：
+- CONCERNS.md - 技术债务、错误、安全性、性能、脆弱区域
 
-Explore thoroughly. Write document directly using template. Return confirmation only.
+彻底探索。使用模板直接写入文档。仅返回确认。
 ```
 
-Continue to collect_confirmations.
+继续到 collect_confirmations。
 </step>
 
 <step name="collect_confirmations">
-Wait for all 4 agents to complete.
+等待所有 4 个代理完成。
 
-Read each agent's output file to collect confirmations.
+读取每个代理的输出文件以收集确认。
 
-**Expected confirmation format from each agent:**
+**每个代理的预期确认格式：**
 ```
-## Mapping Complete
+## 映射完成
 
-**Focus:** {focus}
-**Documents written:**
-- `.planning/codebase/{DOC1}.md` ({N} lines)
-- `.planning/codebase/{DOC2}.md` ({N} lines)
+**焦点：** {focus}
+**已写入文档：**
+- `.planning/codebase/{DOC1}.md` ({N} 行)
+- `.planning/codebase/{DOC2}.md` ({N} 行)
 
-Ready for orchestrator summary.
+准备好编排器摘要。
 ```
 
-**What you receive:** Just file paths and line counts. NOT document contents.
+**您收到的内容：** 只是文件路径和行数。不是文档内容。
 
-If any agent failed, note the failure and continue with successful documents.
-
-Continue to verify_output.
+如果任何代理失败，请注意失败并继续使用成功的文档。
+继续到 verify_output。
 </step>
 
 <step name="verify_output">
-Verify all documents created successfully:
+验证所有文档成功创建：
 
 ```bash
 ls -la .planning/codebase/
 wc -l .planning/codebase/*.md
 ```
 
-**Verification checklist:**
-- All 7 documents exist
-- No empty documents (each should have >20 lines)
+**验证检查清单：**
+- 所有 7 个文档都存在
+- 没有空文档（每个应该 >20 行）
 
-If any documents missing or empty, note which agents may have failed.
-
-Continue to scan_for_secrets.
+如果任何文档缺失或为空，请注意哪些代理可能失败。
+继续到 scan_for_secrets。
 </step>
 
 <step name="scan_for_secrets">
-**CRITICAL SECURITY CHECK:** Scan output files for accidentally leaked secrets before committing.
+**关键安全检查：** 在提交之前扫描输出文件中意外泄漏的机密。
 
-Run secret pattern detection:
+运行机密模式检测：
 
 ```bash
-# Check for common API key patterns in generated docs
+# 在生成的文档中检查常见 API 密钥模式
 grep -E '(sk-[a-zA-Z0-9]{20,}|sk_live_[a-zA-Z0-9]+|sk_test_[a-zA-Z0-9]+|ghp_[a-zA-Z0-9]{36}|gho_[a-zA-Z0-9]{36}|glpat-[a-zA-Z0-9_-]+|AKIA[A-Z0-9]{16}|xox[baprs]-[a-zA-Z0-9-]+|-----BEGIN.*PRIVATE KEY|eyJ[a-zA-Z0-9_-]+\.eyJ[a-zA-Z0-9_-]+\.)' .planning/codebase/*.md 2>/dev/null && SECRETS_FOUND=true || SECRETS_FOUND=false
 ```
 
-**If SECRETS_FOUND=true:**
+**如果 SECRETS_FOUND=true：**
 
 ```
-⚠️  SECURITY ALERT: Potential secrets detected in codebase documents!
+⚠️  安全警报：在代码库文档中检测到潜在机密！
 
-Found patterns that look like API keys or tokens in:
-[show grep output]
+在以下内容中发现看起来像 API 密钥或令牌的模式：
+[显示 grep 输出]
 
-This would expose credentials if committed.
+如果提交，这将暴露凭据。
 
-**Action required:**
-1. Review the flagged content above
-2. If these are real secrets, they must be removed before committing
-3. Consider adding sensitive files to Claude Code "Deny" permissions
+**需要采取的操作：**
+1. 审查上面标记的内容
+2. 如果这些是真实机密，必须在提交前将其删除
+3. 考虑将敏感文件添加到 Claude Code "拒绝" 权限
 
-Pausing before commit. Reply "safe to proceed" if the flagged content is not actually sensitive, or edit the files first.
+在提交前暂停。如果标记的内容实际上不敏感，请回复 "safe to proceed"，或者先编辑文件。
 ```
 
-Wait for user confirmation before continuing to commit_codebase_map.
+在继续到 commit_codebase_map 之前等待用户确认。
 
-**If SECRETS_FOUND=false:**
+**如果 SECRETS_FOUND=false：**
 
-Continue to commit_codebase_map.
+继续到 commit_codebase_map。
 </step>
 
 <step name="commit_codebase_map">
-Commit the codebase map:
+提交代码库映射：
 
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs: map existing codebase" --files .planning/codebase/*.md
 ```
 
-Continue to offer_next.
+继续到 offer_next。
 </step>
 
 <step name="offer_next">
-Present completion summary and next steps.
+展示完成摘要和下一步。
 
-**Get line counts:**
+**获取行数：**
 ```bash
 wc -l .planning/codebase/*.md
 ```
 
-**Output format:**
+**输出格式：**
 
 ```
-Codebase mapping complete.
+代码库映射完成。
 
-Created .planning/codebase/:
-- STACK.md ([N] lines) - Technologies and dependencies
-- ARCHITECTURE.md ([N] lines) - System design and patterns
-- STRUCTURE.md ([N] lines) - Directory layout and organization
-- CONVENTIONS.md ([N] lines) - Code style and patterns
-- TESTING.md ([N] lines) - Test structure and practices
-- INTEGRATIONS.md ([N] lines) - External services and APIs
-- CONCERNS.md ([N] lines) - Technical debt and issues
+已创建 .planning/codebase/：
+- STACK.md ({N} 行) - 技术和依赖项
+- ARCHITECTURE.md ({N} 行) - 系统设计和模式
+- STRUCTURE.md ({N} 行) - 目录布局和组织
+- CONVENTIONS.md ({N} 行) - 代码风格和模式
+- TESTING.md ({N} 行) - 测试结构和实践
+- INTEGRATIONS.md ({N} 行) - 外部服务和 API
+- CONCERNS.md ({N} 行) - 技术债务和问题
 
 
 ---
 
-## ▶ Next Up
+## ▶ 接下来
 
-**Initialize project** — use codebase context for planning
+**初始化项目** — 使用代码库上下文进行规划
 
 `/gsd:new-project`
 
-<sub>`/clear` first → fresh context window</sub>
+<sub>`/clear` 首先 → 新的上下文窗口</sub>
 
 ---
 
-**Also available:**
-- Re-run mapping: `/gsd:map-codebase`
-- Review specific file: `cat .planning/codebase/STACK.md`
-- Edit any document before proceeding
+**也可用：**
+- 重新运行映射：`/gsd:map-codebase`
+- 审查特定文件：`cat .planning/codebase/STACK.md`
+- 在继续之前编辑任何文档
 
 ---
 ```
 
-End workflow.
+结束工作流程。
 </step>
 
 </process>
 
 <success_criteria>
-- .planning/codebase/ directory created
-- 4 parallel gsd-codebase-mapper agents spawned with run_in_background=true
-- Agents write documents directly (orchestrator doesn't receive document contents)
-- Read agent output files to collect confirmations
-- All 7 codebase documents exist
-- Clear completion summary with line counts
-- User offered clear next steps in GSD style
+- .planning/codebase/ 目录已创建
+- 4 个并行 gsd-codebase-mapper 代理已使用 run_in_background=true 生成
+- 代理直接写入文档（编排器不接收文档内容）
+- 读取代理输出文件以收集确认
+- 所有 7 个代码库文档都存在
+- 带有行数的清晰完成摘要
+- 用户以 GSD 风格提供清晰的下一步
 </success_criteria>

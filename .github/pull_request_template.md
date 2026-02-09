@@ -1,24 +1,24 @@
-## What
+## 做了什么
 
-<!-- One sentence: what does this PR do? -->
+<!-- 一句话说明：这个 PR 做了什么？-->
 
-## Why
+## 为什么
 
-<!-- One sentence: why is this change needed? -->
+<!-- 一句话说明：为什么需要这个变更？-->
 
-## Testing
+## 测试
 
-- [ ] Tested on macOS
-- [ ] Tested on Windows
-- [ ] Tested on Linux
+- [ ] 在 macOS 上测试
+- [ ] 在 Windows 上测试
+- [ ] 在 Linux 上测试
 
-## Checklist
+## 检查清单
 
-- [ ] Follows GSD style (no enterprise patterns, no filler)
-- [ ] Updates CHANGELOG.md for user-facing changes
-- [ ] No unnecessary dependencies added
-- [ ] Works on Windows (backslash paths tested)
+- [ ] 遵循 GSD 风格（无企业模式，无填充内容）
+- [ ] 为面向用户的变更更新 CHANGELOG.md
+- [ ] 未添加不必要的依赖
+- [ ] 在 Windows 上正常工作（已测试反斜杠路径）
 
-## Breaking Changes
+## 重大变更
 
-None
+无

@@ -1,7 +1,7 @@
 ---
 name: gsd:research-phase
-description: Research how to implement a phase (standalone - usually use /gsd:plan-phase instead)
-argument-hint: "[phase]"
+description: 研究如何实现阶段（独立 - 通常改用 /gsd:plan-phase）
+argument-hint: "[阶段]"
 allowed-tools:
   - Read
   - Bash
@@ -9,179 +9,179 @@ allowed-tools:
 ---
 
 <objective>
-Research how to implement a phase. Spawns gsd-phase-researcher agent with phase context.
+研究如何实现阶段。生成带有阶段上下文的 gsd-phase-researcher agent。
 
-**Note:** This is a standalone research command. For most workflows, use `/gsd:plan-phase` which integrates research automatically.
+**注意：** 这是一个独立研究命令。对于大多数工作流，使用 `/gsd:plan-phase`，它会自动集成研究。
 
-**Use this command when:**
-- You want to research without planning yet
-- You want to re-research after planning is complete
-- You need to investigate before deciding if a phase is feasible
+**使用此命令当：**
+- 你想在尚未规划的情况下进行研究
+- 你想在规划完成后重新研究
+- 你需要在决定阶段是否可行之前进行调查
 
-**Orchestrator role:** Parse phase, validate against roadmap, check existing research, gather context, spawn researcher agent, present results.
+**编排器角色：** 解析阶段、根据路线图验证、检查现有研究、收集上下文、生成研究代理、呈现结果。
 
-**Why subagent:** Research burns context fast (WebSearch, Context7 queries, source verification). Fresh 200k context for investigation. Main context stays lean for user interaction.
+**为什么使用子代理：** 研究会快速消耗上下文（WebSearch、Context7 查询、源代码验证）。为调查提供全新的 200k 上下文。主上下文保持精简以便用户交互。
 </objective>
 
 <context>
-Phase number: $ARGUMENTS (required)
+阶段编号: $ARGUMENTS（必需）
 
-Normalize phase input in step 1 before any directory lookups.
+在步骤 1 中规范化阶段输入，然后再进行任何目录查找。
 </context>
 
 <process>
 
-## 0. Initialize Context
+## 0. 初始化上下文
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init phase-op "$ARGUMENTS")
 ```
 
-Extract from init JSON: `phase_dir`, `phase_number`, `phase_name`, `phase_found`, `commit_docs`, `has_research`.
+从 init JSON 提取：`phase_dir`、`phase_number`、`phase_name`、`phase_found`、`commit_docs`、`has_research`。
 
-Resolve researcher model:
+解析研究模型：
 ```bash
 RESEARCHER_MODEL=$(node ~/.claude/get-shit-done/bin/gsd-tools.js resolve-model gsd-phase-researcher --raw)
 ```
 
-## 1. Validate Phase
+## 1. 验证阶段
 
 ```bash
 PHASE_INFO=$(node ~/.claude/get-shit-done/bin/gsd-tools.js roadmap get-phase "${phase_number}")
 ```
 
-**If `found` is false:** Error and exit. **If `found` is true:** Extract `phase_number`, `phase_name`, `goal` from JSON.
+**如果 `found` 为 false：** 报错并退出。**如果 `found` 为 true：** 从 JSON 提取 `phase_number`、`phase_name`、`goal`。
 
-## 2. Check Existing Research
+## 2. 检查现有研究
 
 ```bash
 ls .planning/phases/${PHASE}-*/RESEARCH.md 2>/dev/null
 ```
 
-**If exists:** Offer: 1) Update research, 2) View existing, 3) Skip. Wait for response.
+**如果存在：** 提供：1) 更新研究，2) 查看现有，3) 跳过。等待响应。
 
-**If doesn't exist:** Continue.
+**如果不存在：** 继续。
 
-## 3. Gather Phase Context
+## 3. 收集阶段上下文
 
 ```bash
-# Phase section already loaded in PHASE_INFO
+# 阶段部分已在 PHASE_INFO 中加载
 echo "$PHASE_INFO" | jq -r '.section'
 cat .planning/REQUIREMENTS.md 2>/dev/null
 cat .planning/phases/${PHASE}-*/*-CONTEXT.md 2>/dev/null
-grep -A30 "### Decisions Made" .planning/STATE.md 2>/dev/null
+grep -A30 "### 所做决策" .planning/STATE.md 2>/dev/null
 ```
 
-Present summary with phase description, requirements, prior decisions.
+呈现阶段描述、需求、先前决策的摘要。
 
-## 4. Spawn gsd-phase-researcher Agent
+## 4. 生成 gsd-phase-researcher Agent
 
-Research modes: ecosystem (default), feasibility, implementation, comparison.
+研究模式：ecosystem（默认）、feasibility、implementation、comparison。
 
 ```markdown
 <research_type>
-Phase Research — investigating HOW to implement a specific phase well.
+阶段研究 — 调查如何很好地实现特定阶段。
 </research_type>
 
 <key_insight>
-The question is NOT "which library should I use?"
+问题不是"我应该使用哪个库？"
 
-The question is: "What do I not know that I don't know?"
+问题是："有什么我不知道的不知道？"
 
-For this phase, discover:
-- What's the established architecture pattern?
-- What libraries form the standard stack?
-- What problems do people commonly hit?
-- What's SOTA vs what Claude's training thinks is SOTA?
-- What should NOT be hand-rolled?
+对于此阶段，发现：
+- 什么是既定的架构模式？
+- 哪些库形成标准堆栈？
+- 人们经常遇到什么问题？
+- 什么是 SOTA vs Claude 的训练认为的 SOTA？
+- 什么不应该手工构建？
 </key_insight>
 
 <objective>
-Research implementation approach for Phase {phase_number}: {phase_name}
-Mode: ecosystem
+研究阶段 {phase_number} 的实现方法：{phase_name}
+模式：ecosystem
 </objective>
 
 <context>
-**Phase description:** {phase_description}
-**Requirements:** {requirements_list}
-**Prior decisions:** {decisions_if_any}
-**Phase context:** {context_md_content}
+**阶段描述：** {phase_description}
+**需求：** {requirements_list}
+**先前决策：** {decisions_if_any}
+**阶段上下文：** {context_md_content}
 </context>
 
 <downstream_consumer>
-Your RESEARCH.md will be loaded by `/gsd:plan-phase` which uses specific sections:
-- `## Standard Stack` → Plans use these libraries
-- `## Architecture Patterns` → Task structure follows these
-- `## Don't Hand-Roll` → Tasks NEVER build custom solutions for listed problems
-- `## Common Pitfalls` → Verification steps check for these
-- `## Code Examples` → Task actions reference these patterns
+你的 RESEARCH.md 将被 `/gsd:plan-phase` 加载，它使用特定部分：
+- `## 标准堆栈` → 计划使用这些库
+- `## 架构模式` → 任务结构遵循这些
+- `## 不要手工构建` → 任务从不为列出的问题构建自定义解决方案
+- `## 常见陷阱` → 验证步骤检查这些
+- `## 代码示例` → 任务操作引用这些模式
 
-Be prescriptive, not exploratory. "Use X" not "Consider X or Y."
+具有规定性，而不是探索性。"使用 X"而不是"考虑 X 或 Y"。
 </downstream_consumer>
 
 <quality_gate>
-Before declaring complete, verify:
-- [ ] All domains investigated (not just some)
-- [ ] Negative claims verified with official docs
-- [ ] Multiple sources for critical claims
-- [ ] Confidence levels assigned honestly
-- [ ] Section names match what plan-phase expects
+在声明完成之前，验证：
+- [ ] 所有域已调查（而不仅仅是一些）
+- [ ] 通过官方文档验证了否定声明
+- [ ] 关键声明的多个来源
+- [ ] 诚实分配置信度水平
+- [ ] 部分名称与 plan-phase 期望的匹配
 </quality_gate>
 
 <output>
-Write to: .planning/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
+写入：.planning/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
 </output>
 ```
 
 ```
 Task(
-  prompt="First, read ~/.claude/agents/gsd-phase-researcher.md for your role and instructions.\n\n" + filled_prompt,
+  prompt="首先，阅读 ~/.claude/agents/gsd-phase-researcher.md 以了解你的角色和说明。\n\n" + filled_prompt,
   subagent_type="general-purpose",
   model="{researcher_model}",
-  description="Research Phase {phase}"
+  description="研究阶段 {phase}"
 )
 ```
 
-## 5. Handle Agent Return
+## 5. 处理 Agent 返回
 
-**`## RESEARCH COMPLETE`:** Display summary, offer: Plan phase, Dig deeper, Review full, Done.
+**`## RESEARCH COMPLETE`：** 显示摘要，提供：规划阶段、深入挖掘、查看完整、完成。
 
-**`## CHECKPOINT REACHED`:** Present to user, get response, spawn continuation.
+**`## CHECKPOINT REACHED`：** 呈现给用户，获取响应，生成延续。
 
-**`## RESEARCH INCONCLUSIVE`:** Show what was attempted, offer: Add context, Try different mode, Manual.
+**`## RESEARCH INCONCLUSIVE`：** 显示尝试的内容，提供：添加上下文、尝试不同模式、手动。
 
-## 6. Spawn Continuation Agent
+## 6. 生成延续 Agent
 
 ```markdown
 <objective>
-Continue research for Phase {phase_number}: {phase_name}
+继续阶段 {phase_number} 的研究：{phase_name}
 </objective>
 
 <prior_state>
-Research file: @.planning/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
+研究文件：@.planning/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
 </prior_state>
 
 <checkpoint_response>
-**Type:** {checkpoint_type}
-**Response:** {user_response}
+**类型：** {checkpoint_type}
+**响应：** {user_response}
 </checkpoint_response>
 ```
 
 ```
 Task(
-  prompt="First, read ~/.claude/agents/gsd-phase-researcher.md for your role and instructions.\n\n" + continuation_prompt,
+  prompt="首先，阅读 ~/.claude/agents/gsd-phase-researcher.md 以了解你的角色和说明。\n\n" + continuation_prompt,
   subagent_type="general-purpose",
   model="{researcher_model}",
-  description="Continue research Phase {phase}"
+  description="继续研究阶段 {phase}"
 )
 ```
 
 </process>
 
 <success_criteria>
-- [ ] Phase validated against roadmap
-- [ ] Existing research checked
-- [ ] gsd-phase-researcher spawned with context
-- [ ] Checkpoints handled correctly
-- [ ] User knows next steps
+- [ ] 根据路线图验证阶段
+- [ ] 检查现有研究
+- [ ] 使用上下文生成 gsd-phase-researcher
+- [ ] 正确处理检查点
+- [ ] 用户知道后续步骤
 </success_criteria>

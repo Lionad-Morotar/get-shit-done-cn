@@ -1,17 +1,15 @@
 <purpose>
-Validate built features through conversational testing with persistent state. Creates UAT.md that tracks test progress, survives /clear, and feeds gaps into /gsd:plan-phase --gaps.
-
-User tests, Claude records. One test at a time. Plain text responses.
+通过具有持久状态的对话式测试验证已构建的功能。创建跟踪测试进度的 UAT.md，在 /clear 中存活，并将差距反馈到 /gsd:plan-phase --gaps。
 </purpose>
 
 <philosophy>
-**Show expected, ask if reality matches.**
+**展示预期，询问现实是否匹配。**
 
-Claude presents what SHOULD happen. User confirms or describes what's different.
-- "yes" / "y" / "next" / empty → pass
-- Anything else → logged as issue, severity inferred
+Claude 展示应该发生什么。用户确认或描述差异。
+- "yes" / "y" / "next" / 空 → 通过
+- 其他任何内容 → 记录为问题，推断严重性
 
-No Pass/Fail buttons. No severity questions. Just: "Here's what should happen. Does it?"
+没有通过/失败按钮。没有严重性问题。只是："这里应该发生什么。发生了吗？"
 </philosophy>
 
 <template>
@@ -21,137 +19,137 @@ No Pass/Fail buttons. No severity questions. Just: "Here's what should happen. D
 <process>
 
 <step name="initialize" priority="first">
-If $ARGUMENTS contains a phase number, load context:
+如果 $ARGUMENTS 包含阶段编号，加载上下文：
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init verify-work "${PHASE_ARG}")
 ```
 
-Parse JSON for: `planner_model`, `checker_model`, `commit_docs`, `phase_found`, `phase_dir`, `phase_number`, `phase_name`, `has_verification`.
+解析 JSON 获取：`planner_model`、`checker_model`、`commit_docs`、`phase_found`、`phase_dir`、`phase_number`、`phase_name`、`has_verification`。
 </step>
 
 <step name="check_active_session">
-**First: Check for active UAT sessions**
+**首先：检查活动 UAT 会话**
 
 ```bash
 find .planning/phases -name "*-UAT.md" -type f 2>/dev/null | head -5
 ```
 
-**If active sessions exist AND no $ARGUMENTS provided:**
+**如果存在活动会话且未提供 $ARGUMENTS：**
 
-Read each file's frontmatter (status, phase) and Current Test section.
+读取每个文件的前置元数据（status、phase）和当前测试部分。
 
-Display inline:
+内联显示：
 
 ```
-## Active UAT Sessions
+## 活动 UAT 会话
 
-| # | Phase | Status | Current Test | Progress |
+| # | 阶段 | 状态 | 当前测试 | 进度 |
 |---|-------|--------|--------------|----------|
 | 1 | 04-comments | testing | 3. Reply to Comment | 2/6 |
 | 2 | 05-auth | testing | 1. Login Form | 0/4 |
 
-Reply with a number to resume, or provide a phase number to start new.
+回复数字以恢复，或提供阶段编号以开始新的。
 ```
 
-Wait for user response.
+等待用户响应。
 
-- If user replies with number (1, 2) → Load that file, go to `resume_from_file`
-- If user replies with phase number → Treat as new session, go to `create_uat_file`
+- 如果用户回复数字（1、2）→ 加载该文件，转到 `resume_from_file`
+- 如果用户回复阶段编号 → 视为新会话，转到 `create_uat_file`
 
-**If active sessions exist AND $ARGUMENTS provided:**
+**如果存在活动会话且提供了 $ARGUMENTS：**
 
-Check if session exists for that phase. If yes, offer to resume or restart.
-If no, continue to `create_uat_file`.
+检查该阶段是否存在会话。如果是，提供恢复或重新开始选项。
+如果否，继续到 `create_uat_file`。
 
-**If no active sessions AND no $ARGUMENTS:**
+**如果没有活动会话且未提供 $ARGUMENTS：**
 
 ```
-No active UAT sessions.
+无活动 UAT 会话。
 
-Provide a phase number to start testing (e.g., /gsd:verify-work 4)
+提供阶段编号以开始测试（例如，/gsd:verify-work 4）
 ```
 
-**If no active sessions AND $ARGUMENTS provided:**
+**如果没有活动会话且提供了 $ARGUMENTS：**
 
-Continue to `create_uat_file`.
+继续到 `create_uat_file`。
 </step>
 
 <step name="find_summaries">
-**Find what to test:**
+**查找要测试的内容：**
 
-Use `phase_dir` from init (or run init if not already done).
+使用 init 中的 `phase_dir`（如果尚未运行 init 则运行它）。
 
 ```bash
 ls "$phase_dir"/*-SUMMARY.md 2>/dev/null
 ```
 
-Read each SUMMARY.md to extract testable deliverables.
+读取每个 SUMMARY.md 以提取可测试的交付物。
 </step>
 
 <step name="extract_tests">
-**Extract testable deliverables from SUMMARY.md:**
+**从 SUMMARY.md 提取可测试的交付物：**
 
-Parse for:
-1. **Accomplishments** - Features/functionality added
-2. **User-facing changes** - UI, workflows, interactions
+解析：
+1. **成就** — 添加的功能/功能
+2. **面向用户的变化** — UI、工作流程、交互
 
-Focus on USER-OBSERVABLE outcomes, not implementation details.
+专注于用户可观察的结果，而不是实现细节。
 
-For each deliverable, create a test:
-- name: Brief test name
-- expected: What the user should see/experience (specific, observable)
+对于每个交付物，创建一个测试：
+- name：简短的测试名称
+- expected：用户应该看到/体验到的内容（具体的、可观察的）
 
-Examples:
-- Accomplishment: "Added comment threading with infinite nesting"
-  → Test: "Reply to a Comment"
-  → Expected: "Clicking Reply opens inline composer below comment. Submitting shows reply nested under parent with visual indentation."
+示例：
+- 成就："Added comment threading with infinite nesting"
+  → 测试："Reply to a Comment"
+  → 预期："Clicking Reply opens inline composer below comment. Submitting shows reply nested under parent with visual indentation."
 
-Skip internal/non-observable items (refactors, type changes, etc.).
+跳过内部/不可观察的项目（重构、类型更改等）。
 </step>
 
 <step name="create_uat_file">
-**Create UAT file with all tests:**
+**创建包含所有测试的 UAT 文件：**
 
 ```bash
 mkdir -p "$PHASE_DIR"
 ```
 
-Build test list from extracted deliverables.
+从提取的交付物构建测试列表。
 
-Create file:
+创建文件：
 
 ```markdown
 ---
 status: testing
 phase: XX-name
-source: [list of SUMMARY.md files]
-started: [ISO timestamp]
-updated: [ISO timestamp]
+source: [SUMMARY.md 文件列表]
+started: [ISO 时间戳]
+updated: [ISO 时间戳]
 ---
 
-## Current Test
-<!-- OVERWRITE each test - shows where we are -->
+## 当前测试
+<!-- 每个测试覆盖 - 显示我们在哪里 -->
 
 number: 1
-name: [first test name]
+name: [第一个测试名称]
 expected: |
-  [what user should observe]
+  [用户应该观察到的]
 awaiting: user response
 
-## Tests
+## 测试
 
-### 1. [Test Name]
-expected: [observable behavior]
+### 1. [测试名称]
+expected: [可观察行为]
 result: [pending]
 
-### 2. [Test Name]
-expected: [observable behavior]
+### 2. [测试名称]
+expected: [可观察行为]
 result: [pending]
 
 ...
 
-## Summary
+## 总结
 
 total: [N]
 passed: 0
@@ -159,360 +157,360 @@ issues: 0
 pending: [N]
 skipped: 0
 
-## Gaps
+## 差距
 
-[none yet]
+[尚无]
 ```
 
-Write to `.planning/phases/XX-name/{phase}-UAT.md`
+写入到 `.planning/phases/XX-name/{phase}-UAT.md`
 
-Proceed to `present_test`.
+继续到 `present_test`。
 </step>
 
 <step name="present_test">
-**Present current test to user:**
+**向用户展示当前测试：**
 
-Read Current Test section from UAT file.
+从 UAT 文件读取当前测试部分。
 
-Display using checkpoint box format:
+使用检查点框格式显示：
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║  CHECKPOINT: Verification Required                           ║
+║  CHECKPOINT: 需要验证                           ║
 ╚══════════════════════════════════════════════════════════════╝
 
-**Test {number}: {name}**
+**测试 {number}: {name}**
 
 {expected}
 
 ──────────────────────────────────────────────────────────────
-→ Type "pass" or describe what's wrong
+→ 输入 "pass" 或描述问题
 ──────────────────────────────────────────────────────────────
 ```
 
-Wait for user response (plain text, no AskUserQuestion).
+等待用户响应（纯文本，无 AskUserQuestion）。
 </step>
 
 <step name="process_response">
-**Process user response and update file:**
+**处理用户响应并更新文件：**
 
-**If response indicates pass:**
-- Empty response, "yes", "y", "ok", "pass", "next", "approved", "✓"
+**如果响应指示通过：**
+- 空响应、"yes"、"y"、"ok"、"pass"、"next"、"approved"、"✓"
 
-Update Tests section:
+更新测试部分：
 ```
 ### {N}. {name}
 expected: {expected}
 result: pass
 ```
 
-**If response indicates skip:**
-- "skip", "can't test", "n/a"
+**如果响应指示跳过：**
+- "skip"、"can't test"、"n/a"
 
-Update Tests section:
+更新测试部分：
 ```
 ### {N}. {name}
 expected: {expected}
 result: skipped
-reason: [user's reason if provided]
+reason: [用户的原因（如果提供）]
 ```
 
-**If response is anything else:**
-- Treat as issue description
+**如果响应是其他任何内容：**
+- 视为问题描述
 
-Infer severity from description:
-- Contains: crash, error, exception, fails, broken, unusable → blocker
-- Contains: doesn't work, wrong, missing, can't → major
-- Contains: slow, weird, off, minor, small → minor
-- Contains: color, font, spacing, alignment, visual → cosmetic
-- Default if unclear: major
+从描述推断严重性：
+- 包含：crash、error、exception、fails、broken、unusable → blocker
+- 包含：doesn't work、wrong、missing、can't → major
+- 包含：slow、weird、off、minor、small → minor
+- 包含：color、font、spacing、alignment、visual → cosmetic
+- 如果不清楚则默认：major
 
-Update Tests section:
+更新测试部分：
 ```
 ### {N}. {name}
 expected: {expected}
 result: issue
-reported: "{verbatim user response}"
+reported: "{逐字用户响应}"
 severity: {inferred}
 ```
 
-Append to Gaps section (structured YAML for plan-phase --gaps):
+附加到差距部分（用于 plan-phase --gaps 的结构化 YAML）：
 ```yaml
-- truth: "{expected behavior from test}"
+- truth: "{来自测试的预期行为}"
   status: failed
-  reason: "User reported: {verbatim user response}"
+  reason: "User reported: {逐字用户响应}"
   severity: {inferred}
   test: {N}
-  artifacts: []  # Filled by diagnosis
-  missing: []    # Filled by diagnosis
+  artifacts: []  # 由诊断填充
+  missing: []    # 由诊断填充
 ```
 
-**After any response:**
+**任何响应后：**
 
-Update Summary counts.
-Update frontmatter.updated timestamp.
+更新总结计数。
+更新前置元数据.updated 时间戳。
 
-If more tests remain → Update Current Test, go to `present_test`
-If no more tests → Go to `complete_session`
+如果更多测试剩余 → 更新当前测试，转到 `present_test`
+如果没有更多测试 → 转到 `complete_session`
 </step>
 
 <step name="resume_from_file">
-**Resume testing from UAT file:**
+**从 UAT 文件恢复测试：**
 
-Read the full UAT file.
+读取完整的 UAT 文件。
 
-Find first test with `result: [pending]`.
+查找第一个带有 `result: [pending]` 的测试。
 
-Announce:
+宣布：
 ```
-Resuming: Phase {phase} UAT
-Progress: {passed + issues + skipped}/{total}
-Issues found so far: {issues count}
+恢复：阶段 {phase} UAT
+进度：{passed + issues + skipped}/{total}
+目前发现的问题：{issues count}
 
-Continuing from Test {N}...
+从测试 {N} 继续...
 ```
 
-Update Current Test section with the pending test.
-Proceed to `present_test`.
+用待处理测试更新当前测试部分。
+继续到 `present_test`。
 </step>
 
 <step name="complete_session">
-**Complete testing and commit:**
+**完成测试并提交：**
 
-Update frontmatter:
+更新前置元数据：
 - status: complete
-- updated: [now]
+- updated: [现在]
 
-Clear Current Test section:
+清除当前测试部分：
 ```
-## Current Test
+## 当前测试
 
-[testing complete]
+[测试完成]
 ```
 
-Commit the UAT file:
+提交 UAT 文件：
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js commit "test({phase}): complete UAT - {passed} passed, {issues} issues" --files ".planning/phases/XX-name/{phase}-UAT.md"
 ```
 
-Present summary:
+展示总结：
 ```
-## UAT Complete: Phase {phase}
+## UAT 完成：阶段 {phase}
 
-| Result | Count |
+| 结果 | 计数 |
 |--------|-------|
-| Passed | {N}   |
-| Issues | {N}   |
-| Skipped| {N}   |
+| 通过 | {N}   |
+| 问题 | {N}   |
+| 跳过| {N}   |
 
-[If issues > 0:]
-### Issues Found
+[如果 issues > 0:]
+### 发现的问题
 
-[List from Issues section]
+[来自问题部分的列表]
 ```
 
-**If issues > 0:** Proceed to `diagnose_issues`
+**如果 issues > 0：** 转到 `diagnose_issues`
 
-**If issues == 0:**
+**如果 issues == 0：**
 ```
-All tests passed. Ready to continue.
+所有测试通过。准备继续。
 
-- `/gsd:plan-phase {next}` — Plan next phase
-- `/gsd:execute-phase {next}` — Execute next phase
+- `/gsd:plan-phase {next}` — 规划下一个阶段
+- `/gsd:execute-phase {next}` — 执行下一个阶段
 ```
 </step>
 
 <step name="diagnose_issues">
-**Diagnose root causes before planning fixes:**
+**在规划修复之前诊断根本原因：**
 
 ```
 ---
 
-{N} issues found. Diagnosing root causes...
+{N} 个问题。诊断根本原因...
 
-Spawning parallel debug agents to investigate each issue.
+生成并行调试代理以调查每个问题。
 ```
 
-- Load diagnose-issues workflow
-- Follow @~/.claude/get-shit-done/workflows/diagnose-issues.md
-- Spawn parallel debug agents for each issue
-- Collect root causes
-- Update UAT.md with root causes
-- Proceed to `plan_gap_closure`
+- 加载 diagnose-issues 工作流程
+- 遵循 @~/.claude/get-shit-done/workflows/diagnose-issues.md
+- 为每个问题生成并行调试代理
+- 收集根本原因
+- 使用根本原因更新 UAT.md
+- 继续到 `plan_gap_closure`
 
-Diagnosis runs automatically - no user prompt. Parallel agents investigate simultaneously, so overhead is minimal and fixes are more accurate.
+诊断自动运行 — 无用户提示。并行代理同时调查，因此开销最小且修复更准确。
 </step>
 
 <step name="plan_gap_closure">
-**Auto-plan fixes from diagnosed gaps:**
+**从诊断的差距自动规划修复：**
 
-Display:
+显示：
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► PLANNING FIXES
+ GSD ► 规划修复
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-◆ Spawning planner for gap closure...
+◆ 为差距关闭生成规划器...
 ```
 
-Spawn gsd-planner in --gaps mode:
+以 --gaps 模式生成 gsd-planner：
 
 ```
 Task(
   prompt="""
 <planning_context>
 
-**Phase:** {phase_number}
-**Mode:** gap_closure
+**阶段：** {phase_number}
+**模式：** gap_closure
 
-**UAT with diagnoses:**
+**带有诊断的 UAT：**
 @.planning/phases/{phase_dir}/{phase}-UAT.md
 
-**Project State:**
+**项目状态：**
 @.planning/STATE.md
 
-**Roadmap:**
+**路线图：**
 @.planning/ROADMAP.md
 
 </planning_context>
 
 <downstream_consumer>
-Output consumed by /gsd:execute-phase
-Plans must be executable prompts.
+输出由 /gsd:execute-phase 消费
+计划必须是可执行的提示。
 </downstream_consumer>
 """,
   subagent_type="gsd-planner",
   model="{planner_model}",
-  description="Plan gap fixes for Phase {phase}"
+  description="为阶段 {phase} 规划差距修复"
 )
 ```
 
-On return:
-- **PLANNING COMPLETE:** Proceed to `verify_gap_plans`
-- **PLANNING INCONCLUSIVE:** Report and offer manual intervention
+返回时：
+- **规划完成：** 转到 `verify_gap_plans`
+- **规划无结果：** 报告并提供手动干预
 </step>
 
 <step name="verify_gap_plans">
-**Verify fix plans with checker:**
+**使用检查器验证修复计划：**
 
-Display:
+显示：
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► VERIFYING FIX PLANS
+ GSD ► 验证修复计划
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-◆ Spawning plan checker...
+◆ 生成计划检查器...
 ```
 
-Initialize: `iteration_count = 1`
+初始化：`iteration_count = 1`
 
-Spawn gsd-plan-checker:
+生成 gsd-plan-checker：
 
 ```
 Task(
   prompt="""
 <verification_context>
 
-**Phase:** {phase_number}
-**Phase Goal:** Close diagnosed gaps from UAT
+**阶段：** {phase_number}
+**阶段目标：** 关闭来自 UAT 的诊断差距
 
-**Plans to verify:**
+**要验证的计划：**
 @.planning/phases/{phase_dir}/*-PLAN.md
 
 </verification_context>
 
 <expected_output>
-Return one of:
-- ## VERIFICATION PASSED — all checks pass
-- ## ISSUES FOUND — structured issue list
+返回以下之一：
+- ## 验证通过 — 所有检查通过
+- ## 发现问题 — 结构化问题列表
 </expected_output>
 """,
   subagent_type="gsd-plan-checker",
   model="{checker_model}",
-  description="Verify Phase {phase} fix plans"
+  description="验证阶段 {phase} 修复计划"
 )
 ```
 
-On return:
-- **VERIFICATION PASSED:** Proceed to `present_ready`
-- **ISSUES FOUND:** Proceed to `revision_loop`
+返回时：
+- **验证通过：** 转到 `present_ready`
+- **发现问题：** 转到 `revision_loop`
 </step>
 
 <step name="revision_loop">
-**Iterate planner ↔ checker until plans pass (max 3):**
+**迭代规划器 ↔ 检查器直到计划通过（最多 3 次）：**
 
-**If iteration_count < 3:**
+**如果 iteration_count < 3：**
 
-Display: `Sending back to planner for revision... (iteration {N}/3)`
+显示：`发送回规划器进行修订...（迭代 {N}/3）`
 
-Spawn gsd-planner with revision context:
+使用修订上下文生成 gsd-planner：
 
 ```
 Task(
   prompt="""
 <revision_context>
 
-**Phase:** {phase_number}
-**Mode:** revision
+**阶段：** {phase_number}
+**模式：** revision
 
-**Existing plans:**
+**现有计划：**
 @.planning/phases/{phase_dir}/*-PLAN.md
 
-**Checker issues:**
-{structured_issues_from_checker}
+**检查器问题：**
+{来自检查器的结构化问题}
 
 </revision_context>
 
 <instructions>
-Read existing PLAN.md files. Make targeted updates to address checker issues.
-Do NOT replan from scratch unless issues are fundamental.
+读取现有 PLAN.md 文件。进行针对性更新以解决检查器问题。
+除非问题是根本性的，否则不要从头重新规划。
 </instructions>
 """,
   subagent_type="gsd-planner",
   model="{planner_model}",
-  description="Revise Phase {phase} plans"
+  description="修订阶段 {phase} 计划"
 )
 ```
 
-After planner returns → spawn checker again (verify_gap_plans logic)
-Increment iteration_count
+规划器返回后 → 再次生成检查器（verify_gap_plans 逻辑）
+增加 iteration_count
 
-**If iteration_count >= 3:**
+**如果 iteration_count >= 3：**
 
-Display: `Max iterations reached. {N} issues remain.`
+显示：`达到最大迭代次数。{N} 个问题剩余。`
 
-Offer options:
-1. Force proceed (execute despite issues)
-2. Provide guidance (user gives direction, retry)
-3. Abandon (exit, user runs /gsd:plan-phase manually)
+提供选项：
+1. 强制继续（尽管有问题仍执行）
+2. 提供指导（用户给出方向，重试）
+3. 放弃（退出，用户手动运行 /gsd:plan-phase）
 
-Wait for user response.
+等待用户响应。
 </step>
 
 <step name="present_ready">
-**Present completion and next steps:**
+**展示完成和下一步：**
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► FIXES READY ✓
+ GSD ► 修复准备就绪 ✓
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Phase {X}: {Name}** — {N} gap(s) diagnosed, {M} fix plan(s) created
+**阶段 {X}: {Name}** — {N} 个差距已诊断，{M} 个修复计划已创建
 
-| Gap | Root Cause | Fix Plan |
+| 差距 | 根本原因 | 修复计划 |
 |-----|------------|----------|
 | {truth 1} | {root_cause} | {phase}-04 |
 | {truth 2} | {root_cause} | {phase}-04 |
 
-Plans verified and ready for execution.
+计划已验证并准备好执行。
 
 ───────────────────────────────────────────────────────────────
 
-## ▶ Next Up
+## ▶ 接下来
 
-**Execute fixes** — run fix plans
+**执行修复** — 运行修复计划
 
-`/clear` then `/gsd:execute-phase {phase} --gaps-only`
+`/clear` 然后 `/gsd:execute-phase {phase} --gaps-only`
 
 ───────────────────────────────────────────────────────────────
 ```
@@ -521,50 +519,50 @@ Plans verified and ready for execution.
 </process>
 
 <update_rules>
-**Batched writes for efficiency:**
+**批量写入以提高效率：**
 
-Keep results in memory. Write to file only when:
-1. **Issue found** — Preserve the problem immediately
-2. **Session complete** — Final write before commit
-3. **Checkpoint** — Every 5 passed tests (safety net)
+将结果保留在内存中。仅在以下情况写入文件：
+1. **发现问题** — 立即保留问题
+2. **会话完成** — 提交前的最终写入
+3. **检查点** — 每 5 个通过的测试（安全网）
 
-| Section | Rule | When Written |
+| 部分 | 规则 | 写入时间 |
 |---------|------|--------------|
-| Frontmatter.status | OVERWRITE | Start, complete |
-| Frontmatter.updated | OVERWRITE | On any file write |
-| Current Test | OVERWRITE | On any file write |
-| Tests.{N}.result | OVERWRITE | On any file write |
-| Summary | OVERWRITE | On any file write |
-| Gaps | APPEND | When issue found |
+| 前置元数据.status | 覆盖 | 开始、完成 |
+| 前置元数据.updated | 覆盖 | 任何文件写入时 |
+| 当前测试 | 覆盖 | 任何文件写入时 |
+| 测试.{N}.result | 覆盖 | 任何文件写入时 |
+| 总结 | 覆盖 | 任何文件写入时 |
+| 差距 | 附加 | 发现问题时 |
 
-On context reset: File shows last checkpoint. Resume from there.
+上下文重置时：文件显示最后一个检查点。从那里恢复。
 </update_rules>
 
 <severity_inference>
-**Infer severity from user's natural language:**
+**从用户的自然语言推断严重性：**
 
-| User says | Infer |
+| 用户说 | 推断 |
 |-----------|-------|
-| "crashes", "error", "exception", "fails completely" | blocker |
-| "doesn't work", "nothing happens", "wrong behavior" | major |
-| "works but...", "slow", "weird", "minor issue" | minor |
-| "color", "spacing", "alignment", "looks off" | cosmetic |
+| "crashes"、"error"、"exception"、"fails completely" | blocker |
+| "doesn't work"、"nothing happens"、"wrong behavior" | major |
+| "works but..."、"slow"、"weird"、"minor issue" | minor |
+| "color"、"spacing"、"alignment"、"looks off" | cosmetic |
 
-Default to **major** if unclear. User can correct if needed.
+如果不清楚则默认为 **major**。如果需要，用户可以更正。
 
-**Never ask "how severe is this?"** - just infer and move on.
+**从不问"这有多严重？"** — 只需推断并继续。
 </severity_inference>
 
 <success_criteria>
-- [ ] UAT file created with all tests from SUMMARY.md
-- [ ] Tests presented one at a time with expected behavior
-- [ ] User responses processed as pass/issue/skip
-- [ ] Severity inferred from description (never asked)
-- [ ] Batched writes: on issue, every 5 passes, or completion
-- [ ] Committed on completion
-- [ ] If issues: parallel debug agents diagnose root causes
-- [ ] If issues: gsd-planner creates fix plans (gap_closure mode)
-- [ ] If issues: gsd-plan-checker verifies fix plans
-- [ ] If issues: revision loop until plans pass (max 3 iterations)
-- [ ] Ready for `/gsd:execute-phase --gaps-only` when complete
+- [ ] 使用来自 SUMMARY.md 的所有测试创建 UAT 文件
+- [ ] 测试一次展示一个，带有预期行为
+- [ ] 用户响应处理为通过/问题/跳过
+- [ ] 从描述推断严重性（从不询问）
+- [ ] 批量写入：发现问题、每 5 次通过或完成时
+- [ ] 完成时提交
+- [ ] 如果有问题：并行调试代理诊断根本原因
+- [ ] 如果有问题：gsd-planner 创建修复计划（gap_closure 模式）
+- [ ] 如果有问题：gsd-plan-checker 验证修复计划
+- [ ] 如果有问题：修订循环直到计划通过（最多 3 次迭代）
+- [ ] 完成时准备好 `/gsd:execute-phase --gaps-only`
 </success_criteria>

@@ -1,408 +1,408 @@
 <purpose>
-Extract implementation decisions that downstream agents need. Analyze the phase to identify gray areas, let the user choose what to discuss, then deep-dive each selected area until satisfied.
+提取下游代理需要的实现决策。分析阶段以识别灰色区域，让用户选择讨论什么，然后深入探讨每个选择的区域直到满意。
 
-You are a thinking partner, not an interviewer. The user is the visionary — you are the builder. Your job is to capture decisions that will guide research and planning, not to figure out implementation yourself.
+您是思考伙伴，而不是面试官。用户是愿景家 - 您是建设者。您的工作是捕获将指导研究和规划的决策，而不是自己弄清楚实现。
 </purpose>
 
 <downstream_awareness>
-**CONTEXT.md feeds into:**
+**CONTEXT.md 输入到：**
 
-1. **gsd-phase-researcher** — Reads CONTEXT.md to know WHAT to research
-   - "User wants card-based layout" → researcher investigates card component patterns
-   - "Infinite scroll decided" → researcher looks into virtualization libraries
+1. **gsd-phase-researcher** — 读取 CONTEXT.md 以了解研究什么
+   - "用户想要基于卡片的布局" → 研究者调查卡片组件模式
+   - "决定无限滚动" → 研究者研究虚拟化库
 
-2. **gsd-planner** — Reads CONTEXT.md to know WHAT decisions are locked
-   - "Pull-to-refresh on mobile" → planner includes that in task specs
-   - "Claude's Discretion: loading skeleton" → planner can decide approach
+2. **gsd-planner** — 读取 CONTEXT.md 以了解哪些决策已锁定
+   - "移动端下拉刷新" → 规划者将此包含在任务规范中
+   - "Claude 自决：加载骨架" → 规划者可以决定方法
 
-**Your job:** Capture decisions clearly enough that downstream agents can act on them without asking the user again.
+**您的工作：** 清晰地捕获决策，使下游代理可以对其采取行动而无需再次询问用户。
 
-**Not your job:** Figure out HOW to implement. That's what research and planning do with the decisions you capture.
+**不是您的工作：** 弄清楚如何实现。这是研究和规划对您捕获的决策所做的工作。
 </downstream_awareness>
 
 <philosophy>
-**User = founder/visionary. Claude = builder.**
+**用户 = 创始人/愿景家。Claude = 建设者。**
 
-The user knows:
-- How they imagine it working
-- What it should look/feel like
-- What's essential vs nice-to-have
-- Specific behaviors or references they have in mind
+用户知道：
+- 他们想象它如何工作
+- 它应该看起来/感觉起来像什么
+- 什么是必要的 vs 有好更好
+- 他们想到的具体行为或参考
 
-The user doesn't know (and shouldn't be asked):
-- Codebase patterns (researcher reads the code)
-- Technical risks (researcher identifies these)
-- Implementation approach (planner figures this out)
-- Success metrics (inferred from the work)
+用户不知道（也不应该被问及）：
+- 代码库模式（研究者读取代码）
+- 技术风险（研究者识别这些）
+- 实现方法（规划者弄清楚这一点）
+- 成功指标（从工作推断）
 
-Ask about vision and implementation choices. Capture decisions for downstream agents.
+询问有关愿景和实现选择的问题。为下游代理捕获决策。
 </philosophy>
 
 <scope_guardrail>
-**CRITICAL: No scope creep.**
+**关键：无范围蔓延。**
 
-The phase boundary comes from ROADMAP.md and is FIXED. Discussion clarifies HOW to implement what's scoped, never WHETHER to add new capabilities.
+阶段边界来自 ROADMAP.md 并且是固定的。讨论阐明如何实现范围内的内容，从不问是否添加新功能。
 
-**Allowed (clarifying ambiguity):**
-- "How should posts be displayed?" (layout, density, info shown)
-- "What happens on empty state?" (within the feature)
-- "Pull to refresh or manual?" (behavior choice)
+**允许（澄清歧义）：**
+- "帖子应该如何显示？"（布局、密度、显示的信息）
+- "空状态时会发生什么？"（在功能内）
+- "下拉刷新还是手动？"（行为选择）
 
-**Not allowed (scope creep):**
-- "Should we also add comments?" (new capability)
-- "What about search/filtering?" (new capability)
-- "Maybe include bookmarking?" (new capability)
+**不允许（范围蔓延）：**
+- "我们还应该添加评论吗？"（新功能）
+- "搜索/过滤呢？"（新功能）
+- "可能包括书签吗？"（新功能）
 
-**The heuristic:** Does this clarify how we implement what's already in the phase, or does it add a new capability that could be its own phase?
+**启发式：** 这是否阐明了我们如何实现阶段中已有的内容，还是添加了一个可以作为自己阶段的新功能？
 
-**When user suggests scope creep:**
+**当用户建议范围蔓延时：**
 ```
-"[Feature X] would be a new capability — that's its own phase.
-Want me to note it for the roadmap backlog?
+"[功能 X] 将是一个新功能 — 那是它自己的阶段。
+要我把它记在路线图待办事项中吗？
 
-For now, let's focus on [phase domain]."
+目前，让我们专注于 [阶段领域]。"
 ```
 
-Capture the idea in a "Deferred Ideas" section. Don't lose it, don't act on it.
+在 "延迟想法" 部分捕获想法。不要丢失它，不要对其采取行动。
 </scope_guardrail>
 
 <gray_area_identification>
-Gray areas are **implementation decisions the user cares about** — things that could go multiple ways and would change the result.
+灰色区域是**用户关心的实现决策** — 可能有多种方式并且会改变结果的事情。
 
-**How to identify gray areas:**
+**如何识别灰色区域：**
 
-1. **Read the phase goal** from ROADMAP.md
-2. **Understand the domain** — What kind of thing is being built?
-   - Something users SEE → visual presentation, interactions, states matter
-   - Something users CALL → interface contracts, responses, errors matter
-   - Something users RUN → invocation, output, behavior modes matter
-   - Something users READ → structure, tone, depth, flow matter
-   - Something being ORGANIZED → criteria, grouping, handling exceptions matter
-3. **Generate phase-specific gray areas** — Not generic categories, but concrete decisions for THIS phase
+1. **从 ROADMAP.md 读取阶段目标**
+2. **理解领域** — 正在构建什么样的东西？
+   - 用户看到的东西 → 视觉呈现、交互、状态很重要
+   - 用户调用的东西 → 接口契约、响应、错误很重要
+   - 用户运行的东西 → 调用、输出、行为模式很重要
+   - 用户阅读的东西 → 结构、语气、深度、流程很重要
+   - 正在组织的东西 → 标准、分组、处理异常很重要
+3. **生成特定阶段的灰色区域** — 不是通用类别，而是此阶段的具体决策
 
-**Don't use generic category labels** (UI, UX, Behavior). Generate specific gray areas:
+**不要使用通用类别标签**（UI、UX、行为）。生成特定的灰色区域：
 
 ```
-Phase: "User authentication"
-→ Session handling, Error responses, Multi-device policy, Recovery flow
+阶段："用户认证"
+→ 会话处理、错误响应、多设备策略、恢复流程
 
-Phase: "Organize photo library"
-→ Grouping criteria, Duplicate handling, Naming convention, Folder structure
+阶段："组织照片库"
+→ 分组标准、重复处理、命名约定、文件夹结构
 
-Phase: "CLI for database backups"
-→ Output format, Flag design, Progress reporting, Error recovery
+阶段："数据库备份 CLI"
+→ 输出格式、标志设计、进度报告、错误恢复
 
-Phase: "API documentation"
-→ Structure/navigation, Code examples depth, Versioning approach, Interactive elements
+阶段："API 文档"
+→ 结构/导航、代码示例深度、版本控制方法、交互元素
 ```
 
-**The key question:** What decisions would change the outcome that the user should weigh in on?
+**关键问题：** 什么决策会改变用户应该参与的结果？
 
-**Claude handles these (don't ask):**
-- Technical implementation details
-- Architecture patterns
-- Performance optimization
-- Scope (roadmap defines this)
+**Claude 处理这些（不要问）：**
+- 技术实现细节
+- 架构模式
+- 性能优化
+- 范围（路线图定义此）
 </gray_area_identification>
 
 <process>
 
 <step name="initialize" priority="first">
-Phase number from argument (required).
+来自参数的阶段编号（必需）。
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init phase-op "${PHASE}")
 ```
 
-Parse JSON for: `commit_docs`, `phase_found`, `phase_dir`, `phase_number`, `phase_name`, `phase_slug`, `padded_phase`, `has_research`, `has_context`, `has_plans`, `has_verification`, `plan_count`, `roadmap_exists`, `planning_exists`.
+解析 JSON 以获取：`commit_docs`、`phase_found`、`phase_dir`、`phase_number`、`phase_name`、`phase_slug`、`padded_phase`、`has_research`、`has_context`、`has_plans`、`has_verification`、`plan_count`、`roadmap_exists`、`planning_exists`。
 
-**If `phase_found` is false:**
+**如果 `phase_found` 为 false：**
 ```
-Phase [X] not found in roadmap.
+在路线图中未找到阶段 [X]。
 
-Use /gsd:progress to see available phases.
+使用 /gsd:progress 查看可用阶段。
 ```
-Exit workflow.
+退出工作流程。
 
-**If `phase_found` is true:** Continue to check_existing.
+**如果 `phase_found` 为 true：** 继续到 check_existing。
 </step>
 
 <step name="check_existing">
-Check if CONTEXT.md already exists using `has_context` from init.
+使用 init 中的 `has_context` 检查 CONTEXT.md 是否已存在。
 
 ```bash
 ls ${phase_dir}/*-CONTEXT.md 2>/dev/null
 ```
 
-**If exists:**
-Use AskUserQuestion:
-- header: "Existing context"
-- question: "Phase [X] already has context. What do you want to do?"
+**如果存在：**
+使用 AskUserQuestion：
+- header: "现有上下文"
+- question: "阶段 [X] 已有上下文。您想做什么？"
 - options:
-  - "Update it" — Review and revise existing context
-  - "View it" — Show me what's there
-  - "Skip" — Use existing context as-is
+  - "更新它" — 审查和修订现有上下文
+  - "查看它" — 向我显示那里的内容
+  - "跳过" — 按原样使用现有上下文
 
-If "Update": Load existing, continue to analyze_phase
-If "View": Display CONTEXT.md, then offer update/skip
-If "Skip": Exit workflow
+如果 "更新"：加载现有的，继续到 analyze_phase
+如果 "查看"：显示 CONTEXT.md，然后提供更新/跳过
+如果 "跳过"：退出工作流程
 
-**If doesn't exist:** Continue to analyze_phase.
+**如果不存在：** 继续到 analyze_phase。
 </step>
 
 <step name="analyze_phase">
-Analyze the phase to identify gray areas worth discussing.
+分析阶段以识别值得讨论的灰色区域。
 
-**Read the phase description from ROADMAP.md and determine:**
+**从 ROADMAP.md 读取阶段描述并确定：**
 
-1. **Domain boundary** — What capability is this phase delivering? State it clearly.
+1. **领域边界** — 此阶段交付什么功能？清晰地陈述它。
 
-2. **Gray areas by category** — For each relevant category (UI, UX, Behavior, Empty States, Content), identify 1-2 specific ambiguities that would change implementation.
+2. **按类别的灰色区域** — 对于每个相关类别（UI、UX、行为、空状态、内容），识别 1-2 个会改变实现的具体歧义。
 
-3. **Skip assessment** — If no meaningful gray areas exist (pure infrastructure, clear-cut implementation), the phase may not need discussion.
+3. **跳过评估** — 如果不存在有意义的灰色区域（纯基础设施、明确的实现），阶段可能不需要讨论。
 
-**Output your analysis internally, then present to user.**
+**在内部输出您的分析，然后展示给用户。**
 
-Example analysis for "Post Feed" phase:
+"帖子流" 阶段的示例分析：
 ```
-Domain: Displaying posts from followed users
-Gray areas:
-- UI: Layout style (cards vs timeline vs grid)
-- UI: Information density (full posts vs previews)
-- Behavior: Loading pattern (infinite scroll vs pagination)
-- Empty State: What shows when no posts exist
-- Content: What metadata displays (time, author, reactions count)
+领域：显示来自关注用户的帖子
+灰色区域：
+- UI：布局样式（卡片 vs 时间线 vs 网格）
+- UI：信息密度（完整帖子 vs 预览）
+- 行为：加载模式（无限滚动 vs 分页）
+- 空状态：不存在帖子时显示什么
+- 内容：显示什么元数据（时间、作者、反应计数）
 ```
 </step>
 
 <step name="present_gray_areas">
-Present the domain boundary and gray areas to user.
+向用户展示领域边界和灰色区域。
 
-**First, state the boundary:**
+**首先，陈述边界：**
 ```
-Phase [X]: [Name]
-Domain: [What this phase delivers — from your analysis]
+阶段 [X]：[名称]
+领域：[此阶段交付的内容 — 来自您的分析]
 
-We'll clarify HOW to implement this.
-(New capabilities belong in other phases.)
-```
-
-**Then use AskUserQuestion (multiSelect: true):**
-- header: "Discuss"
-- question: "Which areas do you want to discuss for [phase name]?"
-- options: Generate 3-4 phase-specific gray areas, each formatted as:
-  - "[Specific area]" (label) — concrete, not generic
-  - [1-2 questions this covers] (description)
-
-**Do NOT include a "skip" or "you decide" option.** User ran this command to discuss — give them real choices.
-
-**Examples by domain:**
-
-For "Post Feed" (visual feature):
-```
-☐ Layout style — Cards vs list vs timeline? Information density?
-☐ Loading behavior — Infinite scroll or pagination? Pull to refresh?
-☐ Content ordering — Chronological, algorithmic, or user choice?
-☐ Post metadata — What info per post? Timestamps, reactions, author?
+我们将阐明如何实现这个。
+（新功能属于其他阶段。）
 ```
 
-For "Database backup CLI" (command-line tool):
+**然后使用 AskUserQuestion（multiSelect: true）：**
+- header: "讨论"
+- question: "您想讨论 [阶段名称] 的哪些区域？"
+- options: 生成 3-4 个特定阶段的灰色区域，每个格式化为：
+  - "[具体区域]"（标签）— 具体的，不是通用的
+  - [这涵盖的 1-2 个问题]（描述）
+
+**不要包括 "跳过" 或 "你决定" 选项。** 用户运行此命令来讨论 — 给他们真正的选择。
+
+**按领域的示例：**
+
+对于 "帖子流"（视觉功能）：
 ```
-☐ Output format — JSON, table, or plain text? Verbosity levels?
-☐ Flag design — Short flags, long flags, or both? Required vs optional?
-☐ Progress reporting — Silent, progress bar, or verbose logging?
-☐ Error recovery — Fail fast, retry, or prompt for action?
+☐ 布局样式 — 卡片 vs 列表 vs 时间线？信息密度？
+☐ 加载行为 — 无限滚动还是分页？下拉刷新？
+☐ 内容排序 — 按时间、算法还是用户选择？
+☐ 帖子元数据 — 每个帖子什么信息？时间戳、反应、作者？
 ```
 
-For "Organize photo library" (organization task):
+对于 "数据库备份 CLI"（命令行工具）：
 ```
-☐ Grouping criteria — By date, location, faces, or events?
-☐ Duplicate handling — Keep best, keep all, or prompt each time?
-☐ Naming convention — Original names, dates, or descriptive?
-☐ Folder structure — Flat, nested by year, or by category?
+☐ 输出格式 — JSON、表格还是纯文本？详细程度？
+☐ 标志设计 — 短标志、长标志还是两者？必需 vs 可选？
+☐ 进度报告 — 静默、进度条还是详细日志？
+☐ 错误恢复 — 快速失败、重试还是提示操作？
 ```
 
-Continue to discuss_areas with selected areas.
+对于 "组织照片库"（组织任务）：
+```
+☐ 分组标准 — 按日期、位置、人脸还是事件？
+☐ 重复处理 — 保留最好的、保留全部还是每次提示？
+☐ 命名约定 — 原始名称、日期还是描述性？
+☐ 文件夹结构 — 扁平、按年份嵌套还是按类别？
+```
+
+继续到 discuss_areas 并处理选定的区域。
 </step>
 
 <step name="discuss_areas">
-For each selected area, conduct a focused discussion loop.
+对于每个选定的区域，进行集中的讨论循环。
 
-**Philosophy: 4 questions, then check.**
+**哲学：4 个问题，然后检查。**
 
-Ask 4 questions per area before offering to continue or move on. Each answer often reveals the next question.
+在每个区域提供继续或移动之前询问 4 个问题。每个答案通常会揭示下一个问题。
 
-**For each area:**
+**对于每个区域：**
 
-1. **Announce the area:**
+1. **宣布区域：**
    ```
-   Let's talk about [Area].
+   让我们谈谈 [区域]。
    ```
 
-2. **Ask 4 questions using AskUserQuestion:**
-   - header: "[Area]"
-   - question: Specific decision for this area
-   - options: 2-3 concrete choices (AskUserQuestion adds "Other" automatically)
-   - Include "You decide" as an option when reasonable — captures Claude discretion
+2. **使用 AskUserQuestion 询问 4 个问题：**
+   - header: "[区域]"
+   - question: 此区域的具体决策
+   - options: 2-3 个具体选择（AskUserQuestion 自动添加 "其他"）
+   - 包括 "你决定" 作为选项当合理时 — 捕获 Claude 自决权
 
-3. **After 4 questions, check:**
-   - header: "[Area]"
-   - question: "More questions about [area], or move to next?"
-   - options: "More questions" / "Next area"
+3. **4 个问题后，检查：**
+   - header: "[区域]"
+   - question: "更多关于 [区域] 的问题，还是移动到下一个？"
+   - options: "更多问题" / "下一个区域"
 
-   If "More questions" → ask 4 more, then check again
-   If "Next area" → proceed to next selected area
+   如果 "更多问题" → 再问 4 个，然后再次检查
+   如果 "下一个区域" → 继续到下一个选定区域
 
-4. **After all areas complete:**
-   - header: "Done"
-   - question: "That covers [list areas]. Ready to create context?"
-   - options: "Create context" / "Revisit an area"
+4. **所有区域完成后：**
+   - header: "完成"
+   - question: "这涵盖了 [列出区域]。准备创建上下文？"
+   - options: "创建上下文" / "重新访问某个区域"
 
-**Question design:**
-- Options should be concrete, not abstract ("Cards" not "Option A")
-- Each answer should inform the next question
-- If user picks "Other", receive their input, reflect it back, confirm
+**问题设计：**
+- 选项应该是具体的，而不是抽象的（"卡片" 而不是 "选项 A"）
+- 每个答案应该通知下一个问题
+- 如果用户选择 "其他"，接收他们的输入，反射回它，确认
 
-**Scope creep handling:**
-If user mentions something outside the phase domain:
+**范围蔓延处理：**
+如果用户提到阶段领域之外的内容：
 ```
-"[Feature] sounds like a new capability — that belongs in its own phase.
-I'll note it as a deferred idea.
+"[功能] 听起来像一个新功能 — 那属于它自己的阶段。
+我会将其记为延迟想法。
 
-Back to [current area]: [return to current question]"
+回到 [当前区域]：[返回当前问题]"
 ```
 
-Track deferred ideas internally.
+在内部跟踪延迟想法。
 </step>
 
 <step name="write_context">
-Create CONTEXT.md capturing decisions made.
+创建捕获所做决策的 CONTEXT.md。
 
-**Find or create phase directory:**
+**查找或创建阶段目录：**
 
-Use values from init: `phase_dir`, `phase_slug`, `padded_phase`.
+使用 init 中的值：`phase_dir`、`phase_slug`、`padded_phase`。
 
-If `phase_dir` is null (phase exists in roadmap but no directory):
+如果 `phase_dir` 为 null（阶段存在于路线图中但无目录）：
 ```bash
 mkdir -p ".planning/phases/${padded_phase}-${phase_slug}"
 ```
 
-**File location:** `${phase_dir}/${padded_phase}-CONTEXT.md`
+**文件位置：** `${phase_dir}/${padded_phase}-CONTEXT.md`
 
-**Structure the content by what was discussed:**
+**按讨论的内容结构化内容：**
 
 ```markdown
-# Phase [X]: [Name] - Context
+# 阶段 [X]：[名称] - 上下文
 
-**Gathered:** [date]
-**Status:** Ready for planning
+**收集时间：** [date]
+**状态：** 准备规划
 
 <domain>
-## Phase Boundary
+## 阶段边界
 
-[Clear statement of what this phase delivers — the scope anchor]
+[清楚说明此阶段交付的内容 — 范围锚点]
 
 </domain>
 
 <decisions>
-## Implementation Decisions
+## 实现决策
 
-### [Category 1 that was discussed]
-- [Decision or preference captured]
-- [Another decision if applicable]
+### [讨论的类别 1]
+- [捕获的决策或偏好]
+- [另一个决策（如适用）]
 
-### [Category 2 that was discussed]
-- [Decision or preference captured]
+### [讨论的类别 2]
+- [捕获的决策或偏好]
 
-### Claude's Discretion
-[Areas where user said "you decide" — note that Claude has flexibility here]
+### Claude 的自决
+[用户说 "你决定" 的区域 — 注意 Claude 在这里有灵活性]
 
 </decisions>
 
 <specifics>
-## Specific Ideas
+## 具体想法
 
-[Any particular references, examples, or "I want it like X" moments from discussion]
+[讨论中的任何特定参考、示例或 "我想要像 X" 的时刻]
 
-[If none: "No specific requirements — open to standard approaches"]
+[如果没有："无具体要求 — 开放标准方法"]
 
 </specifics>
 
 <deferred>
-## Deferred Ideas
+## 延迟想法
 
-[Ideas that came up but belong in other phases. Don't lose them.]
+[出现但属于其他阶段的想法。不要丢失它们。]
 
-[If none: "None — discussion stayed within phase scope"]
+[如果没有："无 — 讨论保持在阶段范围内"]
 
 </deferred>
 
 ---
 
-*Phase: XX-name*
-*Context gathered: [date]*
+*阶段：XX-name*
+*上下文收集时间：[date]*
 ```
 
-Write file.
+写入文件。
 </step>
 
 <step name="confirm_creation">
-Present summary and next steps:
+展示摘要和下一步：
 
 ```
-Created: .planning/phases/${PADDED_PHASE}-${SLUG}/${PADDED_PHASE}-CONTEXT.md
+已创建：.planning/phases/${PADDED_PHASE}-${SLUG}/${PADDED_PHASE}-CONTEXT.md
 
-## Decisions Captured
+## 捕获的决策
 
-### [Category]
-- [Key decision]
+### [类别]
+- [关键决策]
 
-### [Category]
-- [Key decision]
+### [类别]
+- [关键决策]
 
-[If deferred ideas exist:]
-## Noted for Later
-- [Deferred idea] — future phase
+[如果存在延迟想法:]
+## 稍后记录
+- [延迟想法] — 未来阶段
 
 ---
 
-## ▶ Next Up
+## ▶ 下一步
 
-**Phase ${PHASE}: [Name]** — [Goal from ROADMAP.md]
+**阶段 ${PHASE}：[名称]** — [来自 ROADMAP.md 的目标]
 
 `/gsd:plan-phase ${PHASE}`
 
-<sub>`/clear` first → fresh context window</sub>
+<sub>`/clear` 首先 → 新的上下文窗口</sub>
 
 ---
 
-**Also available:**
-- `/gsd:plan-phase ${PHASE} --skip-research` — plan without research
-- Review/edit CONTEXT.md before continuing
+**也可用：**
+- `/gsd:plan-phase ${PHASE} --skip-research` — 无研究规划
+- 继续之前审查/编辑 CONTEXT.md
 
 ---
 ```
 </step>
 
 <step name="git_commit">
-Commit phase context (uses `commit_docs` from init internally):
+提交阶段上下文（内部使用 init 中的 `commit_docs`）：
 
 ```bash
-node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs(${padded_phase}): capture phase context" --files "${phase_dir}/${padded_phase}-CONTEXT.md"
+node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs(${padded_phase}): 捕获阶段上下文" --files "${phase_dir}/${padded_phase}-CONTEXT.md"
 ```
 
-Confirm: "Committed: docs(${padded_phase}): capture phase context"
+确认："已提交：docs(${padded_phase}): 捕获阶段上下文"
 </step>
 
 </process>
 
 <success_criteria>
-- Phase validated against roadmap
-- Gray areas identified through intelligent analysis (not generic questions)
-- User selected which areas to discuss
-- Each selected area explored until user satisfied
-- Scope creep redirected to deferred ideas
-- CONTEXT.md captures actual decisions, not vague vision
-- Deferred ideas preserved for future phases
-- User knows next steps
+- 阶段已根据路线图验证
+- 通过智能分析识别灰色区域（不是通用问题）
+- 用户选择了要讨论的区域
+- 每个选定区域探索直到用户满意
+- 范围蔓延重定向到延迟想法
+- CONTEXT.md 捕获实际决策，而不是模糊的愿景
+- 延迟想法为未来阶段保留
+- 用户知道下一步
 </success_criteria>

@@ -1,7 +1,7 @@
 ---
 name: gsd:add-phase
-description: Add phase to end of current milestone in roadmap
-argument-hint: <description>
+description: 向路线图中当前里程碑的末尾添加阶段
+argument-hint: <描述>
 allowed-tools:
   - Read
   - Write
@@ -9,13 +9,13 @@ allowed-tools:
 ---
 
 <objective>
-Add a new integer phase to the end of the current milestone in the roadmap.
+向路线图中当前里程碑的末尾添加一个新的整数阶段。
 
-Routes to the add-phase workflow which handles:
-- Phase number calculation (next sequential integer)
-- Directory creation with slug generation
-- Roadmap structure updates
-- STATE.md roadmap evolution tracking
+路由到 add-phase 工作流，该工作流处理：
+- 阶段编号计算（下一个连续整数）
+- 目录创建与 slug 生成
+- 路线图结构更新
+- STATE.md 路线图演进跟踪
 </objective>
 
 <execution_context>
@@ -25,15 +25,15 @@ Routes to the add-phase workflow which handles:
 </execution_context>
 
 <process>
-**Follow the add-phase workflow** from `@~/.claude/get-shit-done/workflows/add-phase.md`.
+**遵循 add-phase 工作流**，来自 `@~/.claude/get-shit-done/workflows/add-phase.md`。
 
-The workflow handles all logic including:
-1. Argument parsing and validation
-2. Roadmap existence checking
-3. Current milestone identification
-4. Next phase number calculation (ignoring decimals)
-5. Slug generation from description
-6. Phase directory creation
-7. Roadmap entry insertion
-8. STATE.md updates
+该工作流处理所有逻辑，包括：
+1. 参数解析和验证
+2. 路线图存在性检查
+3. 当前里程碑识别
+4. 下一阶段编号计算（忽略小数）
+5. 从描述生成 slug
+6. 阶段目录创建
+7. 路线图条目插入
+8. STATE.md 更新
 </process>

@@ -1,146 +1,146 @@
-# Discovery Template
+# 发现模板
 
-Template for `.planning/phases/XX-name/DISCOVERY.md` - shallow research for library/option decisions.
+用于 `.planning/phases/XX-name/DISCOVERY.md` 的模板 — 用于库/选项决策的浅层研究。
 
-**Purpose:** Answer "which library/option should we use" questions during mandatory discovery in plan-phase.
+**目的：** 在 plan-phase 的强制性发现期间回答"我们应该使用哪个库/选项"问题。
 
-For deep ecosystem research ("how do experts build this"), use `/gsd:research-phase` which produces RESEARCH.md.
+对于深度生态系统研究（"专家如何构建这个"），使用 `/gsd:research-phase`，它产生 RESEARCH.md。
 
 ---
 
-## File Template
+## 文件模板
 
 ```markdown
 ---
 phase: XX-name
 type: discovery
-topic: [discovery-topic]
+topic: [发现主题]
 ---
 
 <session_initialization>
-Before beginning discovery, verify today's date:
+在开始发现之前，验证今天的日期：
 !`date +%Y-%m-%d`
 
-Use this date when searching for "current" or "latest" information.
-Example: If today is 2025-11-22, search for "2025" not "2024".
+搜索"当前"或"最新"信息时使用此日期。
+示例：如果今天是 2025-11-22，搜索 "2025" 而不是 "2024"。
 </session_initialization>
 
 <discovery_objective>
-Discover [topic] to inform [phase name] implementation.
+发现 [主题] 以支持 [阶段名称] 实施。
 
-Purpose: [What decision/implementation this enables]
-Scope: [Boundaries]
-Output: DISCOVERY.md with recommendation
+目的：[这启用什么决策/实施]
+范围：[边界]
+输出：带有建议的 DISCOVERY.md
 </discovery_objective>
 
 <discovery_scope>
 <include>
-- [Question to answer]
-- [Area to investigate]
-- [Specific comparison if needed]
+- [要回答的问题]
+- [要调查的领域]
+- [需要时的具体比较]
 </include>
 
 <exclude>
-- [Out of scope for this discovery]
-- [Defer to implementation phase]
+- [超出此发现的范围]
+- [推迟到实施阶段]
 </exclude>
 </discovery_scope>
 
 <discovery_protocol>
 
-**Source Priority:**
-1. **Context7 MCP** - For library/framework documentation (current, authoritative)
-2. **Official Docs** - For platform-specific or non-indexed libraries
-3. **WebSearch** - For comparisons, trends, community patterns (verify all findings)
+**来源优先级：**
+1. **Context7 MCP** - 用于库/框架文档（当前、权威）
+2. **官方文档** - 用于平台特定或未索引的库
+3. **WebSearch** - 用于比较、趋势、社区模式（验证所有发现）
 
-**Quality Checklist:**
-Before completing discovery, verify:
-- [ ] All claims have authoritative sources (Context7 or official docs)
-- [ ] Negative claims ("X is not possible") verified with official documentation
-- [ ] API syntax/configuration from Context7 or official docs (never WebSearch alone)
-- [ ] WebSearch findings cross-checked with authoritative sources
-- [ ] Recent updates/changelogs checked for breaking changes
-- [ ] Alternative approaches considered (not just first solution found)
+**质量检查清单：**
+在完成发现之前，验证：
+- [ ] 所有声明都有权威来源（Context7 或官方文档）
+- [ ] 否定声明（"X 是不可能的"）已通过官方文档验证
+- [ ] API 语法/配置来自 Context7 或官方文档（绝不单独使用 WebSearch）
+- [ ] WebSearch 发现与权威来源交叉检查
+- [ ] 最近更新/变更日志已检查破坏性更改
+- [ ] 考虑了替代方法（不只是找到的第一个解决方案）
 
-**Confidence Levels:**
-- HIGH: Context7 or official docs confirm
-- MEDIUM: WebSearch + Context7/official docs confirm
-- LOW: WebSearch only or training knowledge only (mark for validation)
+**置信度级别：**
+- 高：Context7 或官方文档确认
+- 中：WebSearch + Context7/官方文档确认
+- 低：仅 WebSearch 或仅训练知识（标记以进行验证）
 
 </discovery_protocol>
 
 
 <output_structure>
-Create `.planning/phases/XX-name/DISCOVERY.md`:
+创建 `.planning/phases/XX-name/DISCOVERY.md`：
 
 ```markdown
-# [Topic] Discovery
+# [主题] 发现
 
-## Summary
-[2-3 paragraph executive summary - what was researched, what was found, what's recommended]
+## 摘要
+[2-3 段执行摘要 — 研究了什么、发现了什么、推荐什么]
 
-## Primary Recommendation
-[What to do and why - be specific and actionable]
+## 主要建议
+[做什么以及为什么 — 要具体和可操作]
 
-## Alternatives Considered
-[What else was evaluated and why not chosen]
+## 考虑的替代方案
+[评估了什么以及为什么不选择]
 
-## Key Findings
+## 关键发现
 
-### [Category 1]
-- [Finding with source URL and relevance to our case]
+### [类别 1]
+- [带有源 URL 和与我们案例相关性的发现]
 
-### [Category 2]
-- [Finding with source URL and relevance]
+### [类别 2]
+- [带有源 URL 和相关性的发现]
 
-## Code Examples
-[Relevant implementation patterns, if applicable]
+## 代码示例
+[相关的实施模式（如果适用）]
 
-## Metadata
+## 元数据
 
 <metadata>
 <confidence level="high|medium|low">
-[Why this confidence level - based on source quality and verification]
+[为什么是这个置信度级别 - 基于来源质量和验证]
 </confidence>
 
 <sources>
-- [Primary authoritative sources used]
+- [使用的主要权威来源]
 </sources>
 
 <open_questions>
-[What couldn't be determined or needs validation during implementation]
+[无法确定或在实施期间需要验证的内容]
 </open_questions>
 
 <validation_checkpoints>
-[If confidence is LOW or MEDIUM, list specific things to verify during implementation]
+[如果置信度为低或中，列出实施期间要验证的具体内容]
 </validation_checkpoints>
 </metadata>
 ```
 </output_structure>
 
 <success_criteria>
-- All scope questions answered with authoritative sources
-- Quality checklist items completed
-- Clear primary recommendation
-- Low-confidence findings marked with validation checkpoints
-- Ready to inform PLAN.md creation
+- 所有范围问题都有权威来源回答
+- 质量检查清单项目已完成
+- 明确的主要建议
+- 低置信度发现标记了验证检查点
+- 准备支持 PLAN.md 创建
 </success_criteria>
 
 <guidelines>
-**When to use discovery:**
-- Technology choice unclear (library A vs B)
-- Best practices needed for unfamiliar integration
-- API/library investigation required
-- Single decision pending
+**何时使用发现：**
+- 技术选择不明确（库 A vs B）
+- 不熟悉的集成需要最佳实践
+- 需要调查 API/库
+- 单个待定决策
 
-**When NOT to use:**
-- Established patterns (CRUD, auth with known library)
-- Implementation details (defer to execution)
-- Questions answerable from existing project context
+**何时不使用：**
+- 既定模式（CRUD、使用已知库的身份验证）
+- 实施细节（推迟到执行）
+- 可从现有项目上下文回答的问题
 
-**When to use RESEARCH.md instead:**
-- Niche/complex domains (3D, games, audio, shaders)
-- Need ecosystem knowledge, not just library choice
-- "How do experts build this" questions
-- Use `/gsd:research-phase` for these
+**何时改用 RESEARCH.md：**
+- 小众/复杂领域（3D、游戏、音频、着色器）
+- 需要生态系统知识，而不仅仅是库选择
+- "专家如何构建这个"问题
+- 对这些使用 `/gsd:research-phase`
 </guidelines>

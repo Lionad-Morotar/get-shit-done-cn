@@ -1,176 +1,176 @@
-# State Template
+# 状态模板
 
-Template for `.planning/STATE.md` — the project's living memory.
+用于 `.planning/STATE.md` 的模板 — 项目的活动记忆。
 
 ---
 
-## File Template
+## 文件模板
 
 ```markdown
-# Project State
+# 项目状态
 
-## Project Reference
+## 项目参考
 
-See: .planning/PROJECT.md (updated [date])
+请参阅：.planning/PROJECT.md（更新于 [日期]）
 
-**Core value:** [One-liner from PROJECT.md Core Value section]
-**Current focus:** [Current phase name]
+**核心价值：** [来自 PROJECT.md 核心价值部分的一句话]
+**当前重点：** [当前阶段名称]
 
-## Current Position
+## 当前位置
 
-Phase: [X] of [Y] ([Phase name])
-Plan: [A] of [B] in current phase
-Status: [Ready to plan / Planning / Ready to execute / In progress / Phase complete]
-Last activity: [YYYY-MM-DD] — [What happened]
+阶段：[Y] 中的 [X]（[阶段名称]）
+计划：当前阶段中的 [B] 中的 [A]
+状态：[准备规划 / 规划中 / 准备执行 / 进行中 / 阶段完成]
+最后活动：[YYYY-MM-DD] — [发生了什么]
 
-Progress: [░░░░░░░░░░] 0%
+进度：[░░░░░░░░░░] 0%
 
-## Performance Metrics
+## 性能指标
 
-**Velocity:**
-- Total plans completed: [N]
-- Average duration: [X] min
-- Total execution time: [X.X] hours
+**速度：**
+- 已完成的总计划数：[N]
+- 平均持续时间：[X] 分钟
+- 总执行时间：[X.X] 小时
 
-**By Phase:**
+**按阶段：**
 
-| Phase | Plans | Total | Avg/Plan |
+| 阶段 | 计划数 | 总计 | 平均/计划 |
 |-------|-------|-------|----------|
 | - | - | - | - |
 
-**Recent Trend:**
-- Last 5 plans: [durations]
-- Trend: [Improving / Stable / Degrading]
+**最近趋势：**
+- 最近 5 个计划：[持续时间]
+- 趋势：[改善 / 稳定 / 恶化]
 
-*Updated after each plan completion*
+*每次计划完成后更新*
 
-## Accumulated Context
+## 累积上下文
 
-### Decisions
+### 决策
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
+决策记录在 PROJECT.md 关键决策表中。
+影响当前工作的最近决策：
 
-- [Phase X]: [Decision summary]
-- [Phase Y]: [Decision summary]
+- [阶段 X]：[决策摘要]
+- [阶段 Y]：[决策摘要]
 
-### Pending Todos
+### 待办事项
 
-[From .planning/todos/pending/ — ideas captured during sessions]
+[来自 .planning/todos/pending/ — 在会话期间捕获的想法]
 
-None yet.
+暂无。
 
-### Blockers/Concerns
+### 阻塞/问题
 
-[Issues that affect future work]
+[影响未来工作的问题]
 
-None yet.
+暂无。
 
-## Session Continuity
+## 会话连续性
 
-Last session: [YYYY-MM-DD HH:MM]
-Stopped at: [Description of last completed action]
-Resume file: [Path to .continue-here*.md if exists, otherwise "None"]
+上次会话：[YYYY-MM-DD HH:MM]
+停止于：[最后完成的操作的描述]
+恢复文件：[.continue-here*.md 的路径（如果存在），否则为"无"]
 ```
 
 <purpose>
 
-STATE.md is the project's short-term memory spanning all phases and sessions.
+STATE.md 是跨越所有阶段和会话的项目短期记忆。
 
-**Problem it solves:** Information is captured in summaries, issues, and decisions but not systematically consumed. Sessions start without context.
+**解决的问题：** 信息捕获在摘要、问题和决策中，但没有系统地消费。会话在没有上下文的情况下开始。
 
-**Solution:** A single, small file that's:
-- Read first in every workflow
-- Updated after every significant action
-- Contains digest of accumulated context
-- Enables instant session restoration
+**解决方案：** 单个、小文件，它：
+- 在每个工作流中首先读取
+- 在每个重要操作后更新
+- 包含累积上下文的摘要
+- 启用即时会话恢复
 
 </purpose>
 
 <lifecycle>
 
-**Creation:** After ROADMAP.md is created (during init)
-- Reference PROJECT.md (read it for current context)
-- Initialize empty accumulated context sections
-- Set position to "Phase 1 ready to plan"
+**创建：** 在创建 ROADMAP.md 之后（在 init 期间）
+- 引用 PROJECT.md（读取当前上下文）
+- 初始化空的累积上下文部分
+- 将位置设置为"阶段 1 准备规划"
 
-**Reading:** First step of every workflow
-- progress: Present status to user
-- plan: Inform planning decisions
-- execute: Know current position
-- transition: Know what's complete
+**读取：** 每个工作流的第一步
+- 进度：向用户展示当前状态
+- 规划：通知规划决策
+- 执行：知道当前位置
+- 过渡：知道完成了什么
 
-**Writing:** After every significant action
-- execute: After SUMMARY.md created
-  - Update position (phase, plan, status)
-  - Note new decisions (detail in PROJECT.md)
-  - Add blockers/concerns
-- transition: After phase marked complete
-  - Update progress bar
-  - Clear resolved blockers
-  - Refresh Project Reference date
+**写入：** 在每个重要操作之后
+- 执行：创建 SUMMARY.md 后
+  - 更新位置（阶段、计划、状态）
+  - 记录新决策（详细记录在 PROJECT.md 中）
+  - 添加阻塞/问题
+- 过渡：阶段标记完成后
+  - 更新进度条
+  - 清除已解决的阻塞
+  - 刷新项目参考日期
 
 </lifecycle>
 
 <sections>
 
-### Project Reference
-Points to PROJECT.md for full context. Includes:
-- Core value (the ONE thing that matters)
-- Current focus (which phase)
-- Last update date (triggers re-read if stale)
+### 项目参考
+指向 PROJECT.md 以获取完整上下文。包括：
+- 核心价值（唯一重要的事情）
+- 当前重点（哪个阶段）
+- 最后更新日期（如果过期则触发重新读取）
 
-Claude reads PROJECT.md directly for requirements, constraints, and decisions.
+Claude 直接读取 PROJECT.md 以获取需求、约束和决策。
 
-### Current Position
-Where we are right now:
-- Phase X of Y — which phase
-- Plan A of B — which plan within phase
-- Status — current state
-- Last activity — what happened most recently
-- Progress bar — visual indicator of overall completion
+### 当前位置
+我们现在在哪里：
+- Y 中的阶段 X — 哪个阶段
+- B 中的计划 A — 阶段内的哪个计划
+- 状态 — 当前状态
+- 最后活动 — 最近发生了什么
+- 进度条 — 整体完成的视觉指示器
 
-Progress calculation: (completed plans) / (total plans across all phases) × 100%
+进度计算：（已完成计划）/（所有阶段的总计划）× 100%
 
-### Performance Metrics
-Track velocity to understand execution patterns:
-- Total plans completed
-- Average duration per plan
-- Per-phase breakdown
-- Recent trend (improving/stable/degrading)
+### 性能指标
+跟踪速度以了解执行模式：
+- 已完成的总计划数
+- 每个计划的平均持续时间
+- 按阶段分解
+- 最近趋势（改善/稳定/恶化）
 
-Updated after each plan completion.
+每次计划完成后更新。
 
-### Accumulated Context
+### 累积上下文
 
-**Decisions:** Reference to PROJECT.md Key Decisions table, plus recent decisions summary for quick access. Full decision log lives in PROJECT.md.
+**决策：** 引用 PROJECT.md 关键决策表，加上最近决策摘要以便快速访问。完整决策日志存储在 PROJECT.md 中。
 
-**Pending Todos:** Ideas captured via /gsd:add-todo
-- Count of pending todos
-- Reference to .planning/todos/pending/
-- Brief list if few, count if many (e.g., "5 pending todos — see /gsd:check-todos")
+**待办事项：** 通过 /gsd:add-todo 捕获的想法
+- 待办事项计数
+- 引用 .planning/todos/pending/
+- 如果很少则简要列表，如果很多则计数（例如，"5 个待办事项 — 请参阅 /gsd:check-todos"）
 
-**Blockers/Concerns:** From "Next Phase Readiness" sections
-- Issues that affect future work
-- Prefix with originating phase
-- Cleared when addressed
+**阻塞/问题：** 来自"下一阶段就绪"部分
+- 影响未来工作的问题
+- 以起源阶段为前缀
+- 处理后清除
 
-### Session Continuity
-Enables instant resumption:
-- When was last session
-- What was last completed
-- Is there a .continue-here file to resume from
+### 会话连续性
+启用即时恢复：
+- 上次会话时间
+- 最后完成了什么
+- 是否有 .continue-here 文件可从中恢复
 
 </sections>
 
 <size_constraint>
 
-Keep STATE.md under 100 lines.
+保持 STATE.md 在 100 行以内。
 
-It's a DIGEST, not an archive. If accumulated context grows too large:
-- Keep only 3-5 recent decisions in summary (full log in PROJECT.md)
-- Keep only active blockers, remove resolved ones
+它是摘要，而不是存档。如果累积上下文增长太大：
+- 在摘要中仅保留 3-5 个最近决策（完整日志在 PROJECT.md 中）
+- 仅保留活动的阻塞，删除已解决的
 
-The goal is "read once, know where we are" — if it's too long, that fails.
+目标是"读取一次，知道我们在哪里" — 如果它太长，那就失败了。
 
 </size_constraint>

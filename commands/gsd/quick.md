@@ -1,6 +1,6 @@
 ---
 name: gsd:quick
-description: Execute a quick task with GSD guarantees (atomic commits, state tracking) but skip optional agents
+description: 使用 GSD 保证（原子提交、状态跟踪）执行快速任务，但跳过可选代理
 argument-hint: ""
 allowed-tools:
   - Read
@@ -13,15 +13,15 @@ allowed-tools:
   - AskUserQuestion
 ---
 <objective>
-Execute small, ad-hoc tasks with GSD guarantees (atomic commits, STATE.md tracking) while skipping optional agents (research, plan-checker, verifier).
+使用 GSD 保证（原子提交、STATE.md 跟踪）执行小型、临时任务，同时跳过可选代理（research、plan-checker、verifier）。
 
-Quick mode is the same system with a shorter path:
-- Spawns gsd-planner (quick mode) + gsd-executor(s)
-- Skips gsd-phase-researcher, gsd-plan-checker, gsd-verifier
-- Quick tasks live in `.planning/quick/` separate from planned phases
-- Updates STATE.md "Quick Tasks Completed" table (NOT ROADMAP.md)
+快速模式是相同系统的更短路径：
+- 生成 gsd-planner（快速模式）+ gsd-executor
+- 跳过 gsd-phase-researcher、gsd-plan-checker、gsd-verifier
+- 快速任务位于 `.planning/quick/` 中，与计划阶段分离
+- 更新 STATE.md"已完成的快速任务"表（而非 ROADMAP.md）
 
-Use when: You know exactly what to do and the task is small enough to not need research or verification.
+使用场景：你确切知道要做什么，并且任务足够小，不需要研究或验证。
 </objective>
 
 <execution_context>
@@ -33,6 +33,6 @@ Use when: You know exactly what to do and the task is small enough to not need r
 </context>
 
 <process>
-Execute the quick workflow from @~/.claude/get-shit-done/workflows/quick.md end-to-end.
-Preserve all workflow gates (validation, task description, planning, execution, state updates, commits).
+端到端执行来自 @~/.claude/get-shit-done/workflows/quick.md 的 quick 工作流。
+保留所有工作流关卡（验证、任务描述、规划、执行、状态更新、提交）。
 </process>

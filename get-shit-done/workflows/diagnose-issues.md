@@ -1,219 +1,219 @@
 <purpose>
-Orchestrate parallel debug agents to investigate UAT gaps and find root causes.
+编排并行调试代理来调查 UAT 缺陷并找到根本原因。
 
-After UAT finds gaps, spawn one debug agent per gap. Each agent investigates autonomously with symptoms pre-filled from UAT. Collect root causes, update UAT.md gaps with diagnosis, then hand off to plan-phase --gaps with actual diagnoses.
+UAT 发现缺陷后，为每个缺陷生成一个调试代理。每个代理使用来自 UAT 的预填症状自主调查。收集根本原因，更新 UAT.md 缺陷的诊断，然后交给 plan-phase --gaps 进行实际诊断。
 
-Orchestrator stays lean: parse gaps, spawn agents, collect results, update UAT.
+编排器保持精简：解析缺陷、生成代理、收集结果、更新 UAT。
 </purpose>
 
 <paths>
 DEBUG_DIR=.planning/debug
 
-Debug files use the `.planning/debug/` path (hidden directory with leading dot).
+调试文件使用 `.planning/debug/` 路径（带前导点的隐藏目录）。
 </paths>
 
 <core_principle>
-**Diagnose before planning fixes.**
+**先诊断再计划修复。**
 
-UAT tells us WHAT is broken (symptoms). Debug agents find WHY (root cause). plan-phase --gaps then creates targeted fixes based on actual causes, not guesses.
+UAT 告诉我们什么坏了（症状）。调试代理找到为什么坏（根本原因）。plan-phase --gaps 然后基于实际原因创建针对性修复，而不是猜测。
 
-Without diagnosis: "Comment doesn't refresh" → guess at fix → maybe wrong
-With diagnosis: "Comment doesn't refresh" → "useEffect missing dependency" → precise fix
+没有诊断："评论不刷新" → 猜测修复 → 可能错误
+有诊断："评论不刷新" → "useEffect 缺少依赖" → 精确修复
 </core_principle>
 
 <process>
 
 <step name="parse_gaps">
-**Extract gaps from UAT.md:**
+**从 UAT.md 提取缺陷：**
 
-Read the "Gaps" section (YAML format):
+读取 "Gaps" 部分（YAML 格式）：
 ```yaml
-- truth: "Comment appears immediately after submission"
+- truth: "提交后评论立即显示"
   status: failed
-  reason: "User reported: works but doesn't show until I refresh the page"
+  reason: "用户报告：有效但刷新页面后才显示"
   severity: major
   test: 2
   artifacts: []
   missing: []
 ```
 
-For each gap, also read the corresponding test from "Tests" section to get full context.
+对于每个缺陷，还要从 "Tests" 部分读取相应的测试以获取完整上下文。
 
-Build gap list:
+构建缺陷列表：
 ```
 gaps = [
-  {truth: "Comment appears immediately...", severity: "major", test_num: 2, reason: "..."},
-  {truth: "Reply button positioned correctly...", severity: "minor", test_num: 5, reason: "..."},
+  {truth: "提交后评论立即显示...", severity: "major", test_num: 2, reason: "..."},
+  {truth: "回复按钮位置正确...", severity: "minor", test_num: 5, reason: "..."},
   ...
 ]
 ```
 </step>
 
 <step name="report_plan">
-**Report diagnosis plan to user:**
+**向用户报告诊断计划：**
 
 ```
-## Diagnosing {N} Gaps
+## 正在诊断 {N} 个缺陷
 
-Spawning parallel debug agents to investigate root causes:
+生成并行调试代理来调查根本原因：
 
-| Gap (Truth) | Severity |
+| 缺陷（期望） | 严重程度 |
 |-------------|----------|
-| Comment appears immediately after submission | major |
-| Reply button positioned correctly | minor |
-| Delete removes comment | blocker |
+| 提交后评论立即显示 | major |
+| 回复按钮位置正确 | minor |
+| 删除移除评论 | blocker |
 
-Each agent will:
-1. Create DEBUG-{slug}.md with symptoms pre-filled
-2. Investigate autonomously (read code, form hypotheses, test)
-3. Return root cause
+每个代理将：
+1. 创建 DEBUG-{slug}.md 并预填症状
+2. 自主调查（读取代码、形成假设、测试）
+3. 返回根本原因
 
-This runs in parallel - all gaps investigated simultaneously.
+这是并行运行的 - 所有缺陷同时调查。
 ```
 </step>
 
 <step name="spawn_agents">
-**Spawn debug agents in parallel:**
+**并行生成调试代理：**
 
-For each gap, fill the debug-subagent-prompt template and spawn:
+对于每个缺陷，填充 debug-subagent-prompt 模板并生成：
 
 ```
 Task(
   prompt=filled_debug_subagent_prompt,
   subagent_type="general-purpose",
-  description="Debug: {truth_short}"
+  description="调试: {truth_short}"
 )
 ```
 
-**All agents spawn in single message** (parallel execution).
+**所有代理在单条消息中生成**（并行执行）。
 
-Template placeholders:
-- `{truth}`: The expected behavior that failed
-- `{expected}`: From UAT test
-- `{actual}`: Verbatim user description from reason field
-- `{errors}`: Any error messages from UAT (or "None reported")
-- `{reproduction}`: "Test {test_num} in UAT"
-- `{timeline}`: "Discovered during UAT"
-- `{goal}`: `find_root_cause_only` (UAT flow - plan-phase --gaps handles fixes)
-- `{slug}`: Generated from truth
+模板占位符：
+- `{truth}`: 失败的期望行为
+- `{expected}`: 来自 UAT 测试
+- `{actual}`: 来自 reason 字段的逐字用户描述
+- `{errors}`: 任何来自 UAT 的错误消息（或 "未报告"）
+- `{reproduction}`: "UAT 中的测试 {test_num}"
+- `{timeline}`: "在 UAT 期间发现"
+- `{goal}`: `find_root_cause_only`（UAT 流程 - plan-phase --gaps 处理修复）
+- `{slug}`: 从 truth 生成
 </step>
 
 <step name="collect_results">
-**Collect root causes from agents:**
+**从代理收集根本原因：**
 
-Each agent returns with:
+每个代理返回：
 ```
-## ROOT CAUSE FOUND
+## 发现根本原因
 
-**Debug Session:** ${DEBUG_DIR}/{slug}.md
+**调试会话：** ${DEBUG_DIR}/{slug}.md
 
-**Root Cause:** {specific cause with evidence}
+**根本原因：** {带有证据的具体原因}
 
-**Evidence Summary:**
-- {key finding 1}
-- {key finding 2}
-- {key finding 3}
+**证据摘要：**
+- {关键发现 1}
+- {关键发现 2}
+- {关键发现 3}
 
-**Files Involved:**
-- {file1}: {what's wrong}
-- {file2}: {related issue}
+**涉及的文件：**
+- {file1}: {问题}
+- {file2}: {相关问题}
 
-**Suggested Fix Direction:** {brief hint for plan-phase --gaps}
+**建议的修复方向：** {plan-phase --gaps 的简要提示}
 ```
 
-Parse each return to extract:
-- root_cause: The diagnosed cause
-- files: Files involved
-- debug_path: Path to debug session file
-- suggested_fix: Hint for gap closure plan
+解析每个返回以提取：
+- root_cause: 诊断的原因
+- files: 涉及的文件
+- debug_path: 调试会话文件路径
+- suggested_fix: 缺陷关闭计划的提示
 
-If agent returns `## INVESTIGATION INCONCLUSIVE`:
-- root_cause: "Investigation inconclusive - manual review needed"
-- Note which issue needs manual attention
-- Include remaining possibilities from agent return
+如果代理返回 `## INVESTIGATION INCONCLUSIVE`：
+- root_cause: "调查不确定 - 需要人工审查"
+- 标记哪个问题需要人工注意
+- 包含代理返回的剩余可能性
 </step>
 
 <step name="update_uat">
-**Update UAT.md gaps with diagnosis:**
+**用诊断更新 UAT.md 缺陷：**
 
-For each gap in the Gaps section, add artifacts and missing fields:
+对于 Gaps 部分的每个缺陷，添加 artifacts 和 missing 字段：
 
 ```yaml
-- truth: "Comment appears immediately after submission"
+- truth: "提交后评论立即显示"
   status: failed
-  reason: "User reported: works but doesn't show until I refresh the page"
+  reason: "用户报告：有效但刷新页面后才显示"
   severity: major
   test: 2
-  root_cause: "useEffect in CommentList.tsx missing commentCount dependency"
+  root_cause: "CommentList.tsx 中的 useEffect 缺少 commentCount 依赖"
   artifacts:
     - path: "src/components/CommentList.tsx"
-      issue: "useEffect missing dependency"
+      issue: "useEffect 缺少依赖"
   missing:
-    - "Add commentCount to useEffect dependency array"
-    - "Trigger re-render when new comment added"
+    - "将 commentCount 添加到 useEffect 依赖数组"
+    - "当添加新评论时触发重新渲染"
   debug_session: .planning/debug/comment-not-refreshing.md
 ```
 
-Update status in frontmatter to "diagnosed".
+更新 frontmatter 中的状态为 "diagnosed"。
 
-Commit the updated UAT.md:
+提交更新后的 UAT.md：
 ```bash
-node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs({phase}): add root causes from diagnosis" --files ".planning/phases/XX-name/{phase}-UAT.md"
+node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs({phase}): 添加来自诊断的根本原因" --files ".planning/phases/XX-name/{phase}-UAT.md"
 ```
 </step>
 
 <step name="report_results">
-**Report diagnosis results and hand off:**
+**报告诊断结果并交接：**
 
-Display:
+显示：
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► DIAGNOSIS COMPLETE
+ GSD ► 诊断完成
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-| Gap (Truth) | Root Cause | Files |
+| 缺陷（期望） | 根本原因 | 文件 |
 |-------------|------------|-------|
-| Comment appears immediately | useEffect missing dependency | CommentList.tsx |
-| Reply button positioned correctly | CSS flex order incorrect | ReplyButton.tsx |
-| Delete removes comment | API missing auth header | api/comments.ts |
+| 提交后评论立即显示 | useEffect 缺少依赖 | CommentList.tsx |
+| 回复按钮位置正确 | CSS flex 顺序不正确 | ReplyButton.tsx |
+| 删除移除评论 | API 缺少 auth 头 | api/comments.ts |
 
-Debug sessions: ${DEBUG_DIR}/
+调试会话：${DEBUG_DIR}/
 
-Proceeding to plan fixes...
+正在继续计划修复...
 ```
 
-Return to verify-work orchestrator for automatic planning.
-Do NOT offer manual next steps - verify-work handles the rest.
+返回 verify-work 编排器进行自动规划。
+不要提供手动下一步 - verify-work 处理其余部分。
 </step>
 
 </process>
 
 <context_efficiency>
-Agents start with symptoms pre-filled from UAT (no symptom gathering).
-Agents only diagnose—plan-phase --gaps handles fixes (no fix application).
+代理从 UAT 预填的症状开始（无需症状收集）。
+代理只诊断 - plan-phase --gaps 处理修复（不应用修复）。
 </context_efficiency>
 
 <failure_handling>
-**Agent fails to find root cause:**
-- Mark gap as "needs manual review"
-- Continue with other gaps
-- Report incomplete diagnosis
+**代理未能找到根本原因：**
+- 标记缺陷为 "needs manual review"
+- 继续处理其他缺陷
+- 报告不完整的诊断
 
-**Agent times out:**
-- Check DEBUG-{slug}.md for partial progress
-- Can resume with /gsd:debug
+**代理超时：**
+- 检查 DEBUG-{slug}.md 的部分进度
+- 可以用 /gsd:debug 恢复
 
-**All agents fail:**
-- Something systemic (permissions, git, etc.)
-- Report for manual investigation
-- Fall back to plan-phase --gaps without root causes (less precise)
+**所有代理失败：**
+- 系统性问题（权限、git 等）
+- 报告人工调查
+- 回退到 plan-phase --gaps 而没有根本原因（不太精确）
 </failure_handling>
 
 <success_criteria>
-- [ ] Gaps parsed from UAT.md
-- [ ] Debug agents spawned in parallel
-- [ ] Root causes collected from all agents
-- [ ] UAT.md gaps updated with artifacts and missing
-- [ ] Debug sessions saved to ${DEBUG_DIR}/
-- [ ] Hand off to verify-work for automatic planning
+- [ ] 从 UAT.md 解析缺陷
+- [ ] 并行生成调试代理
+- [ ] 从所有代理收集根本原因
+- [ ] 用 artifacts 和 missing 更新 UAT.md 缺陷
+- [ ] 调试会话保存到 ${DEBUG_DIR}/
+- [ ] 交接给 verify-work 进行自动规划
 </success_criteria>

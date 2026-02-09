@@ -1,80 +1,79 @@
 <purpose>
-Switch the model profile used by GSD agents. Controls which Claude model each agent uses, balancing quality vs token spend.
+切换 GSD 代理使用的模型配置。控制每个代理使用哪个 Claude 模型，平衡质量与令牌消耗。
 </purpose>
 
 <required_reading>
-Read all files referenced by the invoking prompt's execution_context before starting.
+在开始之前读取调用提示的 execution_context 引用的所有文件。
 </required_reading>
 
 <process>
 
 <step name="validate">
-Validate argument:
+验证参数：
 
 ```
-if $ARGUMENTS.profile not in ["quality", "balanced", "budget"]:
-  Error: Invalid profile "$ARGUMENTS.profile"
-  Valid profiles: quality, balanced, budget
-  EXIT
-```
-</step>
+如果 $ARGUMENTS.profile 不在 ["quality"、"balanced"、"budget"] 中：
+  错误：无效的配置 "$ARGUMENTS.profile"
+  有效配置：quality、balanced、budget
+  退出
+```</step>
 
 <step name="ensure_and_load_config">
-Ensure config exists and load current state:
+确保配置存在并加载当前状态：
 
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js config-ensure-section
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js state load)
 ```
 
-This creates `.planning/config.json` with defaults if missing and loads current config.
+如果缺少，这将使用默认值创建 `.planning/config.json` 并加载当前配置。
 </step>
 
 <step name="update_config">
-Read current config from state load or directly:
+从状态加载或直接读取当前配置：
 
-Update `model_profile` field:
+更新 `model_profile` 字段：
 ```json
 {
   "model_profile": "$ARGUMENTS.profile"
 }
 ```
 
-Write updated config back to `.planning/config.json`.
+将更新的配置写回到 `.planning/config.json`。
 </step>
 
 <step name="confirm">
-Display confirmation with model table for selected profile:
+显示确认并展示所选配置的模型表：
 
 ```
-✓ Model profile set to: $ARGUMENTS.profile
+✓ 模型配置已设置为：$ARGUMENTS.profile
 
-Agents will now use:
+代理现在将使用：
 
-[Show table from MODEL_PROFILES in gsd-tools.js for selected profile]
+[从 gsd-tools.js 中所选配置的 MODEL_PROFILES 显示表]
 
-Example:
-| Agent | Model |
+示例：
+| 代理 | 模型 |
 |-------|-------|
 | gsd-planner | opus |
 | gsd-executor | sonnet |
 | gsd-verifier | haiku |
 | ... | ... |
 
-Next spawned agents will use the new profile.
+下一个生成的代理将使用新配置。
 ```
 
-Map profile names:
-- quality: use "quality" column from MODEL_PROFILES
-- balanced: use "balanced" column from MODEL_PROFILES
-- budget: use "budget" column from MODEL_PROFILES
+映射配置名称：
+- quality：使用 MODEL_PROFILES 中的 "quality" 列
+- balanced：使用 MODEL_PROFILES 中的 "balanced" 列
+- budget：使用 MODEL_PROFILES 中的 "budget" 列
 </step>
 
 </process>
 
 <success_criteria>
-- [ ] Argument validated
-- [ ] Config file ensured
-- [ ] Config updated with new model_profile
-- [ ] Confirmation displayed with model table
-</success_criteria>
+- [ ] 参数已验证
+- [ ] 配置文件已确保
+- [ ] 配置已更新并带有新的 model_profile
+- [ ] 已显示确认并带有模型表
+      </success_criteria>

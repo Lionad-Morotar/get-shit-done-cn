@@ -1,28 +1,28 @@
-# Git Planning Commit
+# Git 规划提交
 
-Commit planning artifacts using the gsd-tools CLI, which automatically checks `commit_docs` config and gitignore status.
+使用 gsd-tools CLI 提交规划产物,它会自动检查 `commit_docs` 配置和 gitignore 状态。
 
-## Commit via CLI
+## 通过 CLI 提交
 
-Always use `gsd-tools.js commit` for `.planning/` files — it handles `commit_docs` and gitignore checks automatically:
+始终使用 `gsd-tools.js commit` 提交 `.planning/` 文件 — 它自动处理 `commit_docs` 和 gitignore 检查:
 
 ```bash
-node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs({scope}): {description}" --files .planning/STATE.md .planning/ROADMAP.md
+node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs({范围}): {描述}" --files .planning/STATE.md .planning/ROADMAP.md
 ```
 
-The CLI will return `skipped` (with reason) if `commit_docs` is `false` or `.planning/` is gitignored. No manual conditional checks needed.
+如果 `commit_docs` 为 `false` 或 `.planning/` 被 gitignore,CLI 将返回 `skipped`(附带原因)。无需手动条件检查。
 
-## Amend previous commit
+## 修改上一次提交
 
-To fold `.planning/` file changes into the previous commit:
+要将 `.planning/` 文件更改折叠到上一次提交中:
 
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js commit "" --files .planning/codebase/*.md --amend
 ```
 
-## Commit Message Patterns
+## 提交消息模式
 
-| Command | Scope | Example |
+| 命令 | 范围 | 示例 |
 |---------|-------|---------|
 | plan-phase | phase | `docs(phase-03): create authentication plans` |
 | execute-phase | phase | `docs(phase-03): complete authentication phase` |
@@ -31,8 +31,8 @@ node ~/.claude/get-shit-done/bin/gsd-tools.js commit "" --files .planning/codeba
 | insert-phase | phase | `docs: insert phase 16.1 (critical fix)` |
 | add-phase | phase | `docs: add phase 07 (settings page)` |
 
-## When to Skip
+## 何时跳过
 
-- `commit_docs: false` in config
-- `.planning/` is gitignored
-- No changes to commit (check with `git status --porcelain .planning/`)
+- 配置中 `commit_docs: false`
+- `.planning/` 被 gitignore
+- 没有要提交的更改(使用 `git status --porcelain .planning/` 检查)

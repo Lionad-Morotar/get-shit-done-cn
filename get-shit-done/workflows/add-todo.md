@@ -1,50 +1,50 @@
 <purpose>
-Capture an idea, task, or issue that surfaces during a GSD session as a structured todo for later work. Enables "thought → capture → continue" flow without losing context.
+捕获在 GSD 会话期间出现的想法、任务或问题作为结构化待办事项供以后工作。启用"想法 → 捕获 → 继续"流程而不会丢失上下文。
 </purpose>
 
 <required_reading>
-Read all files referenced by the invoking prompt's execution_context before starting.
+在开始之前读取调用提示的 execution_context 引用的所有文件。
 </required_reading>
 
 <process>
 
 <step name="init_context">
-Load todo context:
+加载待办事项上下文：
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init todos)
 ```
 
-Extract from init JSON: `commit_docs`, `date`, `timestamp`, `todo_count`, `todos`, `pending_dir`, `todos_dir_exists`.
+从 init JSON 中提取：`commit_docs`、`date`、`timestamp`、`todo_count`、`todos`、`pending_dir`、`todos_dir_exists`。
 
-Ensure directories exist:
+确保目录存在：
 ```bash
 mkdir -p .planning/todos/pending .planning/todos/done
 ```
 
-Note existing areas from the todos array for consistency in infer_area step.
+注意来自 todos 数组的现有区域，以便在 infer_area 步骤中保持一致。
 </step>
 
 <step name="extract_content">
-**With arguments:** Use as the title/focus.
-- `/gsd:add-todo Add auth token refresh` → title = "Add auth token refresh"
+**带参数：** 用作标题/焦点。
+- `/gsd:add-todo 添加身份验证令牌刷新` → title = "添加身份验证令牌刷新"
 
-**Without arguments:** Analyze recent conversation to extract:
-- The specific problem, idea, or task discussed
-- Relevant file paths mentioned
-- Technical details (error messages, line numbers, constraints)
+**不带参数：** 分析最近对话以提取：
+- 讨论的具体问题、想法或任务
+- 提到的相关文件路径
+- 技术细节（错误消息、行号、约束）
 
-Formulate:
-- `title`: 3-10 word descriptive title (action verb preferred)
-- `problem`: What's wrong or why this is needed
-- `solution`: Approach hints or "TBD" if just an idea
-- `files`: Relevant paths with line numbers from conversation
+制定：
+- `title`：3-10 个单词的描述性标题（首选动作动词）
+- `problem`：什么错了或为什么需要这个
+- `solution`：方法提示或如果只是想法则为"TBD"
+- `files`：来自对话的相关路径及行号
 </step>
 
 <step name="infer_area">
-Infer area from file paths:
+从文件路径推断区域：
 
-| Path pattern | Area |
+| 路径模式 | 区域 |
 |--------------|------|
 | `src/api/*`, `api/*` | `api` |
 | `src/components/*`, `src/ui/*` | `ui` |
@@ -54,39 +54,39 @@ Infer area from file paths:
 | `docs/*` | `docs` |
 | `.planning/*` | `planning` |
 | `scripts/*`, `bin/*` | `tooling` |
-| No files or unclear | `general` |
+| 无文件或不清楚 | `general` |
 
-Use existing area from step 2 if similar match exists.
+如果存在类似匹配，则使用步骤 2 中的现有区域。
 </step>
 
 <step name="check_duplicates">
 ```bash
-# Search for key words from title in existing todos
-grep -l -i "[key words from title]" .planning/todos/pending/*.md 2>/dev/null
+# 在现有待办事项中搜索来自标题的关键字
+grep -l -i "[来自标题的关键字]" .planning/todos/pending/*.md 2>/dev/null
 ```
 
-If potential duplicate found:
-1. Read the existing todo
-2. Compare scope
+如果发现潜在重复：
+1. 读取现有待办事项
+2. 比较范围
 
-If overlapping, use AskUserQuestion:
-- header: "Duplicate?"
-- question: "Similar todo exists: [title]. What would you like to do?"
+如果重叠，使用 AskUserQuestion：
+- header: "重复？"
+- question: "存在类似的待办事项：[title]。您想做什么？"
 - options:
-  - "Skip" — keep existing todo
-  - "Replace" — update existing with new context
-  - "Add anyway" — create as separate todo
+  - "跳过" — 保留现有待办事项
+  - "替换" — 使用新上下文更新现有
+  - "仍然添加" — 创建为单独的待办事项
 </step>
 
 <step name="create_file">
-Use values from init context: `timestamp` and `date` are already available.
+使用 init 上下文中的值：`timestamp` 和 `date` 已经可用。
 
-Generate slug for the title:
+为标题生成 slug：
 ```bash
 slug=$(node ~/.claude/get-shit-done/bin/gsd-tools.js generate-slug "$title" --raw)
 ```
 
-Write to `.planning/todos/pending/${date}-${slug}.md`:
+写入到 `.planning/todos/pending/${date}-${slug}.md`：
 
 ```markdown
 ---
@@ -97,61 +97,61 @@ files:
   - [file:lines]
 ---
 
-## Problem
+## 问题
 
-[problem description - enough context for future Claude to understand weeks later]
+[问题描述 - 足够的上下文供未来的 Claude 数周后理解]
 
-## Solution
+## 解决方案
 
-[approach hints or "TBD"]
+[方法提示或"TBD"]
 ```
 </step>
 
 <step name="update_state">
-If `.planning/STATE.md` exists:
+如果 `.planning/STATE.md` 存在：
 
-1. Use `todo_count` from init context (or re-run `init todos` if count changed)
-2. Update "### Pending Todos" under "## Accumulated Context"
+1. 使用 init 上下文中的 `todo_count`（或如果计数更改则重新运行 `init todos`）
+2. 更新"## 累积上下文"下的"### 待办待处理事项"
 </step>
 
 <step name="git_commit">
-Commit the todo and any updated state:
+提交待办事项和任何更新的状态：
 
 ```bash
-node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs: capture todo - [title]" --files .planning/todos/pending/[filename] .planning/STATE.md
+node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs: 捕获待办事项 - [title]" --files .planning/todos/pending/[filename] .planning/STATE.md
 ```
 
-Tool respects `commit_docs` config and gitignore automatically.
+工具自动尊重 `commit_docs` 配置和 gitignore。
 
-Confirm: "Committed: docs: capture todo - [title]"
+确认："已提交：docs: 捕获待办事项 - [title]"
 </step>
 
 <step name="confirm">
 ```
-Todo saved: .planning/todos/pending/[filename]
+待办事项已保存：.planning/todos/pending/[filename]
 
   [title]
-  Area: [area]
-  Files: [count] referenced
+  区域：[area]
+  文件：[count] 个引用
 
 ---
 
-Would you like to:
+您想：
 
-1. Continue with current work
-2. Add another todo
-3. View all todos (/gsd:check-todos)
+1. 继续当前工作
+2. 添加另一个待办事项
+3. 查看所有待办事项（/gsd:check-todos）
 ```
 </step>
 
 </process>
 
 <success_criteria>
-- [ ] Directory structure exists
-- [ ] Todo file created with valid frontmatter
-- [ ] Problem section has enough context for future Claude
-- [ ] No duplicates (checked and resolved)
-- [ ] Area consistent with existing todos
-- [ ] STATE.md updated if exists
-- [ ] Todo and state committed to git
+- [ ] 目录结构存在
+- [ ] 待办事项文件已创建，具有有效的前置元数据
+- [ ] 问题部分有足够的上下文供未来的 Claude 使用
+- [ ] 无重复（已检查并解决）
+- [ ] 区域与现有待办事项一致
+- [ ] 如果存在则更新 STATE.md
+- [ ] 待办事项和状态已提交到 git
 </success_criteria>

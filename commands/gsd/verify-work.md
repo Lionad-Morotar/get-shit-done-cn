@@ -1,7 +1,7 @@
 ---
 name: gsd:verify-work
-description: Validate built features through conversational UAT
-argument-hint: "[phase number, e.g., '4']"
+description: 通过对话式 UAT 验证已构建的功能
+argument-hint: "[阶段编号，例如 '4']"
 allowed-tools:
   - Read
   - Bash
@@ -12,11 +12,11 @@ allowed-tools:
   - Task
 ---
 <objective>
-Validate built features through conversational testing with persistent state.
+通过带有持久状态的对话式测试验证已构建的功能。
 
-Purpose: Confirm what Claude built actually works from user's perspective. One test at a time, plain text responses, no interrogation. When issues are found, automatically diagnose, plan fixes, and prepare for execution.
+目的：确认 Claude 构建的内容从用户角度来看确实有效。一次测试一个，纯文本响应，无审问。发现问题时，自动诊断、规划修复并准备执行。
 
-Output: {phase}-UAT.md tracking all test results. If issues found: diagnosed gaps, verified fix plans ready for /gsd:execute-phase
+输出：{phase}-UAT.md 跟踪所有测试结果。如果发现问题：诊断的差距、验证的修复计划准备用于 /gsd:execute-phase
 </objective>
 
 <execution_context>
@@ -25,15 +25,15 @@ Output: {phase}-UAT.md tracking all test results. If issues found: diagnosed gap
 </execution_context>
 
 <context>
-Phase: $ARGUMENTS (optional)
-- If provided: Test specific phase (e.g., "4")
-- If not provided: Check for active sessions or prompt for phase
+阶段: $ARGUMENTS（可选）
+- 如果提供：测试特定阶段（例如，"4"）
+- 如果未提供：检查活动会话或提示输入阶段
 
 @.planning/STATE.md
 @.planning/ROADMAP.md
 </context>
 
 <process>
-Execute the verify-work workflow from @~/.claude/get-shit-done/workflows/verify-work.md end-to-end.
-Preserve all workflow gates (session management, test presentation, diagnosis, fix planning, routing).
+端到端执行来自 @~/.claude/get-shit-done/workflows/verify-work.md 的 verify-work 工作流。
+保留所有工作流关卡（会话管理、测试呈现、诊断、修复规划、路由）。
 </process>

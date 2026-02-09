@@ -1,48 +1,48 @@
-# Phase Argument Parsing
+# 阶段参数解析
 
-Parse and normalize phase arguments for commands that operate on phases.
+解析和规范化用于操作阶段的命令的阶段参数。
 
-## Extraction
+## 提取
 
-From `$ARGUMENTS`:
-- Extract phase number (first numeric argument)
-- Extract flags (prefixed with `--`)
-- Remaining text is description (for insert/add commands)
+从 `$ARGUMENTS` 中：
+- 提取阶段编号（第一个数字参数）
+- 提取标志（以 `--` 为前缀）
+- 剩余文本为描述（用于插入/添加命令）
 
-## Using gsd-tools
+## 使用 gsd-tools
 
-The `find-phase` command handles normalization and validation in one step:
+`find-phase` 命令一步完成规范化和验证：
 
 ```bash
 PHASE_INFO=$(node ~/.claude/get-shit-done/bin/gsd-tools.js find-phase "${PHASE}")
 ```
 
-Returns JSON with:
-- `found`: true/false
-- `directory`: Full path to phase directory
-- `phase_number`: Normalized number (e.g., "06", "06.1")
-- `phase_name`: Name portion (e.g., "foundation")
-- `plans`: Array of PLAN.md files
-- `summaries`: Array of SUMMARY.md files
+返回 JSON 包含：
+- `found`：true/false
+- `directory`：阶段目录的完整路径
+- `phase_number`：规范化的编号（如 "06"、"06.1"）
+- `phase_name`：名称部分（如 "foundation"）
+- `plans`：PLAN.md 文件数组
+- `summaries`：SUMMARY.md 文件数组
 
-## Manual Normalization (Legacy)
+## 手动规范化（传统方法）
 
-Zero-pad integer phases to 2 digits. Preserve decimal suffixes.
+将整数阶段零填充为 2 位数字。保留小数后缀。
 
 ```bash
-# Normalize phase number
+# 规范化阶段编号
 if [[ "$PHASE" =~ ^[0-9]+$ ]]; then
-  # Integer: 8 → 08
+  # 整数： 8 → 08
   PHASE=$(printf "%02d" "$PHASE")
 elif [[ "$PHASE" =~ ^([0-9]+)\.([0-9]+)$ ]]; then
-  # Decimal: 2.1 → 02.1
+  # 小数： 2.1 → 02.1
   PHASE=$(printf "%02d.%s" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}")
 fi
 ```
 
-## Validation
+## 验证
 
-Use `roadmap get-phase` to validate phase exists:
+使用 `roadmap get-phase` 验证阶段是否存在：
 
 ```bash
 PHASE_CHECK=$(node ~/.claude/get-shit-done/bin/gsd-tools.js roadmap get-phase "${PHASE}")
@@ -52,9 +52,9 @@ if [ "$(echo "$PHASE_CHECK" | jq -r '.found')" = "false" ]; then
 fi
 ```
 
-## Directory Lookup
+## 目录查找
 
-Use `find-phase` for directory lookup:
+使用 `find-phase` 进行目录查找：
 
 ```bash
 PHASE_DIR=$(node ~/.claude/get-shit-done/bin/gsd-tools.js find-phase "${PHASE}" --raw)

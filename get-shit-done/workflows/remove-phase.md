@@ -1,133 +1,133 @@
 <purpose>
-Remove an unstarted future phase from the project roadmap, delete its directory, renumber all subsequent phases to maintain a clean linear sequence, and commit the change. The git commit serves as the historical record of removal.
+从项目路线图中删除未开始的未来阶段，删除其目录，重新编号所有后续阶段以保持清洁的线性序列，并提交更改。git 提交作为删除的历史记录。
 </purpose>
 
 <required_reading>
-Read all files referenced by the invoking prompt's execution_context before starting.
+在开始之前读取调用提示的 execution_context 引用的所有文件。
 </required_reading>
 
 <process>
 
 <step name="parse_arguments">
-Parse the command arguments:
-- Argument is the phase number to remove (integer or decimal)
-- Example: `/gsd:remove-phase 17` → phase = 17
-- Example: `/gsd:remove-phase 16.1` → phase = 16.1
+解析命令参数：
+- 参数是要删除的阶段编号（整数或小数）
+- 示例：`/gsd:remove-phase 17` → phase = 17
+- 示例：`/gsd:remove-phase 16.1` → phase = 16.1
 
-If no argument provided:
+如果未提供参数：
 
 ```
-ERROR: Phase number required
-Usage: /gsd:remove-phase <phase-number>
-Example: /gsd:remove-phase 17
+错误：需要阶段编号
+用法：/gsd:remove-phase <阶段编号>
+示例：/gsd:remove-phase 17
 ```
 
-Exit.
+退出。
 </step>
 
 <step name="init_context">
-Load phase operation context:
+加载阶段操作上下文：
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init phase-op "${target}")
 ```
 
-Extract: `phase_found`, `phase_dir`, `phase_number`, `commit_docs`, `roadmap_exists`.
+提取：`phase_found`、`phase_dir`、`phase_number`、`commit_docs`、`roadmap_exists`。
 
-Also read STATE.md and ROADMAP.md content for parsing current position.
+还要读取 STATE.md 和 ROADMAP.md 内容以解析当前位置。
 </step>
 
 <step name="validate_future_phase">
-Verify the phase is a future phase (not started):
+验证阶段是未来阶段（未开始）：
 
-1. Compare target phase to current phase from STATE.md
-2. Target must be > current phase number
+1. 将目标阶段与 STATE.md 中的当前阶段进行比较
+2. 目标必须 > 当前阶段编号
 
-If target <= current phase:
+如果目标 <= 当前阶段：
 
 ```
-ERROR: Cannot remove Phase {target}
+错误：无法删除阶段 {target}
 
-Only future phases can be removed:
-- Current phase: {current}
-- Phase {target} is current or completed
+只有未来阶段可以被删除：
+- 当前阶段：{current}
+- 阶段 {target} 是当前或已完成
 
-To abandon current work, use /gsd:pause-work instead.
+要放弃当前工作，请使用 /gsd:pause-work。
 ```
 
-Exit.
+退出。
 </step>
 
 <step name="confirm_removal">
-Present removal summary and confirm:
+展示删除摘要并确认：
 
 ```
-Removing Phase {target}: {Name}
+删除阶段 {target}：{名称}
 
-This will:
-- Delete: .planning/phases/{target}-{slug}/
-- Renumber all subsequent phases
-- Update: ROADMAP.md, STATE.md
+这将：
+- 删除：.planning/phases/{target}-{slug}/
+- 重新编号所有后续阶段
+- 更新：ROADMAP.md、STATE.md
 
-Proceed? (y/n)
+继续？(y/n)
 ```
 
-Wait for confirmation.
+等待确认。
 </step>
 
 <step name="execute_removal">
-**Delegate the entire removal operation to gsd-tools:**
+**将整个删除操作委托给 gsd-tools：**
 
 ```bash
 RESULT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js phase remove "${target}")
 ```
 
-If the phase has executed plans (SUMMARY.md files), gsd-tools will error. Use `--force` only if the user confirms:
+如果阶段有已执行的计划（SUMMARY.md 文件），gsd-tools 将报错。仅当用户确认时使用 `--force`：
 
 ```bash
 RESULT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js phase remove "${target}" --force)
 ```
 
-The CLI handles:
-- Deleting the phase directory
-- Renumbering all subsequent directories (in reverse order to avoid conflicts)
-- Renaming all files inside renumbered directories (PLAN.md, SUMMARY.md, etc.)
-- Updating ROADMAP.md (removing section, renumbering all phase references, updating dependencies)
-- Updating STATE.md (decrementing phase count)
+CLI 处理：
+- 删除阶段目录
+- 重新编号所有后续目录（按相反顺序以避免冲突）
+- 重命名重新编号目录内的所有文件（PLAN.md、SUMMARY.md 等）
+- 更新 ROADMAP.md（删除部分、重新编号所有阶段引用、更新依赖关系）
+- 更新 STATE.md（减少阶段计数）
 
-Extract from result: `removed`, `directory_deleted`, `renamed_directories`, `renamed_files`, `roadmap_updated`, `state_updated`.
+从结果中提取：`removed`、`directory_deleted`、`renamed_directories`、`renamed_files`、`roadmap_updated`、`state_updated`。
 </step>
 
 <step name="commit">
-Stage and commit the removal:
+暂存并提交删除：
 
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js commit "chore: remove phase {target} ({original-phase-name})" --files .planning/
 ```
 
-The commit message preserves the historical record of what was removed.
+提交消息保留删除内容的历史记录。
 </step>
 
 <step name="completion">
-Present completion summary:
+展示完成摘要：
 
 ```
-Phase {target} ({original-name}) removed.
+阶段 {target} ({original-name}) 已删除。
 
-Changes:
-- Deleted: .planning/phases/{target}-{slug}/
-- Renumbered: {N} directories and {M} files
-- Updated: ROADMAP.md, STATE.md
-- Committed: chore: remove phase {target} ({original-name})
+更改：
+- 已删除：.planning/phases/{target}-{slug}/
+- 已重新编号：{N} 个目录和 {M} 个文件
+- 已更新：ROADMAP.md、STATE.md
+- 已提交：chore: remove phase {target} ({original-phase-name})
 
 ---
 
-## What's Next
+## ▶ 接下来
 
-Would you like to:
-- `/gsd:progress` — see updated roadmap status
-- Continue with current phase
-- Review roadmap
+您想要：
+- `/gsd:progress` — 查看更新的路线图状态
+- 继续当前阶段
+- 审查路线图
 
 ---
 ```
@@ -137,18 +137,18 @@ Would you like to:
 
 <anti_patterns>
 
-- Don't remove completed phases (have SUMMARY.md files) without --force
-- Don't remove current or past phases
-- Don't manually renumber — use `gsd-tools phase remove` which handles all renumbering
-- Don't add "removed phase" notes to STATE.md — git commit is the record
-- Don't modify completed phase directories
+- 不要删除已完成的阶段（有 SUMMARY.md 文件），除非使用 --force
+- 不要删除当前或过去的阶段
+- 不要手动重新编号 — 使用 `gsd-tools phase remove`，它处理所有重新编号
+- 不要在 STATE.md 中添加"已删除阶段"注释 — git 提交就是记录
+- 不要修改已完成的阶段目录
 </anti_patterns>
 
 <success_criteria>
-Phase removal is complete when:
+阶段删除完成时：
 
-- [ ] Target phase validated as future/unstarted
-- [ ] `gsd-tools phase remove` executed successfully
-- [ ] Changes committed with descriptive message
-- [ ] User informed of changes
-</success_criteria>
+- [ ] 目标阶段验证为未来/未开始
+- [ ] `gsd-tools phase remove` 成功执行
+- [ ] 更改已提交并带有描述性消息
+- [ ] 用户已通知更改
+      </success_criteria>

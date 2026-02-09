@@ -1,18 +1,18 @@
 ---
 name: gsd:join-discord
-description: Join the GSD Discord community
+description: 加入 GSD Discord 社区
 ---
 
 <objective>
-Display the Discord invite link for the GSD community server.
+显示 GSD 社区服务器的 Discord 邀请链接。
 </objective>
 
 <output>
-# Join the GSD Discord
+# 加入 GSD Discord
 
-Connect with other GSD users, get help, share what you're building, and stay updated.
+与其他 GSD 用户联系、获取帮助、分享你正在构建的内容并保持更新。
 
-**Invite link:** https://discord.gg/5JJgD5svVS
+**邀请链接：** https://discord.gg/5JJgD5svVS
 
-Click the link or paste it into your browser to join.
+点击链接或将其粘贴到浏览器中以加入。
 </output>

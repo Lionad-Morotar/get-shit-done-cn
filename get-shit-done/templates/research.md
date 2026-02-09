@@ -1,328 +1,328 @@
-# Research Template
+# 研究模板
 
-Template for `.planning/phases/XX-name/{phase}-RESEARCH.md` - comprehensive ecosystem research before planning.
+用于 `.planning/phases/XX-name/{phase}-RESEARCH.md` 的模板 — 规划前的综合生态系统研究。
 
-**Purpose:** Document what Claude needs to know to implement a phase well - not just "which library" but "how do experts build this."
+**目的：** 记录 Claude 需要知道什么才能很好地实施阶段 — 不仅是"使用哪个库"，还有"专家如何构建这个"。
 
 ---
 
-## File Template
+## 文件模板
 
 ```markdown
-# Phase [X]: [Name] - Research
+# 阶段 [X]: [名称] - 研究
 
-**Researched:** [date]
-**Domain:** [primary technology/problem domain]
-**Confidence:** [HIGH/MEDIUM/LOW]
+**研究时间：** [日期]
+**领域：** [主要技术/问题领域]
+**置信度：** [高/中/低]
 
 <user_constraints>
-## User Constraints (from CONTEXT.md)
+## 用户约束（来自 CONTEXT.md）
 
-**CRITICAL:** If CONTEXT.md exists from /gsd:discuss-phase, copy locked decisions here verbatim. These MUST be honored by the planner.
+**关键：** 如果存在来自 /gsd:discuss-phase 的 CONTEXT.md，逐字复制锁定决策。规划者必须遵守这些。
 
-### Locked Decisions
-[Copy from CONTEXT.md `## Decisions` section - these are NON-NEGOTIABLE]
-- [Decision 1]
-- [Decision 2]
+### 锁定决策
+[从 CONTEXT.md `## Decisions` 部分复制 — 这些是不可协商的]
+- [决策 1]
+- [决策 2]
 
-### Claude's Discretion
-[Copy from CONTEXT.md - areas where researcher/planner can choose]
-- [Area 1]
-- [Area 2]
+### Claude 的裁量权
+[从 CONTEXT.md 复制 — 研究者/规划者可以选择的领域]
+- [领域 1]
+- [领域 2]
 
-### Deferred Ideas (OUT OF SCOPE)
-[Copy from CONTEXT.md - do NOT research or plan these]
-- [Deferred 1]
-- [Deferred 2]
+### 延迟的想法（超出范围）
+[从 CONTEXT.md 复制 — 不要研究或规划这些]
+- [延迟 1]
+- [延迟 2]
 
-**If no CONTEXT.md exists:** Write "No user constraints - all decisions at Claude's discretion"
+**如果不存在 CONTEXT.md：** 写"无用户约束 - 所有决策由 Claude 裁量"
 </user_constraints>
 
 <research_summary>
-## Summary
+## 摘要
 
-[2-3 paragraph executive summary]
-- What was researched
-- What the standard approach is
-- Key recommendations
+[2-3 段执行摘要]
+- 研究了什么
+- 标准方法是什么
+- 关键建议
 
-**Primary recommendation:** [one-liner actionable guidance]
+**主要建议：** [一句话可操作的指导]
 </research_summary>
 
 <standard_stack>
-## Standard Stack
+## 标准技术栈
 
-The established libraries/tools for this domain:
+此领域的既定库/工具：
 
-### Core
-| Library | Version | Purpose | Why Standard |
+### 核心
+| 库 | 版本 | 目的 | 为何标准 |
 |---------|---------|---------|--------------|
-| [name] | [ver] | [what it does] | [why experts use it] |
-| [name] | [ver] | [what it does] | [why experts use it] |
+| [名称] | [版本] | [做什么] | [为何专家使用它] |
+| [名称] | [版本] | [做什么] | [为何专家使用它] |
 
-### Supporting
-| Library | Version | Purpose | When to Use |
+### 支持
+| 库 | 版本 | 目的 | 何时使用 |
 |---------|---------|---------|-------------|
-| [name] | [ver] | [what it does] | [use case] |
-| [name] | [ver] | [what it does] | [use case] |
+| [名称] | [版本] | [做什么] | [用例] |
+| [名称] | [版本] | [做什么] | [用例] |
 
-### Alternatives Considered
-| Instead of | Could Use | Tradeoff |
+### 考虑的替代方案
+| 而非 | 可以使用 | 权衡 |
 |------------|-----------|----------|
-| [standard] | [alternative] | [when alternative makes sense] |
+| [标准] | [替代方案] | [替代方案何时有意义] |
 
-**Installation:**
+**安装：**
 ```bash
-npm install [packages]
-# or
-yarn add [packages]
+npm install [软件包]
+# 或
+yarn add [软件包]
 ```
 </standard_stack>
 
 <architecture_patterns>
-## Architecture Patterns
+## 架构模式
 
-### Recommended Project Structure
+### 推荐的项目结构
 ```
 src/
-├── [folder]/        # [purpose]
-├── [folder]/        # [purpose]
-└── [folder]/        # [purpose]
+├── [文件夹]/        # [目的]
+├── [文件夹]/        # [目的]
+└── [文件夹]/        # [目的]
 ```
 
-### Pattern 1: [Pattern Name]
-**What:** [description]
-**When to use:** [conditions]
-**Example:**
+### 模式 1：[模式名称]
+**什么：** [描述]
+**何时使用：** [条件]
+**示例：**
 ```typescript
-// [code example from Context7/official docs]
+// [来自 Context7/官方文档的代码示例]
 ```
 
-### Pattern 2: [Pattern Name]
-**What:** [description]
-**When to use:** [conditions]
-**Example:**
+### 模式 2：[模式名称]
+**什么：** [描述]
+**何时使用：** [条件]
+**示例：**
 ```typescript
-// [code example]
+// [代码示例]
 ```
 
-### Anti-Patterns to Avoid
-- **[Anti-pattern]:** [why it's bad, what to do instead]
-- **[Anti-pattern]:** [why it's bad, what to do instead]
+### 避免的反模式
+- **[反模式]：** [为何不好，改为做什么]
+- **[反模式]：** [为何不好，改为做什么]
 </architecture_patterns>
 
 <dont_hand_roll>
-## Don't Hand-Roll
+## 不要自己构建
 
-Problems that look simple but have existing solutions:
+看起来简单但有现有解决方案的问题：
 
-| Problem | Don't Build | Use Instead | Why |
+| 问题 | 不要构建 | 改为使用 | 原因 |
 |---------|-------------|-------------|-----|
-| [problem] | [what you'd build] | [library] | [edge cases, complexity] |
-| [problem] | [what you'd build] | [library] | [edge cases, complexity] |
-| [problem] | [what you'd build] | [library] | [edge cases, complexity] |
+| [问题] | [你会构建什么] | [库] | [边缘情况，复杂性] |
+| [问题] | [你会构建什么] | [库] | [边缘情况，复杂性] |
+| [问题] | [你会构建什么] | [库] | [边缘情况，复杂性] |
 
-**Key insight:** [why custom solutions are worse in this domain]
+**关键洞察：** [为何此领域的自定义解决方案更差]
 </dont_hand_roll>
 
 <common_pitfalls>
-## Common Pitfalls
+## 常见陷阱
 
-### Pitfall 1: [Name]
-**What goes wrong:** [description]
-**Why it happens:** [root cause]
-**How to avoid:** [prevention strategy]
-**Warning signs:** [how to detect early]
+### 陷阱 1：[名称]
+**出了什么问题：** [描述]
+**为何发生：** [根本原因]
+**如何避免：** [预防策略]
+**警告信号：** [如何早期检测]
 
-### Pitfall 2: [Name]
-**What goes wrong:** [description]
-**Why it happens:** [root cause]
-**How to avoid:** [prevention strategy]
-**Warning signs:** [how to detect early]
+### 陷阱 2：[名称]
+**出了什么问题：** [描述]
+**为何发生：** [根本原因]
+**如何避免：** [预防策略]
+**警告信号：** [如何早期检测]
 
-### Pitfall 3: [Name]
-**What goes wrong:** [description]
-**Why it happens:** [root cause]
-**How to avoid:** [prevention strategy]
-**Warning signs:** [how to detect early]
+### 陷阱 3：[名称]
+**出了什么问题：** [描述]
+**为何发生：** [根本原因]
+**如何避免：** [预防策略]
+**警告信号：** [如何早期检测]
 </common_pitfalls>
 
 <code_examples>
-## Code Examples
+## 代码示例
 
-Verified patterns from official sources:
+来自官方来源的验证模式：
 
-### [Common Operation 1]
+### [常见操作 1]
 ```typescript
-// Source: [Context7/official docs URL]
-[code]
+// 来源：[Context7/官方文档 URL]
+[代码]
 ```
 
-### [Common Operation 2]
+### [常见操作 2]
 ```typescript
-// Source: [Context7/official docs URL]
-[code]
+// 来源：[Context7/官方文档 URL]
+[代码]
 ```
 
-### [Common Operation 3]
+### [常见操作 3]
 ```typescript
-// Source: [Context7/official docs URL]
-[code]
+// 来源：[Context7/官方文档 URL]
+[代码]
 ```
 </code_examples>
 
 <sota_updates>
-## State of the Art (2024-2025)
+## 最新技术（2024-2025）
 
-What's changed recently:
+最近发生了什么变化：
 
-| Old Approach | Current Approach | When Changed | Impact |
+| 旧方法 | 当前方法 | 何时变化 | 影响 |
 |--------------|------------------|--------------|--------|
-| [old] | [new] | [date/version] | [what it means for implementation] |
+| [旧] | [新] | [日期/版本] | [对实施的意义] |
 
-**New tools/patterns to consider:**
-- [Tool/Pattern]: [what it enables, when to use]
-- [Tool/Pattern]: [what it enables, when to use]
+**要考虑的新工具/模式：**
+- [工具/模式]：[启用什么，何时使用]
+- [工具/模式]：[启用什么，何时使用]
 
-**Deprecated/outdated:**
-- [Thing]: [why it's outdated, what replaced it]
+**已弃用/过时：**
+- [东西]：[为何过时，什么替代了它]
 </sota_updates>
 
 <open_questions>
-## Open Questions
+## 未解决问题
 
-Things that couldn't be fully resolved:
+无法完全解决的事情：
 
-1. **[Question]**
-   - What we know: [partial info]
-   - What's unclear: [the gap]
-   - Recommendation: [how to handle during planning/execution]
+1. **[问题]**
+   - 我们知道的：[部分信息]
+   - 不清楚的：[差距]
+   - 建议：[在规划/执行期间如何处理]
 
-2. **[Question]**
-   - What we know: [partial info]
-   - What's unclear: [the gap]
-   - Recommendation: [how to handle]
+2. **[问题]**
+   - 我们知道的：[部分信息]
+   - 不清楚的：[差距]
+   - 建议：[如何处理]
 </open_questions>
 
 <sources>
-## Sources
+## 来源
 
-### Primary (HIGH confidence)
-- [Context7 library ID] - [topics fetched]
-- [Official docs URL] - [what was checked]
+### 主要（高置信度）
+- [Context7 库 ID] - [获取的主题]
+- [官方文档 URL] - [检查的内容]
 
-### Secondary (MEDIUM confidence)
-- [WebSearch verified with official source] - [finding + verification]
+### 次要（中置信度）
+- [WebSearch 经官方来源验证] - [发现 + 验证]
 
-### Tertiary (LOW confidence - needs validation)
-- [WebSearch only] - [finding, marked for validation during implementation]
+### 第三级（低置信度 - 需要验证）
+- [仅 WebSearch] - [发现，在实施期间标记为验证]
 </sources>
 
 <metadata>
-## Metadata
+## 元数据
 
-**Research scope:**
-- Core technology: [what]
-- Ecosystem: [libraries explored]
-- Patterns: [patterns researched]
-- Pitfalls: [areas checked]
+**研究范围：**
+- 核心技术：[什么]
+- 生态系统：[探索的库]
+- 模式：[研究的模式]
+- 陷阱：[检查的领域]
 
-**Confidence breakdown:**
-- Standard stack: [HIGH/MEDIUM/LOW] - [reason]
-- Architecture: [HIGH/MEDIUM/LOW] - [reason]
-- Pitfalls: [HIGH/MEDIUM/LOW] - [reason]
-- Code examples: [HIGH/MEDIUM/LOW] - [reason]
+**置信度细分：**
+- 标准技术栈：[高/中/低] - [原因]
+- 架构：[高/中/低] - [原因]
+- 陷阱：[高/中/低] - [原因]
+- 代码示例：[高/中/低] - [原因]
 
-**Research date:** [date]
-**Valid until:** [estimate - 30 days for stable tech, 7 days for fast-moving]
+**研究日期：** [日期]
+**有效期至：** [估计 - 稳定技术 30 天，快速移动的 7 天]
 </metadata>
 
 ---
 
-*Phase: XX-name*
-*Research completed: [date]*
-*Ready for planning: [yes/no]*
+*阶段：XX-name*
+*研究完成：[日期]*
+*准备好规划：[是/否]*
 ```
 
 ---
 
-## Good Example
+## 好示例
 
 ```markdown
-# Phase 3: 3D City Driving - Research
+# 阶段 3：3D 城市驾驶 - 研究
 
-**Researched:** 2025-01-20
-**Domain:** Three.js 3D web game with driving mechanics
-**Confidence:** HIGH
+**研究时间：** 2025-01-20
+**领域：** Three.js 3D Web 游戏，具有驾驶机制
+**置信度：** 高
 
 <research_summary>
-## Summary
+## 摘要
 
-Researched the Three.js ecosystem for building a 3D city driving game. The standard approach uses Three.js with React Three Fiber for component architecture, Rapier for physics, and drei for common helpers.
+研究了用于构建 3D 城市驾驶游戏的 Three.js 生态系统。标准方法使用 Three.js 与 React Three Fiber 用于组件架构，Rapier 用于物理，drei 用于常见辅助。
 
-Key finding: Don't hand-roll physics or collision detection. Rapier (via @react-three/rapier) handles vehicle physics, terrain collision, and city object interactions efficiently. Custom physics code leads to bugs and performance issues.
+关键发现：不要自己构建物理或碰撞检测。Rapier（通过 @react-three/rapier）高效地处理车辆物理、地形碰撞和城市对象交互。自定义物理代码会导致错误和性能问题。
 
-**Primary recommendation:** Use R3F + Rapier + drei stack. Start with vehicle controller from drei, add Rapier vehicle physics, build city with instanced meshes for performance.
+**主要建议：** 使用 R3F + Rapier + drei 技术栈。从 drei 的车辆控制器开始，添加 Rapier 车辆物理，使用实例化网格构建城市以获得性能。
 </research_summary>
 
 <standard_stack>
-## Standard Stack
+## 标准技术栈
 
-### Core
-| Library | Version | Purpose | Why Standard |
+### 核心
+| 库 | 版本 | 目的 | 为何标准 |
 |---------|---------|---------|--------------|
-| three | 0.160.0 | 3D rendering | The standard for web 3D |
-| @react-three/fiber | 8.15.0 | React renderer for Three.js | Declarative 3D, better DX |
-| @react-three/drei | 9.92.0 | Helpers and abstractions | Solves common problems |
-| @react-three/rapier | 1.2.1 | Physics engine bindings | Best physics for R3F |
+| three | 0.160.0 | 3D 渲染 | Web 3D 的标准 |
+| @react-three/fiber | 8.15.0 | Three.js 的 React 渲染器 | 声明式 3D，更好的 DX |
+| @react-three/drei | 9.92.0 | 辅助和抽象 | 解决常见问题 |
+| @react-three/rapier | 1.2.1 | 物理引擎绑定 | R3F 的最佳物理 |
 
-### Supporting
-| Library | Version | Purpose | When to Use |
+### 支持
+| 库 | 版本 | 目的 | 何时使用 |
 |---------|---------|---------|-------------|
-| @react-three/postprocessing | 2.16.0 | Visual effects | Bloom, DOF, motion blur |
-| leva | 0.9.35 | Debug UI | Tweaking parameters |
-| zustand | 4.4.7 | State management | Game state, UI state |
-| use-sound | 4.0.1 | Audio | Engine sounds, ambient |
+| @react-three/postprocessing | 2.16.0 | 视觉效果 | 泛光、景深、运动模糊 |
+| leva | 0.9.35 | 调试 UI | 调整参数 |
+| zustand | 4.4.7 | 状态管理 | 游戏状态、UI 状态 |
+| use-sound | 4.0.1 | 音频 | 引擎声音、环境音 |
 
-### Alternatives Considered
-| Instead of | Could Use | Tradeoff |
+### 考虑的替代方案
+| 而非 | 可以使用 | 权衡 |
 |------------|-----------|----------|
-| Rapier | Cannon.js | Cannon simpler but less performant for vehicles |
-| R3F | Vanilla Three | Vanilla if no React, but R3F DX is much better |
-| drei | Custom helpers | drei is battle-tested, don't reinvent |
+| Rapier | Cannon.js | Cannon 更简单但车辆性能较差 |
+| R3F | 原生 Three | 如果没有 React 则使用原生，但 R3F DX 更好 |
+| drei | 自定义辅助 | drei 经过实战测试，不要重新发明 |
 
-**Installation:**
+**安装：**
 ```bash
 npm install three @react-three/fiber @react-three/drei @react-three/rapier zustand
 ```
 </standard_stack>
 
 <architecture_patterns>
-## Architecture Patterns
+## 架构模式
 
-### Recommended Project Structure
+### 推荐的项目结构
 ```
 src/
 ├── components/
-│   ├── Vehicle/          # Player car with physics
-│   ├── City/             # City generation and buildings
-│   ├── Road/             # Road network
-│   └── Environment/      # Sky, lighting, fog
+│   ├── Vehicle/          # 带物理的玩家汽车
+│   ├── City/             # 城市生成和建筑
+│   ├── Road/             # 道路网络
+│   └── Environment/      # 天空、照明、雾
 ├── hooks/
 │   ├── useVehicleControls.ts
 │   └── useGameState.ts
 ├── stores/
-│   └── gameStore.ts      # Zustand state
+│   └── gameStore.ts      # Zustand 状态
 └── utils/
-    └── cityGenerator.ts  # Procedural generation helpers
+    └── cityGenerator.ts  # 程序化生成辅助
 ```
 
-### Pattern 1: Vehicle with Rapier Physics
-**What:** Use RigidBody with vehicle-specific settings, not custom physics
-**When to use:** Any ground vehicle
-**Example:**
+### 模式 1：具有 Rapier 物理的车辆
+**什么：** 使用具有车辆特定设置的 RigidBody，而不是自定义物理
+**何时使用：** 任何地面车辆
+**示例：**
 ```typescript
-// Source: @react-three/rapier docs
+// 来源：@react-three/rapier 文档
 import { RigidBody, useRapier } from '@react-three/rapier'
 
 function Vehicle() {
@@ -346,12 +346,12 @@ function Vehicle() {
 }
 ```
 
-### Pattern 2: Instanced Meshes for City
-**What:** Use InstancedMesh for repeated objects (buildings, trees, props)
-**When to use:** >100 similar objects
-**Example:**
+### 模式 2：城市的实例化网格
+**什么：** 对重复对象使用 InstancedMesh（建筑、树木、道具）
+**何时使用：** >100 个相似对象
+**示例：**
 ```typescript
-// Source: drei docs
+// 来源：drei 文档
 import { Instances, Instance } from '@react-three/drei'
 
 function Buildings({ positions }) {
@@ -367,54 +367,54 @@ function Buildings({ positions }) {
 }
 ```
 
-### Anti-Patterns to Avoid
-- **Creating meshes in render loop:** Create once, update transforms only
-- **Not using InstancedMesh:** Individual meshes for buildings kills performance
-- **Custom physics math:** Rapier handles it better, every time
+### 避免的反模式
+- **在渲染循环中创建网格：** 创建一次，仅更新变换
+- **不使用 InstancedMesh：** 单独的网格用于建筑会扼杀性能
+- **自定义物理数学：** Rapier 每次都更好地处理它
 </architecture_patterns>
 
 <dont_hand_roll>
-## Don't Hand-Roll
+## 不要自己构建
 
-| Problem | Don't Build | Use Instead | Why |
+| 问题 | 不要构建 | 改为使用 | 原因 |
 |---------|-------------|-------------|-----|
-| Vehicle physics | Custom velocity/acceleration | Rapier RigidBody | Wheel friction, suspension, collisions are complex |
-| Collision detection | Raycasting everything | Rapier colliders | Performance, edge cases, tunneling |
-| Camera follow | Manual lerp | drei CameraControls or custom with useFrame | Smooth interpolation, bounds |
-| City generation | Pure random placement | Grid-based with noise for variation | Random looks wrong, grid is predictable |
-| LOD | Manual distance checks | drei <Detailed> | Handles transitions, hysteresis |
+| 车辆物理 | 自定义速度/加速度 | Rapier RigidBody | 车轮摩擦、悬挂、碰撞很复杂 |
+| 碰撞检测 | 光线投射所有东西 | Rapier colliders | 性能、边缘情况、隧道 |
+| 相机跟随 | 手动 lerp | drei CameraControls 或自定义与 useFrame | 平滑插值、边界 |
+| 城市生成 | 纯随机放置 | 基于网格，使用噪声变化 | 随机看起来错误，网格可预测 |
+| LOD | 手动距离检查 | drei <Detailed> | 处理转换、滞后 |
 
-**Key insight:** 3D game development has 40+ years of solved problems. Rapier implements proper physics simulation. drei implements proper 3D helpers. Fighting these leads to bugs that look like "game feel" issues but are actually physics edge cases.
+**关键洞察：** 3D 游戏开发有 40 多年的已解决问题。Rapier 实现了适当的物理模拟。drei 实现了适当的 3D 辅助。对抗这些会导致看起来像"游戏感觉"问题的错误，但实际上是物理边缘情况。
 </dont_hand_roll>
 
 <common_pitfalls>
-## Common Pitfalls
+## 常见陷阱
 
-### Pitfall 1: Physics Tunneling
-**What goes wrong:** Fast objects pass through walls
-**Why it happens:** Default physics step too large for velocity
-**How to avoid:** Use CCD (Continuous Collision Detection) in Rapier
-**Warning signs:** Objects randomly appearing outside buildings
+### 陷阱 1：物理隧道
+**出了什么问题：** 快速物体穿过墙壁
+**为何发生：** 默认物理步长对于速度来说太大
+**如何避免：** 在 Rapier 中使用 CCD（连续碰撞检测）
+**警告信号：** 对象随机出现在建筑物外
 
-### Pitfall 2: Performance Death by Draw Calls
-**What goes wrong:** Game stutters with many buildings
-**Why it happens:** Each mesh = 1 draw call, hundreds of buildings = hundreds of calls
-**How to avoid:** InstancedMesh for similar objects, merge static geometry
-**Warning signs:** GPU bound, low FPS despite simple scene
+### 陷阱 2：绘制调用导致的性能死亡
+**出了什么问题：** 许多建筑时游戏卡顿
+**为何发生：** 每个网格 = 1 个绘制调用，数百个建筑 = 数百个调用
+**如何避免：** 对相似对象使用 InstancedMesh，合并静态几何体
+**警告信号：** GPU 受限，尽管场景简单但 FPS 低
 
-### Pitfall 3: Vehicle "Floaty" Feel
-**What goes wrong:** Car doesn't feel grounded
-**Why it happens:** Missing proper wheel/suspension simulation
-**How to avoid:** Use Rapier vehicle controller or tune mass/damping carefully
-**Warning signs:** Car bounces oddly, doesn't grip corners
+### 陷阱 3：车辆"漂浮"感
+**出了什么问题：** 汽车感觉不接地
+**为何发生：** 缺少适当的车轮/悬挂模拟
+**如何避免：** 使用 Rapier 车辆控制器或仔细调整质量/阻尼
+**警告信号：** 汽车奇怪地反弹，不抓地过弯
 </common_pitfalls>
 
 <code_examples>
-## Code Examples
+## 代码示例
 
-### Basic R3F + Rapier Setup
+### 基本 R3F + Rapier 设置
 ```typescript
-// Source: @react-three/rapier getting started
+// 来源：@react-three/rapier 入门
 import { Canvas } from '@react-three/fiber'
 import { Physics } from '@react-three/rapier'
 
@@ -431,9 +431,9 @@ function Game() {
 }
 ```
 
-### Vehicle Controls Hook
+### 车辆控制 Hook
 ```typescript
-// Source: Community pattern, verified with drei docs
+// 来源：社区模式，经 drei 文档验证
 import { useFrame } from '@react-three/fiber'
 import { useKeyboardControls } from '@react-three/drei'
 
@@ -459,94 +459,94 @@ function useVehicleControls(rigidBodyRef) {
 </code_examples>
 
 <sota_updates>
-## State of the Art (2024-2025)
+## 最新技术（2024-2025）
 
-| Old Approach | Current Approach | When Changed | Impact |
+| 旧方法 | 当前方法 | 何时变化 | 影响 |
 |--------------|------------------|--------------|--------|
-| cannon-es | Rapier | 2023 | Rapier is faster, better maintained |
-| vanilla Three.js | React Three Fiber | 2020+ | R3F is now standard for React apps |
-| Manual InstancedMesh | drei <Instances> | 2022 | Simpler API, handles updates |
+| cannon-es | Rapier | 2023 | Rapier 更快，维护更好 |
+| 原生 Three.js | React Three Fiber | 2020+ | R3F 现在是 React 应用的标准 |
+| 手动 InstancedMesh | drei <Instances> | 2022 | 更简单的 API，处理更新 |
 
-**New tools/patterns to consider:**
-- **WebGPU:** Coming but not production-ready for games yet (2025)
-- **drei Gltf helpers:** <useGLTF.preload> for loading screens
+**要考虑的新工具/模式：**
+- **WebGPU：** 即将到来但游戏尚未生产就绪（2025）
+- **drei Gltf 辅助：** <useGLTF.preload> 用于加载屏幕
 
-**Deprecated/outdated:**
-- **cannon.js (original):** Use cannon-es fork or better, Rapier
-- **Manual raycasting for physics:** Just use Rapier colliders
+**已弃用/过时：**
+- **cannon.js（原始）：** 使用 cannon-es 分支或更好的 Rapier
+- **物理的手动光线投射：** 只需使用 Rapier colliders
 </sota_updates>
 
 <sources>
-## Sources
+## 来源
 
-### Primary (HIGH confidence)
-- /pmndrs/react-three-fiber - getting started, hooks, performance
-- /pmndrs/drei - instances, controls, helpers
-- /dimforge/rapier-js - physics setup, vehicle physics
+### 主要（高置信度）
+- /pmndrs/react-three-fiber - 入门、hooks、性能
+- /pmndrs/drei - instances、controls、helpers
+- /dimforge/rapier-js - 物理设置、车辆物理
 
-### Secondary (MEDIUM confidence)
-- Three.js discourse "city driving game" threads - verified patterns against docs
-- R3F examples repository - verified code works
+### 次要（中置信度）
+- Three.js 论坛"城市驾驶游戏"主题 - 经文档验证的模式
+- R3F 示例存储库 - 验证代码有效
 
-### Tertiary (LOW confidence - needs validation)
-- None - all findings verified
+### 第三级（低置信度 - 需要验证）
+- 无 - 所有发现已验证
 </sources>
 
 <metadata>
-## Metadata
+## 元数据
 
-**Research scope:**
-- Core technology: Three.js + React Three Fiber
-- Ecosystem: Rapier, drei, zustand
-- Patterns: Vehicle physics, instancing, city generation
-- Pitfalls: Performance, physics, feel
+**研究范围：**
+- 核心技术：Three.js + React Three Fiber
+- 生态系统：Rapier、drei、zustand
+- 模式：车辆物理、实例化、城市生成
+- 陷阱：性能、物理、感觉
 
-**Confidence breakdown:**
-- Standard stack: HIGH - verified with Context7, widely used
-- Architecture: HIGH - from official examples
-- Pitfalls: HIGH - documented in discourse, verified in docs
-- Code examples: HIGH - from Context7/official sources
+**置信度细分：**
+- 标准技术栈：高 - 经 Context7 验证，广泛使用
+- 架构：高 - 来自官方示例
+- 陷阱：高 - 在论坛中记录，在文档中验证
+- 代码示例：高 - 来自 Context7/官方来源
 
-**Research date:** 2025-01-20
-**Valid until:** 2025-02-20 (30 days - R3F ecosystem stable)
+**研究日期：** 2025-01-20
+**有效期至：** 2025-02-20（30 天 - R3F 生态系统稳定）
 </metadata>
 
 ---
 
-*Phase: 03-city-driving*
-*Research completed: 2025-01-20*
-*Ready for planning: yes*
+*阶段：03-city-driving*
+*研究完成：2025-01-20*
+*准备好规划：是*
 ```
 
 ---
 
-## Guidelines
+## 指南
 
-**When to create:**
-- Before planning phases in niche/complex domains
-- When Claude's training data is likely stale or sparse
-- When "how do experts do this" matters more than "which library"
+**何时创建：**
+- 在规划小众/复杂领域的阶段之前
+- 当 Claude 的训练数据可能过时或稀疏时
+- 当"专家如何做此"比"使用哪个库"更重要时
 
-**Structure:**
-- Use XML tags for section markers (matches GSD templates)
-- Seven core sections: summary, standard_stack, architecture_patterns, dont_hand_roll, common_pitfalls, code_examples, sources
-- All sections required (drives comprehensive research)
+**结构：**
+- 对部分标记使用 XML 标签（匹配 GSD 模板）
+- 七个核心部分：摘要、standard_stack、architecture_patterns、dont_hand_roll、common_pitfalls、code_examples、sources
+- 所有部分都需要（驱动全面研究）
 
-**Content quality:**
-- Standard stack: Specific versions, not just names
-- Architecture: Include actual code examples from authoritative sources
-- Don't hand-roll: Be explicit about what problems to NOT solve yourself
-- Pitfalls: Include warning signs, not just "don't do this"
-- Sources: Mark confidence levels honestly
+**内容质量：**
+- 标准技术栈：特定版本，而不仅仅是名称
+- 架构：包括来自权威来源的实际代码示例
+- 不要自己构建：明确说明不要自己解决什么问题
+- 陷阱：包括警告信号，而不仅仅是"不要这样做"
+- 来源：诚实标记置信度级别
 
-**Integration with planning:**
-- RESEARCH.md loaded as @context reference in PLAN.md
-- Standard stack informs library choices
-- Don't hand-roll prevents custom solutions
-- Pitfalls inform verification criteria
-- Code examples can be referenced in task actions
+**与规划的集成：**
+- RESEARCH.md 作为 PLAN.md 中的 @context 引用加载
+- 标准技术栈通知库选择
+- 不要自己构建防止自定义解决方案
+- 陷阱通知验证标准
+- 代码示例可以在任务操作中引用
 
-**After creation:**
-- File lives in phase directory: `.planning/phases/XX-name/{phase}-RESEARCH.md`
-- Referenced during planning workflow
-- plan-phase loads it automatically when present
+**创建后：**
+- 文件位于阶段目录：`.planning/phases/XX-name/{phase}-RESEARCH.md`
+- 在规划工作流期间引用
+- plan-phase 在存在时自动加载它

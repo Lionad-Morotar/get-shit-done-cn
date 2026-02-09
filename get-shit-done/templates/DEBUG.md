@@ -1,57 +1,57 @@
-# Debug Template
+# 调试模板
 
-Template for `.planning/debug/[slug].md` — active debug session tracking.
+用于 `.planning/debug/[slug].md` 的模板 — 活动调试会话跟踪。
 
 ---
 
-## File Template
+## 文件模板
 
 ```markdown
 ---
 status: gathering | investigating | fixing | verifying | resolved
-trigger: "[verbatim user input]"
-created: [ISO timestamp]
-updated: [ISO timestamp]
+trigger: "[逐字用户输入]"
+created: [ISO 时间戳]
+updated: [ISO 时间戳]
 ---
 
-## Current Focus
-<!-- OVERWRITE on each update - always reflects NOW -->
+## 当前焦点
+<!-- 每次更新时覆盖 - 始终反映现在 -->
 
-hypothesis: [current theory being tested]
-test: [how testing it]
-expecting: [what result means if true/false]
-next_action: [immediate next step]
+hypothesis: [当前正在测试的理论]
+test: [如何测试它]
+expecting: [如果为真/假意味着什么结果]
+next_action: [直接的下一步]
 
-## Symptoms
-<!-- Written during gathering, then immutable -->
+## 症状
+<!-- 在收集期间编写，然后不可变 -->
 
-expected: [what should happen]
-actual: [what actually happens]
-errors: [error messages if any]
-reproduction: [how to trigger]
-started: [when it broke / always broken]
+expected: [应该发生什么]
+actual: [实际发生了什么]
+errors: [错误信息（如果有）]
+reproduction: [如何触发]
+started: [何时出问题 / 一直有问题]
 
-## Eliminated
-<!-- APPEND only - prevents re-investigating after /clear -->
+## 已排除
+<!-- 仅追加 - 防止在 /clear 后重新调查 -->
 
-- hypothesis: [theory that was wrong]
-  evidence: [what disproved it]
-  timestamp: [when eliminated]
+- hypothesis: [错误的理论]
+  evidence: [什么反驳了它]
+  timestamp: [何时排除]
 
-## Evidence
-<!-- APPEND only - facts discovered during investigation -->
+## 证据
+<!-- 仅追加 - 调查期间发现的事实 -->
 
-- timestamp: [when found]
-  checked: [what was examined]
-  found: [what was observed]
-  implication: [what this means]
+- timestamp: [何时发现]
+  checked: [检查了什么]
+  found: [观察到什么]
+  implication: [这意味着什么]
 
-## Resolution
-<!-- OVERWRITE as understanding evolves -->
+## 解决方案
+<!-- 随着理解演变而覆盖 -->
 
-root_cause: [empty until found]
-fix: [empty until applied]
-verification: [empty until verified]
+root_cause: [找到之前为空]
+fix: [应用之前为空]
+verification: [验证之前为空]
 files_changed: []
 ```
 
@@ -59,101 +59,101 @@ files_changed: []
 
 <section_rules>
 
-**Frontmatter (status, trigger, timestamps):**
-- `status`: OVERWRITE - reflects current phase
-- `trigger`: IMMUTABLE - verbatim user input, never changes
-- `created`: IMMUTABLE - set once
-- `updated`: OVERWRITE - update on every change
+**前置元数据（status、trigger、timestamps）：**
+- `status`：覆盖 — 反映当前阶段
+- `trigger`：不可变 — 逐字用户输入，永不更改
+- `created`：不可变 — 设置一次
+- `updated`：覆盖 — 每次更改时更新
 
-**Current Focus:**
-- OVERWRITE entirely on each update
-- Always reflects what Claude is doing RIGHT NOW
-- If Claude reads this after /clear, it knows exactly where to resume
-- Fields: hypothesis, test, expecting, next_action
+**当前焦点：**
+- 每次更新时完全覆盖
+- 始终反映 Claude 当前正在做什么
+- 如果 Claude 在 /clear 后读取此文件，它确切知道从哪里恢复
+- 字段：hypothesis、test、expecting、next_action
 
-**Symptoms:**
-- Written during initial gathering phase
-- IMMUTABLE after gathering complete
-- Reference point for what we're trying to fix
-- Fields: expected, actual, errors, reproduction, started
+**症状：**
+- 在初始收集阶段编写
+- 收集完成后不可变
+- 我们要修复什么的参考点
+- 字段：expected、actual、errors、reproduction、started
 
-**Eliminated:**
-- APPEND only - never remove entries
-- Prevents re-investigating dead ends after context reset
-- Each entry: hypothesis, evidence that disproved it, timestamp
-- Critical for efficiency across /clear boundaries
+**已排除：**
+- 仅追加 — 永不删除条目
+- 防止在上下文重置后重新调查死胡同
+- 每个条目：hypothesis、反驳它的证据、timestamp
+- 对于跨 /clear 边界的效率至关重要
 
-**Evidence:**
-- APPEND only - never remove entries
-- Facts discovered during investigation
-- Each entry: timestamp, what checked, what found, implication
-- Builds the case for root cause
+**证据：**
+- 仅追加 — 永不删除条目
+- 调查期间发现的事实
+- 每个条目：timestamp、检查了什么、发现了什么、implication
+- 构建根本原因的案例
 
-**Resolution:**
-- OVERWRITE as understanding evolves
-- May update multiple times as fixes are tried
-- Final state shows confirmed root cause and verified fix
-- Fields: root_cause, fix, verification, files_changed
+**解决方案：**
+- 随着理解演变而覆盖
+- 可能随着尝试修复而多次更新
+- 最终状态显示确认的根本原因和验证的修复
+- 字段：root_cause、fix、verification、files_changed
 
 </section_rules>
 
 <lifecycle>
 
-**Creation:** Immediately when /gsd:debug is called
-- Create file with trigger from user input
-- Set status to "gathering"
-- Current Focus: next_action = "gather symptoms"
-- Symptoms: empty, to be filled
+**创建：** 调用 /gsd:debug 时立即
+- 使用来自用户输入的触发器创建文件
+- 将状态设置为 "gathering"
+- 当前焦点：next_action = "收集症状"
+- 症状：空，待填写
 
-**During symptom gathering:**
-- Update Symptoms section as user answers questions
-- Update Current Focus with each question
-- When complete: status → "investigating"
+**在症状收集期间：**
+- 随着用户回答问题更新症状部分
+- 每个问题更新当前焦点
+- 完成时：status → "investigating"
 
-**During investigation:**
-- OVERWRITE Current Focus with each hypothesis
-- APPEND to Evidence with each finding
-- APPEND to Eliminated when hypothesis disproved
-- Update timestamp in frontmatter
+**在调查期间：**
+- 每个假设覆盖当前焦点
+- 每个发现追加到证据
+- 假设被反驳时追加到已排除
+- 更新前置元数据中的 timestamp
 
-**During fixing:**
+**在修复期间：**
 - status → "fixing"
-- Update Resolution.root_cause when confirmed
-- Update Resolution.fix when applied
-- Update Resolution.files_changed
+- 确认时更新 Resolution.root_cause
+- 应用时更新 Resolution.fix
+- 更新 Resolution.files_changed
 
-**During verification:**
+**在验证期间：**
 - status → "verifying"
-- Update Resolution.verification with results
-- If verification fails: status → "investigating", try again
+- 用结果更新 Resolution.verification
+- 如果验证失败：status → "investigating"，重试
 
-**On resolution:**
+**解决时：**
 - status → "resolved"
-- Move file to .planning/debug/resolved/
+- 将文件移动到 .planning/debug/resolved/
 
 </lifecycle>
 
 <resume_behavior>
 
-When Claude reads this file after /clear:
+当 Claude 在 /clear 后读取此文件时：
 
-1. Parse frontmatter → know status
-2. Read Current Focus → know exactly what was happening
-3. Read Eliminated → know what NOT to retry
-4. Read Evidence → know what's been learned
-5. Continue from next_action
+1. 解析前置元数据 → 知道状态
+2. 读取当前焦点 → 知道确切发生了什么
+3. 读取已排除 → 知道不要重试什么
+4. 读取证据 → 知道学到了什么
+5. 从 next_action 继续
 
-The file IS the debugging brain. Claude should be able to resume perfectly from any interruption point.
+文件就是调试大脑。Claude 应该能够从任何中断点完美恢复。
 
 </resume_behavior>
 
 <size_constraint>
 
-Keep debug files focused:
-- Evidence entries: 1-2 lines each, just the facts
-- Eliminated: brief - hypothesis + why it failed
-- No narrative prose - structured data only
+保持调试文件聚焦：
+- 证据条目：每个 1-2 行，只是事实
+- 已排除：简短 — hypothesis + 为什么失败
+- 无叙述散文 — 仅结构化数据
 
-If evidence grows very large (10+ entries), consider whether you're going in circles. Check Eliminated to ensure you're not re-treading.
+如果证据变得很大（10+ 条目），考虑是否在兜圈子。检查已排除以确保不是在重蹈覆辙。
 
 </size_constraint>

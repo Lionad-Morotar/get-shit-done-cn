@@ -1,7 +1,7 @@
 ---
 name: gsd:check-todos
-description: List pending todos and select one to work on
-argument-hint: [area filter]
+description: 列出待办事项并选择一个来处理
+argument-hint: [区域筛选]
 allowed-tools:
   - Read
   - Write
@@ -10,14 +10,14 @@ allowed-tools:
 ---
 
 <objective>
-List all pending todos, allow selection, load full context for the selected todo, and route to appropriate action.
+列出所有待办事项，允许选择，为选定的待办事项加载完整上下文，并路由到适当的操作。
 
-Routes to the check-todos workflow which handles:
-- Todo counting and listing with area filtering
-- Interactive selection with full context loading
-- Roadmap correlation checking
-- Action routing (work now, add to phase, brainstorm, create phase)
-- STATE.md updates and git commits
+路由到 check-todos 工作流，该工作流处理：
+- 待办事项计数和列表，带区域筛选
+- 交互式选择，带完整上下文加载
+- 路线图相关性检查
+- 操作路由（现在工作、添加到阶段、头脑风暴、创建阶段）
+- STATE.md 更新和 git 提交
 </objective>
 
 <execution_context>
@@ -27,15 +27,15 @@ Routes to the check-todos workflow which handles:
 </execution_context>
 
 <process>
-**Follow the check-todos workflow** from `@~/.claude/get-shit-done/workflows/check-todos.md`.
+**遵循 check-todos 工作流**，来自 `@~/.claude/get-shit-done/workflows/check-todos.md`。
 
-The workflow handles all logic including:
-1. Todo existence checking
-2. Area filtering
-3. Interactive listing and selection
-4. Full context loading with file summaries
-5. Roadmap correlation checking
-6. Action offering and execution
-7. STATE.md updates
-8. Git commits
+该工作流处理所有逻辑，包括：
+1. 待办事项存在性检查
+2. 区域筛选
+3. 交互式列表和选择
+4. 完整上下文加载，带文件摘要
+5. 路线图相关性检查
+6. 操作提供和执行
+7. STATE.md 更新
+8. Git 提交
 </process>

@@ -1,45 +1,45 @@
 <purpose>
-Execute small, ad-hoc tasks with GSD guarantees (atomic commits, STATE.md tracking) while skipping optional agents (research, plan-checker, verifier). Quick mode spawns gsd-planner (quick mode) + gsd-executor(s), tracks tasks in `.planning/quick/`, and updates STATE.md's "Quick Tasks Completed" table.
+使用 GSD 保证（原子提交、STATE.md 跟踪）执行小型、临时任务，同时跳过可选代理（研究、计划检查器、验证器）。快速模式生成 gsd-planner（快速模式）+ gsd-executor(s)，在 `.planning/quick/` 中跟踪任务，并更新 STATE.md 的"快速任务已完成"表。
 </purpose>
 
 <required_reading>
-Read all files referenced by the invoking prompt's execution_context before starting.
+在开始之前读取调用提示的 execution_context 引用的所有文件。
 </required_reading>
 
 <process>
-**Step 1: Get task description**
+**步骤 1：获取任务描述**
 
-Prompt user interactively for the task description:
+以交互方式提示用户输入任务描述：
 
 ```
 AskUserQuestion(
-  header: "Quick Task",
-  question: "What do you want to do?",
+  header: "快速任务",
+  question: "您想做什么？",
   followUp: null
 )
 ```
 
-Store response as `$DESCRIPTION`.
+将响应存储为 `$DESCRIPTION`。
 
-If empty, re-prompt: "Please provide a task description."
+如果为空，重新提示："请提供任务描述。"
 
 ---
 
-**Step 2: Initialize**
+**步骤 2：初始化**
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init quick "$DESCRIPTION")
 ```
 
-Parse JSON for: `planner_model`, `executor_model`, `commit_docs`, `next_num`, `slug`, `date`, `timestamp`, `quick_dir`, `task_dir`, `roadmap_exists`, `planning_exists`.
+解析 JSON 获取：`planner_model`、`executor_model`、`commit_docs`、`next_num`、`slug`、`date`、`timestamp`、`quick_dir`、`task_dir`、`roadmap_exists`、`planning_exists`。
 
-**If `roadmap_exists` is false:** Error — Quick mode requires an active project with ROADMAP.md. Run `/gsd:new-project` first.
+**如果 `roadmap_exists` 为 false：** 错误 — 快速模式需要带有 ROADMAP.md 的活动项目。首先运行 `/gsd:new-project`。
 
-Quick tasks can run mid-phase - validation only checks ROADMAP.md exists, not phase status.
+快速任务可以在阶段中期运行 — 验证仅检查 ROADMAP.md 是否存在，而不是阶段状态。
 
 ---
 
-**Step 3: Create task directory**
+**步骤 3：创建任务目录**
 
 ```bash
 mkdir -p "${task_dir}"
@@ -47,53 +47,53 @@ mkdir -p "${task_dir}"
 
 ---
 
-**Step 4: Create quick task directory**
+**步骤 4：创建快速任务目录**
 
-Create the directory for this quick task:
+为此快速任务创建目录：
 
 ```bash
 QUICK_DIR=".planning/quick/${next_num}-${slug}"
 mkdir -p "$QUICK_DIR"
 ```
 
-Report to user:
+向用户报告：
 ```
-Creating quick task ${next_num}: ${DESCRIPTION}
-Directory: ${QUICK_DIR}
+创建快速任务 ${next_num}：${DESCRIPTION}
+目录：${QUICK_DIR}
 ```
 
-Store `$QUICK_DIR` for use in orchestration.
+存储 `$QUICK_DIR` 以在编排中使用。
 
 ---
 
-**Step 5: Spawn planner (quick mode)**
+**步骤 5：生成规划器（快速模式）**
 
-Spawn gsd-planner with quick mode context:
+使用快速模式上下文生成 gsd-planner：
 
 ```
 Task(
   prompt="
 <planning_context>
 
-**Mode:** quick
-**Directory:** ${QUICK_DIR}
-**Description:** ${DESCRIPTION}
+**模式：** quick
+**目录：** ${QUICK_DIR}
+**描述：** ${DESCRIPTION}
 
-**Project State:**
+**项目状态：**
 @.planning/STATE.md
 
 </planning_context>
 
 <constraints>
-- Create a SINGLE plan with 1-3 focused tasks
-- Quick tasks should be atomic and self-contained
-- No research phase, no checker phase
-- Target ~30% context usage (simple, focused)
+- 创建具有 1-3 个专注任务的单一计划
+- 快速任务应该是原子和自包含的
+- 无研究阶段，无检查器阶段
+- 目标约 30% 上下文使用（简单、专注）
 </constraints>
 
 <output>
-Write plan to: ${QUICK_DIR}/${next_num}-PLAN.md
-Return: ## PLANNING COMPLETE with plan path
+将计划写入到：${QUICK_DIR}/${next_num}-PLAN.md
+返回：## PLANNING COMPLETE 并带有计划路径
 </output>
 ",
   subagent_type="gsd-planner",
@@ -102,32 +102,32 @@ Return: ## PLANNING COMPLETE with plan path
 )
 ```
 
-After planner returns:
-1. Verify plan exists at `${QUICK_DIR}/${next_num}-PLAN.md`
-2. Extract plan count (typically 1 for quick tasks)
-3. Report: "Plan created: ${QUICK_DIR}/${next_num}-PLAN.md"
+规划器返回后：
+1. 验证计划存在于 `${QUICK_DIR}/${next_num}-PLAN.md`
+2. 提取计划计数（快速任务通常为 1）
+3. 报告："计划已创建：${QUICK_DIR}/${next_num}-PLAN.md"
 
-If plan not found, error: "Planner failed to create ${next_num}-PLAN.md"
+如果未找到计划，错误："规划器未能创建 ${next_num}-PLAN.md"
 
 ---
 
-**Step 6: Spawn executor**
+**步骤 6：生成执行器**
 
-Spawn gsd-executor with plan reference:
+使用计划引用生成 gsd-executor：
 
 ```
 Task(
   prompt="
-Execute quick task ${next_num}.
+执行快速任务 ${next_num}。
 
-Plan: @${QUICK_DIR}/${next_num}-PLAN.md
-Project state: @.planning/STATE.md
+计划：@${QUICK_DIR}/${next_num}-PLAN.md
+项目状态：@.planning/STATE.md
 
 <constraints>
-- Execute all tasks in the plan
-- Commit each task atomically
-- Create summary at: ${QUICK_DIR}/${next_num}-SUMMARY.md
-- Do NOT update ROADMAP.md (quick tasks are separate from planned phases)
+- 执行计划中的所有任务
+- 原子地提交每个任务
+- 在此处创建摘要：${QUICK_DIR}/${next_num}-SUMMARY.md
+- 不要更新 ROADMAP.md（快速任务与计划的阶段分开）
 </constraints>
 ",
   subagent_type="gsd-executor",
@@ -136,30 +136,30 @@ Project state: @.planning/STATE.md
 )
 ```
 
-After executor returns:
-1. Verify summary exists at `${QUICK_DIR}/${next_num}-SUMMARY.md`
-2. Extract commit hash from executor output
-3. Report completion status
+执行器返回后：
+1. 验证摘要存在于 `${QUICK_DIR}/${next_num}-SUMMARY.md`
+2. 从执行器输出中提取提交哈希
+3. 报告完成状态
 
-**Known Claude Code bug (classifyHandoffIfNeeded):** If executor reports "failed" with error `classifyHandoffIfNeeded is not defined`, this is a Claude Code runtime bug — not a real failure. Check if summary file exists and git log shows commits. If so, treat as successful.
+**已知的 Claude Code 错误 (classifyHandoffIfNeeded)：** 如果执行器报告"失败"并带有错误 `classifyHandoffIfNeeded is not defined`，这是一个 Claude Code 运行时错误 — 不是真正的失败。检查摘要文件是否存在以及 git log 显示提交。如果是，则视为成功。
 
-If summary not found, error: "Executor failed to create ${next_num}-SUMMARY.md"
+如果未找到摘要，错误："执行器未能创建 ${next_num}-SUMMARY.md"
 
-Note: For quick tasks producing multiple plans (rare), spawn executors in parallel waves per execute-phase patterns.
+注意：对于生成多个计划的快速任务（罕见），按照 execute-phase 模式在并行波中生成执行器。
 
 ---
 
-**Step 7: Update STATE.md**
+**步骤 7：更新 STATE.md**
 
-Update STATE.md with quick task completion record.
+使用快速任务完成记录更新 STATE.md。
 
-**7a. Check if "Quick Tasks Completed" section exists:**
+**7a. 检查"快速任务已完成"部分是否存在：**
 
-Read STATE.md and check for `### Quick Tasks Completed` section.
+读取 STATE.md 并检查 `### Quick Tasks Completed` 部分。
 
-**7b. If section doesn't exist, create it:**
+**7b. 如果部分不存在，创建它：**
 
-Insert after `### Blockers/Concerns` section:
+在 `### Blockers/Concerns` 部分后插入：
 
 ```markdown
 ### Quick Tasks Completed
@@ -168,63 +168,63 @@ Insert after `### Blockers/Concerns` section:
 |---|-------------|------|--------|-----------|
 ```
 
-**7c. Append new row to table:**
+**7c. 向表追加新行：**
 
-Use `date` from init:
+使用来自 init 的 `date`：
 ```markdown
 | ${next_num} | ${DESCRIPTION} | ${date} | ${commit_hash} | [${next_num}-${slug}](./quick/${next_num}-${slug}/) |
 ```
 
-**7d. Update "Last activity" line:**
+**7d. 更新"最后活动"行：**
 
-Use `date` from init:
+使用来自 init 的 `date`：
 ```
-Last activity: ${date} - Completed quick task ${next_num}: ${DESCRIPTION}
+最后活动：${date} - 已完成快速任务 ${next_num}：${DESCRIPTION}
 ```
 
-Use Edit tool to make these changes atomically
+使用 Edit 工具原子地进行这些更改
 
 ---
 
-**Step 8: Final commit and completion**
+**步骤 8：最终提交和完成**
 
-Stage and commit quick task artifacts:
+暂存并提交快速任务工件：
 
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs(quick-${next_num}): ${DESCRIPTION}" --files ${QUICK_DIR}/${next_num}-PLAN.md ${QUICK_DIR}/${next_num}-SUMMARY.md .planning/STATE.md
 ```
 
-Get final commit hash:
+获取最终提交哈希：
 ```bash
 commit_hash=$(git rev-parse --short HEAD)
 ```
 
-Display completion output:
+显示完成输出：
 ```
 ---
 
-GSD > QUICK TASK COMPLETE
+GSD > 快速任务完成
 
-Quick Task ${next_num}: ${DESCRIPTION}
+快速任务 ${next_num}：${DESCRIPTION}
 
-Summary: ${QUICK_DIR}/${next_num}-SUMMARY.md
-Commit: ${commit_hash}
+摘要：${QUICK_DIR}/${next_num}-SUMMARY.md
+提交：${commit_hash}
 
 ---
 
-Ready for next task: /gsd:quick
+准备好下一个任务：/gsd:quick
 ```
 
 </process>
 
 <success_criteria>
-- [ ] ROADMAP.md validation passes
-- [ ] User provides task description
-- [ ] Slug generated (lowercase, hyphens, max 40 chars)
-- [ ] Next number calculated (001, 002, 003...)
-- [ ] Directory created at `.planning/quick/NNN-slug/`
-- [ ] `${next_num}-PLAN.md` created by planner
-- [ ] `${next_num}-SUMMARY.md` created by executor
-- [ ] STATE.md updated with quick task row
-- [ ] Artifacts committed
-</success_criteria>
+- [ ] ROADMAP.md 验证通过
+- [ ] 用户提供任务描述
+- [ ] 生成了 slug（小写、连字符、最多 40 个字符）
+- [ ] 计算了下一个编号（001、002、003...）
+- [ ] 在 `.planning/quick/NNN-slug/` 创建了目录
+- [ ] 由规划器创建了 `${next_num}-PLAN.md`
+- [ ] 由执行器创建了 `${next_num}-SUMMARY.md`
+- [ ] STATE.md 已更新并带有快速任务行
+- [ ] 工件已提交
+      </success_criteria>

@@ -1,283 +1,283 @@
-# Phase Context Template
+# 阶段上下文模板
 
-Template for `.planning/phases/XX-name/{phase}-CONTEXT.md` - captures implementation decisions for a phase.
+用于 `.planning/phases/XX-name/{phase}-CONTEXT.md` 的模板 — 捕获阶段的实施决策。
 
-**Purpose:** Document decisions that downstream agents need. Researcher uses this to know WHAT to investigate. Planner uses this to know WHAT choices are locked vs flexible.
+**目的：** 记录下游代理需要的决策。研究者用它来知道需要调查什么。规划者用它来知道哪些选择已锁定、哪些仍灵活。
 
-**Key principle:** Categories are NOT predefined. They emerge from what was actually discussed for THIS phase. A CLI phase has CLI-relevant sections, a UI phase has UI-relevant sections.
+**核心原则：** 类别不是预定义的。它们从该阶段实际讨论的内容中产生。CLI 阶段有 CLI 相关的章节，UI 阶段有 UI 相关的章节。
 
-**Downstream consumers:**
-- `gsd-phase-researcher` — Reads decisions to focus research (e.g., "card layout" → research card component patterns)
-- `gsd-planner` — Reads decisions to create specific tasks (e.g., "infinite scroll" → task includes virtualization)
+**下游使用者：**
+- `gsd-phase-researcher` — 读取决策以聚焦研究（例如，"卡片布局" → 研究卡片组件模式）
+- `gsd-planner` — 读取决策以创建具体任务（例如，"无限滚动" → 任务包含虚拟化）
 
 ---
 
-## File Template
+## 文件模板
 
 ```markdown
-# Phase [X]: [Name] - Context
+# 阶段 [X]: [名称] - 上下文
 
-**Gathered:** [date]
-**Status:** Ready for planning
+**收集时间：** [日期]
+**状态：** 准备好进行规划
 
 <domain>
-## Phase Boundary
+## 阶段边界
 
-[Clear statement of what this phase delivers — the scope anchor. This comes from ROADMAP.md and is fixed. Discussion clarifies implementation within this boundary.]
+[清晰说明该阶段交付的内容 — 范围锚点。来自 ROADMAP.md，是固定的。讨论阐明此边界内的实现方式。]
 
 </domain>
 
 <decisions>
-## Implementation Decisions
+## 实施决策
 
-### [Area 1 that was discussed]
-- [Specific decision made]
-- [Another decision if applicable]
+### [讨论过的领域 1]
+- [做出的具体决策]
+- [如适用，另一个决策]
 
-### [Area 2 that was discussed]
-- [Specific decision made]
+### [讨论过的领域 2]
+- [做出的具体决策]
 
-### [Area 3 that was discussed]
-- [Specific decision made]
+### [讨论过的领域 3]
+- [做出的具体决策]
 
-### Claude's Discretion
-[Areas where user explicitly said "you decide" — Claude has flexibility here during planning/implementation]
+### Claude 的裁量权
+[用户明确说"你决定"的领域 — Claude 在规划/实施期间在此处有灵活性]
 
 </decisions>
 
 <specifics>
-## Specific Ideas
+## 具体想法
 
-[Any particular references, examples, or "I want it like X" moments from discussion. Product references, specific behaviors, interaction patterns.]
+[讨论中提到的任何具体引用、示例或"我想要像 X 这样的"时刻。产品引用、具体行为、交互模式。]
 
-[If none: "No specific requirements — open to standard approaches"]
+[如果没有："无具体要求 — 开放采用标准方法"]
 
 </specifics>
 
 <deferred>
-## Deferred Ideas
+## 延迟的想法
 
-[Ideas that came up during discussion but belong in other phases. Captured here so they're not lost, but explicitly out of scope for this phase.]
+[讨论中提出但属于其他阶段的想法。在此捕获以免丢失，但明确超出该阶段的范围。]
 
-[If none: "None — discussion stayed within phase scope"]
+[如果没有："无 — 讨论保持在阶段范围内"]
 
 </deferred>
 
 ---
 
-*Phase: XX-name*
-*Context gathered: [date]*
+*阶段：XX-name*
+*上下文收集时间：[日期]*
 ```
 
 <good_examples>
 
-**Example 1: Visual feature (Post Feed)**
+**示例 1：视觉功能（帖子信息流）**
 
 ```markdown
-# Phase 3: Post Feed - Context
+# 阶段 3：帖子信息流 - 上下文
 
-**Gathered:** 2025-01-20
-**Status:** Ready for planning
+**收集时间：** 2025-01-20
+**状态：** 准备好进行规划
 
 <domain>
-## Phase Boundary
+## 阶段边界
 
-Display posts from followed users in a scrollable feed. Users can view posts and see engagement counts. Creating posts and interactions are separate phases.
+在可滚动信息流中显示关注用户的帖子。用户可以查看帖子并查看互动计数。创建帖子和互动是独立的阶段。
 
 </domain>
 
 <decisions>
-## Implementation Decisions
+## 实施决策
 
-### Layout style
-- Card-based layout, not timeline or list
-- Each card shows: author avatar, name, timestamp, full post content, reaction counts
-- Cards have subtle shadows, rounded corners — modern feel
+### 布局风格
+- 基于卡片的布局，而非时间线或列表
+- 每张卡片显示：作者头像、姓名、时间戳、完整帖子内容、互动计数
+- 卡片有微妙的阴影、圆角 — 现代感
 
-### Loading behavior
-- Infinite scroll, not pagination
-- Pull-to-refresh on mobile
-- New posts indicator at top ("3 new posts") rather than auto-inserting
+### 加载行为
+- 无限滚动，而非分页
+- 移动端支持下拉刷新
+- 顶部显示新帖子指示器（"3 条新帖子"），而非自动插入
 
-### Empty state
-- Friendly illustration + "Follow people to see posts here"
-- Suggest 3-5 accounts to follow based on interests
+### 空状态
+- 友好的插图 + "关注用户以查看帖子"
+- 根据兴趣建议 3-5 个关注账号
 
-### Claude's Discretion
-- Loading skeleton design
-- Exact spacing and typography
-- Error state handling
+### Claude 的裁量权
+- 加载骨架设计
+- 精确间距和排版
+- 错误状态处理
 
 </decisions>
 
 <specifics>
-## Specific Ideas
+## 具体想法
 
-- "I like how Twitter shows the new posts indicator without disrupting your scroll position"
-- Cards should feel like Linear's issue cards — clean, not cluttered
+- "我喜欢 Twitter 在不打扰滚动位置的情况下显示新帖子指示器"
+- 卡片应该感觉像 Linear 的问题卡片 — 干净，不杂乱
 
 </specifics>
 
 <deferred>
-## Deferred Ideas
+## 延迟的想法
 
-- Commenting on posts — Phase 5
-- Bookmarking posts — add to backlog
+- 帖子评论 — 阶段 5
+- 收藏帖子 — 添加到待办事项
 
 </deferred>
 
 ---
 
-*Phase: 03-post-feed*
-*Context gathered: 2025-01-20*
+*阶段：03-post-feed*
+*上下文收集时间：2025-01-20*
 ```
 
-**Example 2: CLI tool (Database backup)**
+**示例 2：CLI 工具（数据库备份）**
 
 ```markdown
-# Phase 2: Backup Command - Context
+# 阶段 2：备份命令 - 上下文
 
-**Gathered:** 2025-01-20
-**Status:** Ready for planning
+**收集时间：** 2025-01-20
+**状态：** 准备好进行规划
 
 <domain>
-## Phase Boundary
+## 阶段边界
 
-CLI command to backup database to local file or S3. Supports full and incremental backups. Restore command is a separate phase.
+将数据库备份到本地文件或 S3 的 CLI 命令。支持完整备份和增量备份。恢复命令是独立的阶段。
 
 </domain>
 
 <decisions>
-## Implementation Decisions
+## 实施决策
 
-### Output format
-- JSON for programmatic use, table format for humans
-- Default to table, --json flag for JSON
-- Verbose mode (-v) shows progress, silent by default
+### 输出格式
+- JSON 用于程序化使用，表格格式供人类使用
+- 默认为表格，--json 标志用于 JSON
+- 详细模式 (-v) 显示进度，默认静默
 
-### Flag design
-- Short flags for common options: -o (output), -v (verbose), -f (force)
-- Long flags for clarity: --incremental, --compress, --encrypt
-- Required: database connection string (positional or --db)
+### 标志设计
+- 常用选项使用短标志：-o（输出）、-v（详细）、-f（强制）
+- 清晰起见使用长标志：--incremental、--compress、--encrypt
+- 必需：数据库连接字符串（位置参数或 --db）
 
-### Error recovery
-- Retry 3 times on network failure, then fail with clear message
-- --no-retry flag to fail fast
-- Partial backups are deleted on failure (no corrupt files)
+### 错误恢复
+- 网络失败时重试 3 次，然后以清晰消息失败
+- --no-retry 标志用于快速失败
+- 部分备份在失败时删除（无损坏文件）
 
-### Claude's Discretion
-- Exact progress bar implementation
-- Compression algorithm choice
-- Temp file handling
+### Claude 的裁量权
+- 精确进度条实现
+- 压缩算法选择
+- 临时文件处理
 
 </decisions>
 
 <specifics>
-## Specific Ideas
+## 具体想法
 
-- "I want it to feel like pg_dump — familiar to database people"
-- Should work in CI pipelines (exit codes, no interactive prompts)
+- "我希望它感觉像 pg_dump — 数据库人员熟悉"
+- 应在 CI 管道中工作（退出码、无交互式提示）
 
 </specifics>
 
 <deferred>
-## Deferred Ideas
+## 延迟的想法
 
-- Scheduled backups — separate phase
-- Backup rotation/retention — add to backlog
+- 定期备份 — 独立阶段
+- 备份轮换/保留 — 添加到待办事项
 
 </deferred>
 
 ---
 
-*Phase: 02-backup-command*
-*Context gathered: 2025-01-20*
+*阶段：02-backup-command*
+*上下文收集时间：2025-01-20*
 ```
 
-**Example 3: Organization task (Photo library)**
+**示例 3：组织任务（照片库）**
 
 ```markdown
-# Phase 1: Photo Organization - Context
+# 阶段 1：照片组织 - 上下文
 
-**Gathered:** 2025-01-20
-**Status:** Ready for planning
+**收集时间：** 2025-01-20
+**状态：** 准备好进行规划
 
 <domain>
-## Phase Boundary
+## 阶段边界
 
-Organize existing photo library into structured folders. Handle duplicates and apply consistent naming. Tagging and search are separate phases.
+将现有照片库组织成结构化文件夹。处理重复项并应用一致的命名。标记和搜索是独立的阶段。
 
 </domain>
 
 <decisions>
-## Implementation Decisions
+## 实施决策
 
-### Grouping criteria
-- Primary grouping by year, then by month
-- Events detected by time clustering (photos within 2 hours = same event)
-- Event folders named by date + location if available
+### 分组标准
+- 主要按年份分组，然后按月份
+- 通过时间聚类检测事件（2 小时内的照片 = 同一事件）
+- 事件文件夹按日期 + 位置命名（如果有）
 
-### Duplicate handling
-- Keep highest resolution version
-- Move duplicates to _duplicates folder (don't delete)
-- Log all duplicate decisions for review
+### 重复处理
+- 保留最高分辨率版本
+- 将重复项移动到 _duplicates 文件夹（不删除）
+- 记录所有重复决策以供审查
 
-### Naming convention
-- Format: YYYY-MM-DD_HH-MM-SS_originalname.ext
-- Preserve original filename as suffix for searchability
-- Handle name collisions with incrementing suffix
+### 命名约定
+- 格式：YYYY-MM-DD_HH-MM-SS_原始名称.ext
+- 保留原始文件名作为后缀以可搜索
+- 使用递增后缀处理名称冲突
 
-### Claude's Discretion
-- Exact clustering algorithm
-- How to handle photos with no EXIF data
-- Folder emoji usage
+### Claude 的裁量权
+- 精确聚类算法
+- 如何处理没有 EXIF 数据的照片
+- 文件夹表情符号使用
 
 </decisions>
 
 <specifics>
-## Specific Ideas
+## 具体想法
 
-- "I want to be able to find photos by roughly when they were taken"
-- Don't delete anything — worst case, move to a review folder
+- "我希望能够大致按拍摄时间找到照片"
+- 不要删除任何东西 — 最坏情况下，移动到审查文件夹
 
 </specifics>
 
 <deferred>
-## Deferred Ideas
+## 延迟的想法
 
-- Face detection grouping — future phase
-- Cloud sync — out of scope for now
+- 人脸检测分组 — 未来阶段
+- 云同步 — 目前超出范围
 
 </deferred>
 
 ---
 
-*Phase: 01-photo-organization*
-*Context gathered: 2025-01-20*
+*阶段：01-photo-organization*
+*上下文收集时间：2025-01-20*
 ```
 
 </good_examples>
 
 <guidelines>
-**This template captures DECISIONS for downstream agents.**
+**此模板捕获下游代理的决策。**
 
-The output should answer: "What does the researcher need to investigate? What choices are locked for the planner?"
+输出应回答："研究者需要调查什么？规划者的哪些选择已锁定？"
 
-**Good content (concrete decisions):**
-- "Card-based layout, not timeline"
-- "Retry 3 times on network failure, then fail"
-- "Group by year, then by month"
-- "JSON for programmatic use, table for humans"
+**好的内容（具体决策）：**
+- "基于卡片的布局，而非时间线"
+- "网络失败时重试 3 次，然后失败"
+- "按年份分组，然后按月份"
+- "JSON 用于程序化使用，表格供人类使用"
 
-**Bad content (too vague):**
-- "Should feel modern and clean"
-- "Good user experience"
-- "Fast and responsive"
-- "Easy to use"
+**不好的内容（太模糊）：**
+- "应该感觉现代干净"
+- "良好的用户体验"
+- "快速响应"
+- "易于使用"
 
-**After creation:**
-- File lives in phase directory: `.planning/phases/XX-name/{phase}-CONTEXT.md`
-- `gsd-phase-researcher` uses decisions to focus investigation
-- `gsd-planner` uses decisions + research to create executable tasks
-- Downstream agents should NOT need to ask the user again about captured decisions
+**创建后：**
+- 文件位于阶段目录：`.planning/phases/XX-name/{phase}-CONTEXT.md`
+- `gsd-phase-researcher` 使用决策聚焦调查
+- `gsd-planner` 使用决策 + 研究创建可执行任务
+- 下游代理不应再次询问用户有关已捕获决策的问题
 </guidelines>

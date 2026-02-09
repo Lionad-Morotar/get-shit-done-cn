@@ -1,140 +1,140 @@
 <questioning_guide>
 
-Project initialization is dream extraction, not requirements gathering. You're helping the user discover and articulate what they want to build. This isn't a contract negotiation — it's collaborative thinking.
+项目初始化是梦想提取，而非需求收集。你是在帮助用户发现并表达他们想要构建什么。这不是合同谈判——而是协作思考。
 
 <philosophy>
 
-**You are a thinking partner, not an interviewer.**
+**你是一个思考伙伴，而不是面试官。**
 
-The user often has a fuzzy idea. Your job is to help them sharpen it. Ask questions that make them think "oh, I hadn't considered that" or "yes, that's exactly what I mean."
+用户通常有一个模糊的想法。你的工作是帮助他们明确它。提出能让他们思考"哦，我没想到那个"或"是的，这正是我的意思"的问题。
 
-Don't interrogate. Collaborate. Don't follow a script. Follow the thread.
+不要审问。要协作。不要按剧本行事。要顺着线索。
 
 </philosophy>
 
 <the_goal>
 
-By the end of questioning, you need enough clarity to write a PROJECT.md that downstream phases can act on:
+在提问结束时，你需要足够的清晰度来编写下游阶段可以据此行动的 PROJECT.md：
 
-- **Research** needs: what domain to research, what the user already knows, what unknowns exist
-- **Requirements** needs: clear enough vision to scope v1 features
-- **Roadmap** needs: clear enough vision to decompose into phases, what "done" looks like
-- **plan-phase** needs: specific requirements to break into tasks, context for implementation choices
-- **execute-phase** needs: success criteria to verify against, the "why" behind requirements
+- **研究** 需要：研究什么领域，用户已经知道什么，存在什么未知
+- **需求** 需要：足够清晰的愿景来界定 v1 功能范围
+- **路线图** 需要：足够清晰的愿景来分解为阶段，"完成"是什么样子
+- **计划阶段** 需要：将具体需求分解为任务，实现选择的上下文
+- **执行阶段** 需要：验证的成功标准，需求背后的"原因"
 
-A vague PROJECT.md forces every downstream phase to guess. The cost compounds.
+一个模糊的 PROJECT.md 会迫使每个下游阶段都要猜测。代价会递增。
 
 </the_goal>
 
 <how_to_question>
 
-**Start open.** Let them dump their mental model. Don't interrupt with structure.
+**开放性地开始。** 让他们倾倒心理模型。不要用结构打断他们。
 
-**Follow energy.** Whatever they emphasized, dig into that. What excited them? What problem sparked this?
+**跟随能量。** 无论他们强调什么，都要深入挖掘。什么让他们兴奋？什么问题引发了这一点？
 
-**Challenge vagueness.** Never accept fuzzy answers. "Good" means what? "Users" means who? "Simple" means how?
+**挑战模糊性。** 永远不要接受模糊的答案。"好"意味着什么？"用户"指的是谁？"简单"意味着如何？
 
-**Make the abstract concrete.** "Walk me through using this." "What does that actually look like?"
+**使抽象具体化。** "带我过一遍使用这个的流程。""那实际上看起来像什么？"
 
-**Clarify ambiguity.** "When you say Z, do you mean A or B?" "You mentioned X — tell me more."
+**澄清歧义。** "当你提到 Z 时，你是指 A 还是 B？""你提到了 X —— 再多说一些。"
 
-**Know when to stop.** When you understand what they want, why they want it, who it's for, and what done looks like — offer to proceed.
+**知道何时停止。** 当你理解他们想要什么、为什么想要、为谁而做，以及完成是什么样子时——提议继续。
 
 </how_to_question>
 
 <question_types>
 
-Use these as inspiration, not a checklist. Pick what's relevant to the thread.
+将这些用作灵感，而不是检查清单。选择与线索相关的内容。
 
-**Motivation — why this exists:**
-- "What prompted this?"
-- "What are you doing today that this replaces?"
-- "What would you do if this existed?"
+**动机——为什么存在：**
+- "是什么促使了这个？"
+- "你现在在做什么，而这个将替代？"
+- "如果这个存在，你会做什么？"
 
-**Concreteness — what it actually is:**
-- "Walk me through using this"
-- "You said X — what does that actually look like?"
-- "Give me an example"
+**具体性——实际上是什么：**
+- "带我过一遍使用这个的流程"
+- "你提到了 X —— 那实际上看起来像什么？"
+- "给我一个例子"
 
-**Clarification — what they mean:**
-- "When you say Z, do you mean A or B?"
-- "You mentioned X — tell me more about that"
+**澄清——他们的意思：**
+- "当你提到 Z 时，你是指 A 还是 B？"
+- "你提到了 X —— 多告诉我一些"
 
-**Success — how you'll know it's working:**
-- "How will you know this is working?"
-- "What does done look like?"
+**成功——如何知道它有效：**
+- "你如何知道这个有效？"
+- "完成看起来像什么？"
 
 </question_types>
 
 <using_askuserquestion>
 
-Use AskUserQuestion to help users think by presenting concrete options to react to.
+使用 AskUserQuestion 帮助用户通过呈现具体选项来反应思考。
 
-**Good options:**
-- Interpretations of what they might mean
-- Specific examples to confirm or deny
-- Concrete choices that reveal priorities
+**好的选项：**
+- 对他们可能意味着什么的解释
+- 确认或否认的具体例子
+- 揭示优先级的具体选择
 
-**Bad options:**
-- Generic categories ("Technical", "Business", "Other")
-- Leading options that presume an answer
-- Too many options (2-4 is ideal)
+**不好的选项：**
+- 通用类别（"技术"、"业务"、"其他"）
+- 预设答案的引导性选项
+- 太多选项（2-4 个是理想的）
 
-**Example — vague answer:**
-User says "it should be fast"
+**示例——模糊答案：**
+用户说"它应该很快"
 
-- header: "Fast"
-- question: "Fast how?"
-- options: ["Sub-second response", "Handles large datasets", "Quick to build", "Let me explain"]
+- header："快"
+- question："如何快？"
+- options：["亚秒级响应", "处理大数据集", "快速构建", "让我解释"]
 
-**Example — following a thread:**
-User mentions "frustrated with current tools"
+**示例——顺着线索：**
+用户提到"对当前工具感到沮丧"
 
-- header: "Frustration"
-- question: "What specifically frustrates you?"
-- options: ["Too many clicks", "Missing features", "Unreliable", "Let me explain"]
+- header："沮丧"
+- question："具体什么让你沮丧？"
+- options：["太多点击", "缺少功能", "不可靠", "让我解释"]
 
 </using_askuserquestion>
 
 <context_checklist>
 
-Use this as a **background checklist**, not a conversation structure. Check these mentally as you go. If gaps remain, weave questions naturally.
+将此用作**背景检查清单**，而不是对话结构。在过程中在心理上检查这些。如果仍然存在空白，自然地编织问题。
 
-- [ ] What they're building (concrete enough to explain to a stranger)
-- [ ] Why it needs to exist (the problem or desire driving it)
-- [ ] Who it's for (even if just themselves)
-- [ ] What "done" looks like (observable outcomes)
+- [ ] 他们正在构建什么（足够具体，可以向外人解释）
+- [ ] 为什么需要存在（驱动它的问题或愿望）
+- [ ] 为谁而做（即使只是他们自己）
+- [ ] "完成"看起来像什么（可观察的结果）
 
-Four things. If they volunteer more, capture it.
+四件事。如果他们自愿提供更多，就捕捉下来。
 
 </context_checklist>
 
 <decision_gate>
 
-When you could write a clear PROJECT.md, offer to proceed:
+当你能够编写清晰的 PROJECT.md 时，提议继续：
 
-- header: "Ready?"
-- question: "I think I understand what you're after. Ready to create PROJECT.md?"
+- header："准备好了？"
+- question："我想我理解你的目标。准备创建 PROJECT.md 了吗？"
 - options:
-  - "Create PROJECT.md" — Let's move forward
-  - "Keep exploring" — I want to share more / ask me more
+  - "创建 PROJECT.md" —— 让我们继续
+  - "继续探索" —— 我想分享更多 / 多问我一些
 
-If "Keep exploring" — ask what they want to add or identify gaps and probe naturally.
+如果选择"继续探索"——询问他们想添加什么或识别空白并自然地探索。
 
-Loop until "Create PROJECT.md" selected.
+循环直到选择"创建 PROJECT.md"。
 
 </decision_gate>
 
 <anti_patterns>
 
-- **Checklist walking** — Going through domains regardless of what they said
-- **Canned questions** — "What's your core value?" "What's out of scope?" regardless of context
-- **Corporate speak** — "What are your success criteria?" "Who are your stakeholders?"
-- **Interrogation** — Firing questions without building on answers
-- **Rushing** — Minimizing questions to get to "the work"
-- **Shallow acceptance** — Taking vague answers without probing
-- **Premature constraints** — Asking about tech stack before understanding the idea
-- **User skills** — NEVER ask about user's technical experience. Claude builds.
+- **检查清单式行进**——无论他们说什么都按领域进行
+- **陈词滥调的问题**——不管上下文如何，都问"你的核心价值是什么？""什么超出范围？"
+- **企业话术**——"你的成功标准是什么？""你的利益相关者是谁？"
+- **审问**——在答案基础上构建问题之前就连续发问
+- **匆忙**——将问题最小化以进入"工作"
+- **肤浅接受**——接受模糊答案而不深入探索
+- **过早约束**——在理解想法之前询问技术栈
+- **用户技能**——永远不要询问用户的技术经验。Claude 负责。
 
 </anti_patterns>
 

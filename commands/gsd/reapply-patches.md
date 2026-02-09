@@ -1,110 +1,110 @@
 ---
-description: Reapply local modifications after a GSD update
+description: 在 GSD 更新后重新应用本地修改
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
 ---
 
 <purpose>
-After a GSD update wipes and reinstalls files, this command merges user's previously saved local modifications back into the new version. Uses intelligent comparison to handle cases where the upstream file also changed.
+在 GSD 更新擦除并重新安装文件后，此命令将用户之前保存的本地修改合并回新版本。使用智能比较来处理上游文件也更改的情况。
 </purpose>
 
 <process>
 
-## Step 1: Detect backed-up patches
+## 步骤 1：检测备份的补丁
 
-Check for local patches directory:
+检查本地补丁目录：
 
 ```bash
-# Global install
+# 全局安装
 PATCHES_DIR="${HOME}/.claude/gsd-local-patches"
-# Local install fallback
+# 本地安装回退
 if [ ! -d "$PATCHES_DIR" ]; then
   PATCHES_DIR="./.claude/gsd-local-patches"
 fi
 ```
 
-Read `backup-meta.json` from the patches directory.
+从补丁目录读取 `backup-meta.json`。
 
-**If no patches found:**
+**如果未找到补丁：**
 ```
-No local patches found. Nothing to reapply.
+未找到本地补丁。无需重新应用。
 
-Local patches are automatically saved when you run /gsd:update
-after modifying any GSD workflow, command, or agent files.
+当你修改任何 GSD 工作流、命令或 agent 文件后运行 /gsd:update 时，
+会自动保存本地补丁。
 ```
-Exit.
+退出。
 
-## Step 2: Show patch summary
+## 步骤 2：显示补丁摘要
 
 ```
-## Local Patches to Reapply
+## 要重新应用的本地补丁
 
-**Backed up from:** v{from_version}
-**Current version:** {read VERSION file}
-**Files modified:** {count}
+**备份来源：** v{from_version}
+**当前版本：** {read VERSION file}
+**修改的文件：** {count}
 
-| # | File | Status |
+| # | 文件 | 状态 |
 |---|------|--------|
-| 1 | {file_path} | Pending |
-| 2 | {file_path} | Pending |
+| 1 | {file_path} | 待处理 |
+| 2 | {file_path} | 待处理 |
 ```
 
-## Step 3: Merge each file
+## 步骤 3：合并每个文件
 
-For each file in `backup-meta.json`:
+对于 `backup-meta.json` 中的每个文件：
 
-1. **Read the backed-up version** (user's modified copy from `gsd-local-patches/`)
-2. **Read the newly installed version** (current file after update)
-3. **Compare and merge:**
+1. **读取备份版本**（用户从 `gsd-local-patches/` 修改的副本）
+2. **读取新安装版本**（更新后的当前文件）
+3. **比较和合并：**
 
-   - If the new file is identical to the backed-up file: skip (modification was incorporated upstream)
-   - If the new file differs: identify the user's modifications and apply them to the new version
+   - 如果新文件与备份文件相同：跳过（修改已被上游采纳）
+   - 如果新文件不同：识别用户的修改并将其应用于新版本
 
-   **Merge strategy:**
-   - Read both versions fully
-   - Identify sections the user added or modified (look for additions, not just differences from path replacement)
-   - Apply user's additions/modifications to the new version
-   - If a section the user modified was also changed upstream: flag as conflict, show both versions, ask user which to keep
+   **合并策略：**
+   - 完全读取两个版本
+   - 识别用户添加或修改的部分（查找添加内容，而不仅仅是与路径替换的差异）
+   - 将用户的添加/修改应用于新版本
+   - 如果用户修改的部分也被上游更改：标记为冲突，显示两个版本，询问用户保留哪一个
 
-4. **Write merged result** to the installed location
-5. **Report status:**
-   - `Merged` — user modifications applied cleanly
-   - `Skipped` — modification already in upstream
-   - `Conflict` — user chose resolution
+4. **将合并结果**写入安装位置
+5. **报告状态：**
+   - `已合并` — 用户修改已干净应用
+   - `已跳过` — 修改已在上游
+   - `冲突` — 用户选择了解决方案
 
-## Step 4: Update manifest
+## 步骤 4：更新清单
 
-After reapplying, regenerate the file manifest so future updates correctly detect these as user modifications:
+重新应用后，重新生成文件清单，以便未来的更新正确检测这些为用户修改：
 
 ```bash
-# The manifest will be regenerated on next /gsd:update
-# For now, just note which files were modified
+# 清单将在下次 /gsd:update 时重新生成
+# 目前，仅记录哪些文件被修改了
 ```
 
-## Step 5: Cleanup option
+## 步骤 5：清理选项
 
-Ask user:
-- "Keep patch backups for reference?" → preserve `gsd-local-patches/`
-- "Clean up patch backups?" → remove `gsd-local-patches/` directory
+询问用户：
+- "保留补丁备份以供参考？" → 保留 `gsd-local-patches/`
+- "清理补丁备份？" → 删除 `gsd-local-patches/` 目录
 
-## Step 6: Report
+## 步骤 6：报告
 
 ```
-## Patches Reapplied
+## 补丁已重新应用
 
-| # | File | Status |
+| # | 文件 | 状态 |
 |---|------|--------|
-| 1 | {file_path} | ✓ Merged |
-| 2 | {file_path} | ○ Skipped (already upstream) |
-| 3 | {file_path} | ⚠ Conflict resolved |
+| 1 | {file_path} | ✓ 已合并 |
+| 2 | {file_path} | ○ 已跳过（已在上游） |
+| 3 | {file_path} | ⚠ 冲突已解决 |
 
-{count} file(s) updated. Your local modifications are active again.
+{count} 个文件已更新。你的本地修改再次激活。
 ```
 
 </process>
 
 <success_criteria>
-- [ ] All backed-up patches processed
-- [ ] User modifications merged into new version
-- [ ] Conflicts resolved with user input
-- [ ] Status reported for each file
+- [ ] 所有备份的补丁已处理
+- [ ] 用户修改已合并到新版本
+- [ ] 冲突已通过用户输入解决
+- [ ] 每个文件的状态已报告
 </success_criteria>

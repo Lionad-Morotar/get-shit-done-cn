@@ -1,10 +1,10 @@
 <purpose>
-Execute a phase prompt (PLAN.md) and create the outcome summary (SUMMARY.md).
+执行阶段提示（PLAN.md）并创建结果摘要（SUMMARY.md）。
 </purpose>
 
 <required_reading>
-Read STATE.md before any operation to load project context.
-Read config.json for planning behavior settings.
+在任何操作之前读取 STATE.md 以加载项目上下文。
+读取 config.json 以获取规划行为设置。
 
 @~/.claude/get-shit-done/references/git-integration.md
 </required_reading>
@@ -12,43 +12,43 @@ Read config.json for planning behavior settings.
 <process>
 
 <step name="init_context" priority="first">
-Load execution context (uses `init execute-phase` for full context, including file contents):
+加载执行上下文（使用 `init execute-phase` 获取完整上下文，包括文件内容）：
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init execute-phase "${PHASE}" --include state,config)
 ```
 
-Extract from init JSON: `executor_model`, `commit_docs`, `phase_dir`, `phase_number`, `plans`, `summaries`, `incomplete_plans`.
+从 init JSON 提取：`executor_model`、`commit_docs`、`phase_dir`、`phase_number`、`plans`、`summaries`、`incomplete_plans`。
 
-**File contents (from --include):** `state_content`, `config_content`. Access with:
+**文件内容（来自 --include）：** `state_content`、`config_content`。访问方式：
 ```bash
 STATE_CONTENT=$(echo "$INIT" | jq -r '.state_content // empty')
 CONFIG_CONTENT=$(echo "$INIT" | jq -r '.config_content // empty')
 ```
 
-If `.planning/` missing: error.
+如果 `.planning/` 缺失：错误。
 </step>
 
 <step name="identify_plan">
 ```bash
-# Use plans/summaries from INIT JSON, or list files
+# 使用 INIT JSON 中的 plans/summaries，或列出文件
 ls .planning/phases/XX-name/*-PLAN.md 2>/dev/null | sort
 ls .planning/phases/XX-name/*-SUMMARY.md 2>/dev/null | sort
 ```
 
-Find first PLAN without matching SUMMARY. Decimal phases supported (`01.1-hotfix/`):
+查找第一个没有匹配 SUMMARY 的 PLAN。支持十进制阶段（`01.1-hotfix/`）：
 
 ```bash
 PHASE=$(echo "$PLAN_PATH" | grep -oE '[0-9]+(\.[0-9]+)?-[0-9]+')
-# config_content already loaded via --include config in init_context
+# config_content 已通过 init_context 中的 --include config 加载
 ```
 
 <if mode="yolo">
-Auto-approve: `⚡ Execute {phase}-{plan}-PLAN.md [Plan X of Y for Phase Z]` → parse_segments.
+自动批准：`⚡ Execute {phase}-{plan}-PLAN.md [阶段 Z 的计划 X 共 Y]` → parse_segments。
 </if>
 
 <if mode="interactive" OR="custom with gates.execute_next_plan true">
-Present plan identification, wait for confirmation.
+展示计划识别，等待确认。
 </if>
 </step>
 
@@ -64,21 +64,21 @@ PLAN_START_EPOCH=$(date +%s)
 grep -n "type=\"checkpoint" .planning/phases/XX-name/{phase}-{plan}-PLAN.md
 ```
 
-**Routing by checkpoint type:**
+**通过检查点类型路由：**
 
-| Checkpoints | Pattern | Execution |
+| 检查点 | 模式 | 执行 |
 |-------------|---------|-----------|
-| None | A (autonomous) | Single subagent: full plan + SUMMARY + commit |
-| Verify-only | B (segmented) | Segments between checkpoints. After none/human-verify → SUBAGENT. After decision/human-action → MAIN |
-| Decision | C (main) | Execute entirely in main context |
+| 无 | A（自主） | 单个子代理：完整计划 + SUMMARY + 提交 |
+| 仅验证 | B（分段） | 检查点之间的段。在 none/human-verify 之后 → 子代理。在 decision/human-action 之后 → 主代理 |
+| 决策 | C（主） | 完全在主上下文中执行 |
 
-**Pattern A:** init_agent_tracking → spawn Task(subagent_type="gsd-executor", model=executor_model) with prompt: execute plan at [path], autonomous, all tasks + SUMMARY + commit, follow deviation/auth rules, report: plan name, tasks, SUMMARY path, commit hash → track agent_id → wait → update tracking → report.
+**模式 A：** init_agent_tracking → 生成 Task(subagent_type="gsd-executor", model=executor_model)，提示：在 [path] 处执行计划、自主、所有任务 + SUMMARY + 提交、遵循偏差/授权规则、报告：计划名称、任务、SUMMARY 路径、提交哈希 → 跟踪 agent_id → 等待 → 更新跟踪 → 报告。
 
-**Pattern B:** Execute segment-by-segment. Autonomous segments: spawn subagent for assigned tasks only (no SUMMARY/commit). Checkpoints: main context. After all segments: aggregate, create SUMMARY, commit. See segment_execution.
+**模式 B：** 逐段执行。自主段：仅为分配的任务生成子代理（无 SUMMARY/提交）。检查点：主上下文。所有段之后：聚合、创建 SUMMARY、提交。参见 segment_execution。
 
-**Pattern C:** Execute in main using standard flow (step name="execute").
+**模式 C：** 使用标准流程在主上下文中执行（步骤名称 "execute"）。
 
-Fresh context per subagent preserves peak quality. Main context stays lean.
+每个子代理的新鲜上下文保持峰值质量。主上下文保持精简。
 </step>
 
 <step name="init_agent_tracking">
@@ -89,31 +89,30 @@ fi
 rm -f .planning/current-agent-id.txt
 if [ -f .planning/current-agent-id.txt ]; then
   INTERRUPTED_ID=$(cat .planning/current-agent-id.txt)
-  echo "Found interrupted agent: $INTERRUPTED_ID"
+  echo "发现中断的代理：$INTERRUPTED_ID"
 fi
 ```
 
-If interrupted: ask user to resume (Task `resume` parameter) or start fresh.
+如果中断：询问用户恢复（Task `resume` 参数）或重新开始。
 
-**Tracking protocol:** On spawn: write agent_id to `current-agent-id.txt`, append to agent-history.json: `{"agent_id":"[id]","task_description":"[desc]","phase":"[phase]","plan":"[plan]","segment":[num|null],"timestamp":"[ISO]","status":"spawned","completion_timestamp":null}`. On completion: status → "completed", set completion_timestamp, delete current-agent-id.txt. Prune: if entries > max_entries, remove oldest "completed" (never "spawned").
+**跟踪协议：** 生成时：将 agent_id 写入 `current-agent-id.txt`，附加到 agent-history.json：`{"agent_id":"[id]","task_description":"[desc]","phase":"[phase]","plan":"[plan]","segment":[num|null],"timestamp":"[ISO]","status":"spawned","completion_timestamp":null}`。完成时：status → "completed"，设置 completion_timestamp，删除 current-agent-id.txt。修剪：如果条目 > max_entries，删除最旧的 "completed"（从不删除 "spawned"）。
 
-Run for Pattern A/B before spawning. Pattern C: skip.
+在模式 A/B 生成之前运行。模式 C：跳过。
 </step>
 
 <step name="segment_execution">
-Pattern B only (verify-only checkpoints). Skip for A/C.
+仅模式 B（仅验证检查点）。跳过 A/C。
 
-1. Parse segment map: checkpoint locations and types
-2. Per segment:
-   - Subagent route: spawn gsd-executor for assigned tasks only. Prompt: task range, plan path, read full plan for context, execute assigned tasks, track deviations, NO SUMMARY/commit. Track via agent protocol.
-   - Main route: execute tasks using standard flow (step name="execute")
-3. After ALL segments: aggregate files/deviations/decisions → create SUMMARY.md → commit → self-check:
-   - Verify key-files.created exist on disk with `[ -f ]`
-   - Check `git log --oneline --all --grep="{phase}-{plan}"` returns ≥1 commit
-   - Append `## Self-Check: PASSED` or `## Self-Check: FAILED` to SUMMARY
+1. 解析段映射：检查点位置和类型
+2. 每段：
+   - 子代理路由：仅为分配的任务生成 gsd-executor。提示：任务范围、计划路径、读取完整计划作为上下文、执行分配的任务、跟踪偏差、无 SUMMARY/提交。通过代理协议跟踪。
+   - 主路由：使用标准流程执行任务（步骤名称 "execute"）
+3. 所有段之后：聚合文件/偏差/决策 → 创建 SUMMARY.md → 提交 → 自检：
+   - 使用 `[ -f ]` 验证 key-files.created 存在于磁盘上
+   - 检查 `git log --oneline --all --grep="{phase}-{plan}"` 返回 ≥1 个提交
+   - 将 `## Self-Check: PASSED` 或 `## Self-Check: FAILED` 附加到 SUMMARY
 
-   **Known Claude Code bug (classifyHandoffIfNeeded):** If any segment agent reports "failed" with `classifyHandoffIfNeeded is not defined`, this is a Claude Code runtime bug — not a real failure. Run spot-checks; if they pass, treat as successful.
-
+   **已知的 Claude Code 错误（classifyHandoffIfNeeded）：** 如果任何段代理报告 "failed" 且带有 `classifyHandoffIfNeeded is not defined`，这是一个 Claude Code 运行时错误 — 不是真正的失败。运行抽查；如果通过，视为成功。
 
 
 
@@ -123,173 +122,173 @@ Pattern B only (verify-only checkpoints). Skip for A/C.
 ```bash
 cat .planning/phases/XX-name/{phase}-{plan}-PLAN.md
 ```
-This IS the execution instructions. Follow exactly. If plan references CONTEXT.md: honor user's vision throughout.
+这就是执行指令。完全遵循。如果计划引用 CONTEXT.md：始终尊重用户的愿景。
 </step>
 
 <step name="previous_phase_check">
 ```bash
 ls .planning/phases/*/SUMMARY.md 2>/dev/null | sort -r | head -2 | tail -1
 ```
-If previous SUMMARY has unresolved "Issues Encountered" or "Next Phase Readiness" blockers: AskUserQuestion(header="Previous Issues", options: "Proceed anyway" | "Address first" | "Review previous").
+如果以前的 SUMMARY 有未解决的 "遇到的问题" 或 "下一阶段就绪" 阻塞器：AskUserQuestion(header="以前的问题"，选项："无论如何继续" | "先解决" | "审查以前的")。
 </step>
 
 <step name="execute">
-Deviations are normal — handle via rules below.
+偏差是正常的 — 通过以下规则处理。
 
-1. Read @context files from prompt
-2. Per task:
-   - `type="auto"`: if `tdd="true"` → TDD execution. Implement with deviation rules + auth gates. Verify done criteria. Commit (see task_commit). Track hash for Summary.
-   - `type="checkpoint:*"`: STOP → checkpoint_protocol → wait for user → continue only after confirmation.
-3. Run `<verification>` checks
-4. Confirm `<success_criteria>` met
-5. Document deviations in Summary
+1. 从提示读取 @context 文件
+2. 每个任务：
+   - `type="auto"`：如果 `tdd="true"` → TDD 执行。使用偏差规则 + 授权门实现。验证完成标准。提交（参见 task_commit）。跟踪哈希用于摘要。
+   - `type="checkpoint:*"`：停止 → checkpoint_protocol → 等待用户 → 仅在确认后继续。
+3. 运行 `<verification>` 检查
+4. 确认满足 `<success_criteria>`
+5. 在摘要中记录偏差
 </step>
 
 <authentication_gates>
 
-## Authentication Gates
+## 授权门
 
-Auth errors during execution are NOT failures — they're expected interaction points.
+执行期间的授权错误不是失败 — 它们是预期的交互点。
 
-**Indicators:** "Not authenticated", "Unauthorized", 401/403, "Please run {tool} login", "Set {ENV_VAR}"
+**指示器：** "未授权"、"未经授权"、401/403、"请运行 {tool} login"、"设置 {ENV_VAR}"
 
-**Protocol:**
-1. Recognize auth gate (not a bug)
-2. STOP task execution
-3. Create dynamic checkpoint:human-action with exact auth steps
-4. Wait for user to authenticate
-5. Verify credentials work
-6. Retry original task
-7. Continue normally
+**协议：**
+1. 识别授权门（不是错误）
+2. 停止任务执行
+3. 创建动态检查点：human-action 并带有确切的授权步骤
+4. 等待用户授权
+5. 验证凭据有效
+6. 重试原始任务
+7. 正常继续
 
-**Example:** `vercel --yes` → "Not authenticated" → checkpoint asking user to `vercel login` → verify with `vercel whoami` → retry deploy → continue
+**示例：** `vercel --yes` → "未授权" → 检查点要求用户 `vercel login` → 使用 `vercel whoami` 验证 → 重试部署 → 继续
 
-**In Summary:** Document as normal flow under "## Authentication Gates", not as deviations.
+**在摘要中：** 在 "## 授权门" 下记录为正常流程，而不是偏差。
 
 </authentication_gates>
 
 <deviation_rules>
 
-## Deviation Rules
+## 偏差规则
 
-You WILL discover unplanned work. Apply automatically, track all for Summary.
+您将发现计划外的工作。自动应用，跟踪所有用于摘要。
 
-| Rule | Trigger | Action | Permission |
+| 规则 | 触发器 | 操作 | 权限 |
 |------|---------|--------|------------|
-| **1: Bug** | Broken behavior, errors, wrong queries, type errors, security vulns, race conditions, leaks | Fix → test → verify → track `[Rule 1 - Bug]` | Auto |
-| **2: Missing Critical** | Missing essentials: error handling, validation, auth, CSRF/CORS, rate limiting, indexes, logging | Add → test → verify → track `[Rule 2 - Missing Critical]` | Auto |
-| **3: Blocking** | Prevents completion: missing deps, wrong types, broken imports, missing env/config/files, circular deps | Fix blocker → verify proceeds → track `[Rule 3 - Blocking]` | Auto |
-| **4: Architectural** | Structural change: new DB table, schema change, new service, switching libs, breaking API, new infra | STOP → present decision (below) → track `[Rule 4 - Architectural]` | Ask user |
+| **1：错误** | 错误行为、错误、错误查询、类型错误、安全漏洞、竞态条件、泄漏 | 修复 → 测试 → 验证 → 跟踪 `[规则 1 - 错误]` | 自动 |
+| **2：缺少关键** | 缺少必要内容：错误处理、验证、授权、CSRF/CORS、速率限制、索引、日志记录 | 添加 → 测试 → 验证 → 跟踪 `[规则 2 - 缺少关键]` | 自动 |
+| **3：阻塞** | 阻止完成：缺少依赖、错误类型、损坏的导入、缺少环境/配置/文件、循环依赖 | 修复阻塞器 → 验证继续 → 跟踪 `[规则 3 - 阻塞]` | 自动 |
+| **4：架构** | 结构更改：新数据库表、架构更改、新服务、切换库、破坏性 API、新基础设施 | 停止 → 展示决策（下面）→ 跟踪 `[规则 4 - 架构]` | 询问用户 |
 
-**Rule 4 format:**
+**规则 4 格式：**
 ```
-⚠️ Architectural Decision Needed
+⚠️ 需要架构决策
 
-Current task: [task name]
-Discovery: [what prompted this]
-Proposed change: [modification]
-Why needed: [rationale]
-Impact: [what this affects]
-Alternatives: [other approaches]
+当前任务：[任务名称]
+发现：[提示此内容的内容]
+建议更改：[修改]
+为什么需要：[理由]
+影响：[受影响的内容]
+替代方案：[其他方法]
 
-Proceed with proposed change? (yes / different approach / defer)
+继续建议的更改？（是 / 不同方法 / 延迟）
 ```
 
-**Priority:** Rule 4 (STOP) > Rules 1-3 (auto) > unsure → Rule 4
-**Edge cases:** missing validation → R2 | null crash → R1 | new table → R4 | new column → R1/2
-**Heuristic:** Affects correctness/security/completion? → R1-3. Maybe? → R4.
+**优先级：** 规则 4（停止）> 规则 1-3（自动）> 不确定 → 规则 4
+**边缘情况：** 缺少验证 → R2 | null 崩溃 → R1 | 新表 → R4 | 新列 → R1/2
+**启发式：** 影响正确性/安全性/完成？→ R1-3。也许？→ R4。
 
 </deviation_rules>
 
 <deviation_documentation>
 
-## Documenting Deviations
+## 记录偏差
 
-Summary MUST include deviations section. None? → `## Deviations from Plan\n\nNone - plan executed exactly as written.`
+摘要必须包括偏差部分。无？→ `## 计划偏差\n\n无 - 计划完全按书面执行。`
 
-Per deviation: **[Rule N - Category] Title** — Found during: Task X | Issue | Fix | Files modified | Verification | Commit hash
+每个偏差：**[规则 N - 类别] 标题** — 发现于：任务 X | 问题 | 修复 | 修改的文件 | 验证 | 提交哈希
 
-End with: **Total deviations:** N auto-fixed (breakdown). **Impact:** assessment.
+结束于：**总偏差：** N 个自动修复（细分）。**影响：** 评估。
 
 </deviation_documentation>
 
 <tdd_plan_execution>
-## TDD Execution
+## TDD 执行
 
-For `type: tdd` plans — RED-GREEN-REFACTOR:
+对于 `type: tdd` 计划 — 红-绿-重构：
 
-1. **Infrastructure** (first TDD plan only): detect project, install framework, config, verify empty suite
-2. **RED:** Read `<behavior>` → failing test(s) → run (MUST fail) → commit: `test({phase}-{plan}): add failing test for [feature]`
-3. **GREEN:** Read `<implementation>` → minimal code → run (MUST pass) → commit: `feat({phase}-{plan}): implement [feature]`
-4. **REFACTOR:** Clean up → tests MUST pass → commit: `refactor({phase}-{plan}): clean up [feature]`
+1. **基础设施**（仅第一个 TDD 计划）：检测项目、安装框架、配置、验证空套件
+2. **红：** 读取 `<behavior>` → 失败测试 → 运行（必须失败）→ 提交：`test({phase}-{plan}): 为 [功能] 添加失败测试`
+3. **绿：** 读取 `<implementation>` → 最小代码 → 运行（必须通过）→ 提交：`feat({phase}-{plan}): 实现 [功能]`
+4. **重构：** 清理 → 测试必须通过 → 提交：`refactor({phase}-{plan}): 清理 [功能]`
 
-Errors: RED doesn't fail → investigate test/existing feature. GREEN doesn't pass → debug, iterate. REFACTOR breaks → undo.
+错误：红不失败 → 调查测试/现有功能。绿不通 → 调试、迭代。重构破坏 → 撤销。
 
-See `~/.claude/get-shit-done/references/tdd.md` for structure.
+结构见 `~/.claude/get-shit-done/references/tdd.md`。
 </tdd_plan_execution>
 
 <task_commit>
-## Task Commit Protocol
+## 任务提交协议
 
-After each task (verification passed, done criteria met), commit immediately.
+在每个任务之后（验证通过、满足完成标准），立即提交。
 
-**1. Check:** `git status --short`
+**1. 检查：** `git status --short`
 
-**2. Stage individually** (NEVER `git add .` or `git add -A`):
+**2. 单独暂存**（从不使用 `git add .` 或 `git add -A`）：
 ```bash
 git add src/api/auth.ts
 git add src/types/user.ts
 ```
 
-**3. Commit type:**
+**3. 提交类型：**
 
-| Type | When | Example |
+| 类型 | 当 | 示例 |
 |------|------|---------|
-| `feat` | New functionality | feat(08-02): create user registration endpoint |
-| `fix` | Bug fix | fix(08-02): correct email validation regex |
-| `test` | Test-only (TDD RED) | test(08-02): add failing test for password hashing |
-| `refactor` | No behavior change (TDD REFACTOR) | refactor(08-02): extract validation to helper |
-| `perf` | Performance | perf(08-02): add database index |
-| `docs` | Documentation | docs(08-02): add API docs |
-| `style` | Formatting | style(08-02): format auth module |
-| `chore` | Config/deps | chore(08-02): add bcrypt dependency |
+| `feat` | 新功能 | feat(08-02): 创建用户注册端点 |
+| `fix` | 错误修复 | fix(08-02): 更正电子邮件验证正则表达式 |
+| `test` | 仅测试（TDD 红） | test(08-02): 为密码哈希添加失败测试 |
+| `refactor` | 无行为更改（TDD 重构） | refactor(08-02): 将验证提取到辅助程序 |
+| `perf` | 性能 | perf(08-02): 添加数据库索引 |
+| `docs` | 文档 | docs(08-02): 添加 API 文档 |
+| `style` | 格式化 | style(08-02): 格式化授权模块 |
+| `chore` | 配置/依赖 | chore(08-02): 添加 bcrypt 依赖 |
 
-**4. Format:** `{type}({phase}-{plan}): {description}` with bullet points for key changes.
+**4. 格式：** `{type}({phase}-{plan}): {description}` 并带有关键更改的要点。
 
-**5. Record hash:**
+**5. 记录哈希：**
 ```bash
 TASK_COMMIT=$(git rev-parse --short HEAD)
-TASK_COMMITS+=("Task ${TASK_NUM}: ${TASK_COMMIT}")
+TASK_COMMITS+=("任务 ${TASK_NUM}: ${TASK_COMMIT}")
 ```
 
 </task_commit>
 
 <step name="checkpoint_protocol">
-On `type="checkpoint:*"`: automate everything possible first. Checkpoints are for verification/decisions only.
+在 `type="checkpoint:*"` 上：首先尽可能自动化。检查点仅用于验证/决策。
 
-Display: `CHECKPOINT: [Type]` box → Progress {X}/{Y} → Task name → type-specific content → `YOUR ACTION: [signal]`
+显示：`CHECKPOINT: [类型]` 框 → 进度 {X}/{Y} → 任务名称 → 特定类型的内容 → `您的操作：[signal]`
 
-| Type | Content | Resume signal |
+| 类型 | 内容 | 恢复信号 |
 |------|---------|---------------|
-| human-verify (90%) | What was built + verification steps (commands/URLs) | "approved" or describe issues |
-| decision (9%) | Decision needed + context + options with pros/cons | "Select: option-id" |
-| human-action (1%) | What was automated + ONE manual step + verification plan | "done" |
+| human-verify（90%） | 构建的内容 + 验证步骤（命令/URL） | "approved" 或描述问题 |
+| decision（9%） | 需要决策 + 上下文 + 带有优点/缺点的选项 | "选择：option-id" |
+| human-action（1%） | 自动化的内容 + 一个手动步骤 + 验证计划 | "done"`
 
-After response: verify if specified. Pass → continue. Fail → inform, wait. WAIT for user — do NOT hallucinate completion.
+响应后：如果指定则验证。通过 → 继续。失败 → 通知、等待。等待用户 — 不要臆测完成。
 
-See ~/.claude/get-shit-done/references/checkpoints.md for details.
+详细信息见 ~/.claude/get-shit-done/references/checkpoints.md。
 </step>
 
 <step name="checkpoint_return_for_orchestrator">
-When spawned via Task and hitting checkpoint: return structured state (cannot interact with user directly).
+当通过 Task 生成并遇到检查点时：返回结构化状态（无法直接与用户交互）。
 
-**Required return:** 1) Completed Tasks table (hashes + files) 2) Current Task (what's blocking) 3) Checkpoint Details (user-facing content) 4) Awaiting (what's needed from user)
+**必需返回：** 1) 已完成任务表（哈希 + 文件）2) 当前任务（阻塞的内容）3) 检查点详细信息（面向用户的内容）4) 等待（需要用户提供的内容）
 
-Orchestrator parses → presents to user → spawns fresh continuation with your completed tasks state. You will NOT be resumed. In main context: use checkpoint_protocol above.
+编排器解析 → 展示给用户 → 使用您的已完成任务状态生成新鲜的继续。您不会被恢复。在主上下文中：使用上面的 checkpoint_protocol。
 </step>
 
 <step name="verification_failure_gate">
-If verification fails: STOP. Present: "Verification failed for Task [X]: [name]. Expected: [criteria]. Actual: [result]." Options: Retry | Skip (mark incomplete) | Stop (investigate). If skipped → SUMMARY "Issues Encountered".
+如果验证失败：停止。展示："任务 [X] 的验证失败：[name]。预期：[标准]。实际：[result]。"。选项：重试 | 跳过（标记未完成） | 停止（调查）。如果跳过 → 摘要 "遇到的问题"。
 </step>
 
 <step name="record_completion_time">
@@ -315,34 +314,34 @@ fi
 grep -A 50 "^user_setup:" .planning/phases/XX-name/{phase}-{plan}-PLAN.md | head -50
 ```
 
-If user_setup exists: create `{phase}-USER-SETUP.md` using template `~/.claude/get-shit-done/templates/user-setup.md`. Per service: env vars table, account setup checklist, dashboard config, local dev notes, verification commands. Status "Incomplete". Set `USER_SETUP_CREATED=true`. If empty/missing: skip.
+如果 user_setup 存在：使用模板 `~/.claude/get-shit-done/templates/user-setup.md` 创建 `{phase}-USER-SETUP.md`。每个服务：环境变量表、帐户设置清单、仪表板配置、本地开发注释、验证命令。状态 "未完成"。设置 `USER_SETUP_CREATED=true`。如果为空/缺失：跳过。
 </step>
 
 <step name="create_summary">
-Create `{phase}-{plan}-SUMMARY.md` at `.planning/phases/XX-name/`. Use `~/.claude/get-shit-done/templates/summary.md`.
+在 `.planning/phases/XX-name/` 处创建 `{phase}-{plan}-SUMMARY.md`。使用 `~/.claude/get-shit-done/templates/summary.md`。
 
-**Frontmatter:** phase, plan, subsystem, tags | requires/provides/affects | tech-stack.added/patterns | key-files.created/modified | key-decisions | duration ($DURATION), completed ($PLAN_END_TIME date).
+**Frontmatter：** 阶段、计划、子系统、标签 | requires/provides/affects | tech-stack.added/patterns | key-files.created/modified | key-decisions | 持续时间（$DURATION）、完成时间（$PLAN_END_TIME 日期）。
 
-Title: `# Phase [X] Plan [Y]: [Name] Summary`
+标题：`# 阶段 [X] 计划 [Y]：[名称] 摘要`
 
-One-liner SUBSTANTIVE: "JWT auth with refresh rotation using jose library" not "Authentication implemented"
+One-liner 实质性："使用 jose 库的刷新轮换 JWT 授权" 而不是 "已实现授权"
 
-Include: duration, start/end times, task count, file count.
+包括：持续时间、开始/结束时间、任务计数、文件计数。
 
-Next: more plans → "Ready for {next-plan}" | last → "Phase complete, ready for transition".
+下一步：更多计划 → "准备 {next-plan}" | 最后 → "阶段完成，准备过渡"。
 </step>
 
 <step name="update_current_position">
-Update STATE.md using gsd-tools:
+使用 gsd-tools 更新 STATE.md：
 
 ```bash
-# Advance plan counter (handles last-plan edge case)
+# 前进计划计数器（处理最后计划边缘情况）
 node ~/.claude/get-shit-done/bin/gsd-tools.js state advance-plan
 
-# Recalculate progress bar from disk state
+# 从磁盘状态重新计算进度条
 node ~/.claude/get-shit-done/bin/gsd-tools.js state update-progress
 
-# Record execution metrics
+# 记录执行指标
 node ~/.claude/get-shit-done/bin/gsd-tools.js state record-metric \
   --phase "${PHASE}" --plan "${PLAN}" --duration "${DURATION}" \
   --tasks "${TASK_COUNT}" --files "${FILE_COUNT}"
@@ -350,55 +349,55 @@ node ~/.claude/get-shit-done/bin/gsd-tools.js state record-metric \
 </step>
 
 <step name="extract_decisions_and_issues">
-From SUMMARY: Extract decisions and add to STATE.md:
+从摘要：提取决策并添加到 STATE.md：
 
 ```bash
-# Add each decision from SUMMARY key-decisions
+# 从摘要 key-decisions 添加每个决策
 node ~/.claude/get-shit-done/bin/gsd-tools.js state add-decision \
   --phase "${PHASE}" --summary "${DECISION_TEXT}" --rationale "${RATIONALE}"
 
-# Add blockers if any found
-node ~/.claude/get-shit-done/bin/gsd-tools.js state add-blocker "Blocker description"
+# 如果发现阻塞器则添加
+node ~/.claude/get-shit-done/bin/gsd-tools.js state add-blocker "阻塞器描述"
 ```
 </step>
 
 <step name="update_session_continuity">
-Update session info using gsd-tools:
+使用 gsd-tools 更新会话信息：
 
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js state record-session \
-  --stopped-at "Completed ${PHASE}-${PLAN}-PLAN.md" \
-  --resume-file "None"
+  --stopped-at "已完成 ${PHASE}-${PLAN}-PLAN.md" \
+  --resume-file "无"
 ```
 
-Keep STATE.md under 150 lines.
+保持 STATE.md 低于 150 行。
 </step>
 
 <step name="issues_review_gate">
-If SUMMARY "Issues Encountered" ≠ "None": yolo → log and continue. Interactive → present issues, wait for acknowledgment.
+如果摘要 "遇到的问题" ≠ "无"：yolo → 记录并继续。交互 → 展示问题，等待确认。
 </step>
 
 <step name="update_roadmap">
-More plans → update plan count, keep "In progress". Last plan → mark phase "Complete", add date.
+更多计划 → 更新计划计数，保持 "进行中"。最后计划 → 标记阶段 "完成"，添加日期。
 </step>
 
 <step name="git_commit_metadata">
-Task code already committed per-task. Commit plan metadata:
+任务代码已按任务提交。提交计划元数据：
 
 ```bash
-node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs({phase}-{plan}): complete [plan-name] plan" --files .planning/phases/XX-name/{phase}-{plan}-SUMMARY.md .planning/STATE.md .planning/ROADMAP.md
+node ~/.claude/get-shit-done/bin/gsd-tools.js commit "docs({phase}-{plan}): 完成 [plan-name] 计划" --files .planning/phases/XX-name/{phase}-{plan}-SUMMARY.md .planning/STATE.md .planning/ROADMAP.md
 ```
 </step>
 
 <step name="update_codebase_map">
-If .planning/codebase/ doesn't exist: skip.
+如果 .planning/codebase/ 不存在：跳过。
 
 ```bash
-FIRST_TASK=$(git log --oneline --grep="feat({phase}-{plan}):" --grep="fix({phase}-{plan}):" --grep="test({phase}-{plan}):" --reverse | head -1 | cut -d' ' -f1)
+FIRST_TASK=$(git log --oneline --grep="feat({phase}-{plan}):" --grep="fix({phase}-{plan}):" --grep="test({phase-{plan}):" --reverse | head -1 | cut -d' ' -f1)
 git diff --name-only ${FIRST_TASK}^..HEAD 2>/dev/null
 ```
 
-Update only structural changes: new src/ dir → STRUCTURE.md | deps → STACK.md | file pattern → CONVENTIONS.md | API client → INTEGRATIONS.md | config → STACK.md | renamed → update paths. Skip code-only/bugfix/content changes.
+仅更新结构更改：新的 src/ 目录 → STRUCTURE.md | 依赖 → STACK.md | 文件模式 → CONVENTIONS.md | API 客户端 → INTEGRATIONS.md | 配置 → STACK.md | 重命名 → 更新路径。跳过仅代码/错误修复/内容更改。
 
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js commit "" --files .planning/codebase/*.md --amend
@@ -406,32 +405,32 @@ node ~/.claude/get-shit-done/bin/gsd-tools.js commit "" --files .planning/codeba
 </step>
 
 <step name="offer_next">
-If `USER_SETUP_CREATED=true`: display `⚠️ USER SETUP REQUIRED` with path + env/config tasks at TOP.
+如果 `USER_SETUP_CREATED=true`：在顶部显示 `⚠️ 需要用户设置` 并带有路径 + 环境/配置任务。
 
 ```bash
 ls -1 .planning/phases/[current-phase-dir]/*-PLAN.md 2>/dev/null | wc -l
 ls -1 .planning/phases/[current-phase-dir]/*-SUMMARY.md 2>/dev/null | wc -l
 ```
 
-| Condition | Route | Action |
+| 条件 | 路由 | 操作 |
 |-----------|-------|--------|
-| summaries < plans | **A: More plans** | Find next PLAN without SUMMARY. Yolo: auto-continue. Interactive: show next plan, suggest `/gsd:execute-phase {phase}` + `/gsd:verify-work`. STOP here. |
-| summaries = plans, current < highest phase | **B: Phase done** | Show completion, suggest `/gsd:plan-phase {Z+1}` + `/gsd:verify-work {Z}` + `/gsd:discuss-phase {Z+1}` |
-| summaries = plans, current = highest phase | **C: Milestone done** | Show banner, suggest `/gsd:complete-milestone` + `/gsd:verify-work` + `/gsd:add-phase` |
+| summaries < plans | **A：更多计划** | 查找下一个没有 SUMMARY 的 PLAN。Yolo：自动继续。交互：显示下一个计划，建议 `/gsd:execute-phase {phase}` + `/gsd:verify-work`。在此停止。 |
+| summaries = plans，当前 < 最高阶段 | **B：阶段完成** | 显示完成，建议 `/gsd:plan-phase {Z+1}` + `/gsd:verify-work {Z}` + `/gsd:discuss-phase {Z+1}` |
+| summaries = plans，当前 = 最高阶段 | **C：里程碑完成** | 显示横幅，建议 `/gsd:complete-milestone` + `/gsd:verify-work` + `/gsd:add-phase` |
 
-All routes: `/clear` first for fresh context.
+所有路由：首先 `/clear` 以获得新上下文。
 </step>
 
 </process>
 
 <success_criteria>
 
-- All tasks from PLAN.md completed
-- All verifications pass
-- USER-SETUP.md generated if user_setup in frontmatter
-- SUMMARY.md created with substantive content
-- STATE.md updated (position, decisions, issues, session)
-- ROADMAP.md updated
-- If codebase map exists: map updated with execution changes (or skipped if no significant changes)
-- If USER-SETUP.md created: prominently surfaced in completion output
+- PLAN.md 的所有任务已完成
+- 所有验证通过
+- 如果 frontmatter 中有 user_setup，则生成 USER-SETUP.md
+- 创建了带有实质性内容的 SUMMARY.md
+- STATE.md 已更新（位置、决策、问题、会话）
+- ROADMAP.md 已更新
+- 如果存在代码库映射：使用执行更改更新映射（或如果没有重大更改则跳过）
+- 如果创建了 USER-SETUP.md：在完成输出中突出显示
 </success_criteria>

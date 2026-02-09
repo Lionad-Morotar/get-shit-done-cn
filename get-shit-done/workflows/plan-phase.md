@@ -1,141 +1,141 @@
 <purpose>
-Create executable phase prompts (PLAN.md files) for a roadmap phase with integrated research and verification. Default flow: Research (if needed) -> Plan -> Verify -> Done. Orchestrates gsd-phase-researcher, gsd-planner, and gsd-plan-checker agents with a revision loop (max 3 iterations).
+为路线图阶段创建可执行的阶段提示（PLAN.md 文件），具有集成的研究和验证。默认流程：研究（如果需要）→ 规划 → 验证 → 完成。编排 gsd-phase-researcher、gsd-planner 和 gsd-plan-checker 代理并具有修订循环（最多 3 次迭代）。
 </purpose>
 
 <required_reading>
-Read all files referenced by the invoking prompt's execution_context before starting.
+在开始之前读取执行上下文引用的所有文件。
 
 @~/.claude/get-shit-done/references/ui-brand.md
 </required_reading>
 
 <process>
 
-## 1. Initialize
+## 1. 初始化
 
-Load all context in one call (include file contents to avoid redundant reads):
+在一次调用中加载所有上下文（包括文件内容以避免冗余读取）：
 
 ```bash
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js init plan-phase "$PHASE" --include state,roadmap,requirements,context,research,verification,uat)
 ```
 
-Parse JSON for: `researcher_model`, `planner_model`, `checker_model`, `research_enabled`, `plan_checker_enabled`, `commit_docs`, `phase_found`, `phase_dir`, `phase_number`, `phase_name`, `phase_slug`, `padded_phase`, `has_research`, `has_context`, `has_plans`, `plan_count`, `planning_exists`, `roadmap_exists`.
+解析 JSON 以获取：`researcher_model`、`planner_model`、`checker_model`、`research_enabled`、`plan_checker_enabled`、`commit_docs`、`phase_found`、`phase_dir`、`phase_number`、`phase_name`、`phase_slug`、`padded_phase`、`has_research`、`has_context`、`has_plans`、`plan_count`、`planning_exists`、`roadmap_exists`。
 
-**File contents (from --include):** `state_content`, `roadmap_content`, `requirements_content`, `context_content`, `research_content`, `verification_content`, `uat_content`. These are null if files don't exist.
+**文件内容（来自 --include）：** `state_content`、`roadmap_content`、`requirements_content`、`context_content`、`research_content`、`verification_content`、`uat_content`。如果文件不存在，这些为 null。
 
-**If `planning_exists` is false:** Error — run `/gsd:new-project` first.
+**如果 `planning_exists` 为 false：** 错误 — 首先运行 `/gsd:new-project`。
 
-## 2. Parse and Normalize Arguments
+## 2. 解析和规范化参数
 
-Extract from $ARGUMENTS: phase number (integer or decimal like `2.1`), flags (`--research`, `--skip-research`, `--gaps`, `--skip-verify`).
+从 $ARGUMENTS 提取：阶段编号（整数或十进制，如 `2.1`）、标志（`--research`、`--skip-research`、`--gaps`、`--skip-verify`）。
 
-**If no phase number:** Detect next unplanned phase from roadmap.
+**如果没有阶段编号：** 从路线图检测下一个未计划的阶段。
 
-**If `phase_found` is false:** Validate phase exists in ROADMAP.md. If valid, create the directory using `phase_slug` and `padded_phase` from init:
+**如果 `phase_found` 为 false：** 在 ROADMAP.md 中验证阶段是否存在。如果有效，使用 init 中的 `phase_slug` 和 `padded_phase` 创建目录：
 ```bash
 mkdir -p ".planning/phases/${padded_phase}-${phase_slug}"
 ```
 
-**Existing artifacts from init:** `has_research`, `has_plans`, `plan_count`.
+**来自 init 的现有工件：** `has_research`、`has_plans`、`plan_count`。
 
-## 3. Validate Phase
+## 3. 验证阶段
 
 ```bash
 PHASE_INFO=$(node ~/.claude/get-shit-done/bin/gsd-tools.js roadmap get-phase "${PHASE}")
 ```
 
-**If `found` is false:** Error with available phases. **If `found` is true:** Extract `phase_number`, `phase_name`, `goal` from JSON.
+**如果 `found` 为 false：** 错误并显示可用阶段。**如果 `found` 为 true：** 从 JSON 提取 `phase_number`、`phase_name`、`goal`。
 
-## 4. Load CONTEXT.md
+## 4. 加载 CONTEXT.md
 
-Use `context_content` from init JSON (already loaded via `--include context`).
+使用 init JSON 中的 `context_content`（已通过 `--include context` 加载）。
 
-**CRITICAL:** Use `context_content` from INIT — pass to researcher, planner, checker, and revision agents.
+**关键：** 使用 INIT 中的 `context_content` — 传递给研究者、规划器、检查器和修订代理。
 
-If `context_content` is not null, display: `Using phase context from: ${PHASE_DIR}/*-CONTEXT.md`
+如果 `context_content` 不为 null，显示：`Using phase context from: ${PHASE_DIR}/*-CONTEXT.md`
 
-## 5. Handle Research
+## 5. 处理研究
 
-**Skip if:** `--gaps` flag, `--skip-research` flag, or `research_enabled` is false (from init) without `--research` override.
+**跳过如果：** `--gaps` 标志、`--skip-research` 标志或 `research_enabled` 为 false（来自 init）而没有 `--research` 覆盖。
 
-**If `has_research` is true (from init) AND no `--research` flag:** Use existing, skip to step 6.
+**如果 `has_research` 为 true（来自 init）且没有 `--research` 标志：** 使用现有，跳到步骤 6。
 
-**If RESEARCH.md missing OR `--research` flag:**
+**如果缺少 RESEARCH.md 或存在 `--research` 标志：**
 
-Display banner:
+显示横幅：
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► RESEARCHING PHASE {X}
+ GSD ► 研究阶段 {X}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-◆ Spawning researcher...
+◆ 生成研究者...
 ```
 
-### Spawn gsd-phase-researcher
+### 生成 gsd-phase-researcher
 
 ```bash
 PHASE_DESC=$(node ~/.claude/get-shit-done/bin/gsd-tools.js roadmap get-phase "${PHASE}" | jq -r '.section')
-# Use requirements_content from INIT (already loaded via --include requirements)
+# 使用来自 INIT 的 requirements_content（已通过 --include requirements 加载）
 REQUIREMENTS=$(echo "$INIT" | jq -r '.requirements_content // empty' | grep -A100 "## Requirements" | head -50)
 STATE_SNAP=$(node ~/.claude/get-shit-done/bin/gsd-tools.js state-snapshot)
-# Extract decisions from state-snapshot JSON: jq '.decisions[] | "\(.phase): \(.summary) - \(.rationale)"'
+# 从 state-snapshot JSON 提取决策：jq '.decisions[] | "\(.phase): \(.summary) - \(.rationale)"'
 ```
 
-Research prompt:
+研究提示：
 
 ```markdown
 <objective>
-Research how to implement Phase {phase_number}: {phase_name}
-Answer: "What do I need to know to PLAN this phase well?"
+研究如何实现阶段 {phase_number}：{phase_name}
+回答："要很好地规划此阶段我需要知道什么？"
 </objective>
 
 <phase_context>
-IMPORTANT: If CONTEXT.md exists below, it contains user decisions from /gsd:discuss-phase.
-- **Decisions** = Locked — research THESE deeply, no alternatives
-- **Claude's Discretion** = Freedom areas — research options, recommend
-- **Deferred Ideas** = Out of scope — ignore
+重要：如果下面存在 CONTEXT.md，它包含来自 /gsd:discuss-phase 的用户决策。
+- **决策** = 已锁定 — 深入研究这些，无替代方案
+- **Claude 的自决** = 自由区域 — 研究选项、推荐
+- **延迟的想法** = 超出范围 — 忽略
 
 {context_content}
 </phase_context>
 
 <additional_context>
-**Phase description:** {phase_description}
-**Requirements:** {requirements}
-**Prior decisions:** {decisions}
+**阶段描述：** {phase_description}
+**需求：** {requirements}
+**先前的决策：** {decisions}
 </additional_context>
 
 <output>
-Write to: {phase_dir}/{phase}-RESEARCH.md
+写入到：{phase_dir}/{phase}-RESEARCH.md
 </output>
 ```
 
 ```
 Task(
-  prompt="First, read ~/.claude/agents/gsd-phase-researcher.md for your role and instructions.\n\n" + research_prompt,
+  prompt="首先，读取 ~/.claude/agents/gsd-phase-researcher.md 以获取您的角色和说明。\n\n" + research_prompt,
   subagent_type="general-purpose",
   model="{researcher_model}",
   description="Research Phase {phase}"
 )
 ```
 
-### Handle Researcher Return
+### 处理研究者返回
 
-- **`## RESEARCH COMPLETE`:** Display confirmation, continue to step 6
-- **`## RESEARCH BLOCKED`:** Display blocker, offer: 1) Provide context, 2) Skip research, 3) Abort
+- **`## RESEARCH COMPLETE`：** 显示确认，继续到步骤 6
+- **`## RESEARCH BLOCKED`：** 显示阻塞因素，提供：1) 提供上下文，2) 跳过研究，3) 中止
 
-## 6. Check Existing Plans
+## 6. 检查现有计划
 
 ```bash
 ls "${PHASE_DIR}"/*-PLAN.md 2>/dev/null
 ```
 
-**If exists:** Offer: 1) Add more plans, 2) View existing, 3) Replan from scratch.
+**如果存在：** 提供：1) 添加更多计划，2) 查看现有，3) 从头重新规划。
 
-## 7. Use Context Files from INIT
+## 7. 使用来自 INIT 的上下文文件
 
-All file contents are already loaded via `--include` in step 1 (`@` syntax doesn't work across Task() boundaries):
+所有文件内容已在步骤 1 中通过 `--include` 加载（`@` 语法在 Task() 边界之间不起作用）：
 
 ```bash
-# Extract from INIT JSON (no need to re-read files)
+# 从 INIT JSON 提取（无需重新读取文件）
 STATE_CONTENT=$(echo "$INIT" | jq -r '.state_content // empty')
 ROADMAP_CONTENT=$(echo "$INIT" | jq -r '.roadmap_content // empty')
 REQUIREMENTS_CONTENT=$(echo "$INIT" | jq -r '.requirements_content // empty')
@@ -145,110 +145,110 @@ UAT_CONTENT=$(echo "$INIT" | jq -r '.uat_content // empty')
 CONTEXT_CONTENT=$(echo "$INIT" | jq -r '.context_content // empty')
 ```
 
-## 8. Spawn gsd-planner Agent
+## 8. 生成 gsd-planner 代理
 
-Display banner:
+显示横幅：
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► PLANNING PHASE {X}
+ GSD ► 规划阶段 {X}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-◆ Spawning planner...
+◆ 生成规划器...
 ```
 
-Planner prompt:
+规划器提示：
 
 ```markdown
 <planning_context>
-**Phase:** {phase_number}
-**Mode:** {standard | gap_closure}
+**阶段：** {phase_number}
+**模式：** {standard | gap_closure}
 
-**Project State:** {state_content}
-**Roadmap:** {roadmap_content}
-**Requirements:** {requirements_content}
+**项目状态：** {state_content}
+**路线图：** {roadmap_content}
+**需求：** {requirements_content}
 
-**Phase Context:**
-IMPORTANT: If context exists below, it contains USER DECISIONS from /gsd:discuss-phase.
-- **Decisions** = LOCKED — honor exactly, do not revisit
-- **Claude's Discretion** = Freedom — make implementation choices
-- **Deferred Ideas** = Out of scope — do NOT include
+**阶段上下文：**
+重要：如果下面存在上下文，它包含来自 /gsd:discuss-phase 的用户决策。
+- **决策** = 已锁定 — 完全遵守，不要重新访问
+- **Claude 的自决** = 自由 — 做出实现选择
+- **延迟的想法** = 超出范围 — 不要包括
 
 {context_content}
 
-**Research:** {research_content}
-**Gap Closure (if --gaps):** {verification_content} {uat_content}
+**研究：** {research_content}
+**缺陷关闭（如果是 --gaps）：** {verification_content} {uat_content}
 </planning_context>
 
 <downstream_consumer>
-Output consumed by /gsd:execute-phase. Plans need:
-- Frontmatter (wave, depends_on, files_modified, autonomous)
-- Tasks in XML format
-- Verification criteria
-- must_haves for goal-backward verification
+输出由 /gsd:execute-phase 消费。计划需要：
+- Frontmatter（wave、depends_on、files_modified、autonomous）
+- XML 格式的任务
+- 验证标准
+- 用于目标反向验证的 must_haves
 </downstream_consumer>
 
 <quality_gate>
-- [ ] PLAN.md files created in phase directory
-- [ ] Each plan has valid frontmatter
-- [ ] Tasks are specific and actionable
-- [ ] Dependencies correctly identified
-- [ ] Waves assigned for parallel execution
-- [ ] must_haves derived from phase goal
+- [ ] 在阶段目录中创建了 PLAN.md 文件
+- [ ] 每个计划都有有效的 frontmatter
+- [ ] 任务具体且可操作
+- [ ] 正确识别了依赖项
+- [ ] 为并行执行分配了波
+- [ ] 从阶段目标派生了 must_haves
 </quality_gate>
 ```
 
 ```
 Task(
-  prompt="First, read ~/.claude/agents/gsd-planner.md for your role and instructions.\n\n" + filled_prompt,
+  prompt="首先，读取 ~/.claude/agents/gsd-planner.md 以获取您的角色和说明。\n\n" + filled_prompt,
   subagent_type="general-purpose",
   model="{planner_model}",
   description="Plan Phase {phase}"
 )
 ```
 
-## 9. Handle Planner Return
+## 9. 处理规划器返回
 
-- **`## PLANNING COMPLETE`:** Display plan count. If `--skip-verify` or `plan_checker_enabled` is false (from init): skip to step 13. Otherwise: step 10.
-- **`## CHECKPOINT REACHED`:** Present to user, get response, spawn continuation (step 12)
-- **`## PLANNING INCONCLUSIVE`:** Show attempts, offer: Add context / Retry / Manual
+- **`## PLANNING COMPLETE`：** 显示计划计数。如果 `--skip-verify` 或 `plan_checker_enabled` 为 false（来自 init）：跳到步骤 13。否则：步骤 10。
+- **`## CHECKPOINT REACHED`：** 展示给用户，获取响应，生成继续（步骤 12）
+- **`## PLANNING INCONCLUSIVE`：** 显示尝试，提供：添加上下文 / 重试 / 手动
 
-## 10. Spawn gsd-plan-checker Agent
+## 10. 生成 gsd-plan-checker 代理
 
-Display banner:
+显示横幅：
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► VERIFYING PLANS
+ GSD ► 验证计划
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-◆ Spawning plan checker...
+◆ 生成计划检查器...
 ```
 
 ```bash
 PLANS_CONTENT=$(cat "${PHASE_DIR}"/*-PLAN.md 2>/dev/null)
 ```
 
-Checker prompt:
+检查器提示：
 
 ```markdown
 <verification_context>
-**Phase:** {phase_number}
-**Phase Goal:** {goal from ROADMAP}
+**阶段：** {phase_number}
+**阶段目标：** {来自 ROADMAP 的 goal}
 
-**Plans to verify:** {plans_content}
-**Requirements:** {requirements_content}
+**要验证的计划：** {plans_content}
+**需求：** {requirements_content}
 
-**Phase Context:**
-IMPORTANT: Plans MUST honor user decisions. Flag as issue if plans contradict.
-- **Decisions** = LOCKED — plans must implement exactly
-- **Claude's Discretion** = Freedom areas — plans can choose approach
-- **Deferred Ideas** = Out of scope — plans must NOT include
+**阶段上下文：**
+重要：计划必须遵守用户决策。如果计划矛盾则标记为问题。
+- **决策** = 已锁定 — 计划必须完全实现
+- **Claude 的自决** = 自由区域 — 计划可以选择方法
+- **延迟的想法** = 超出范围 — 计划不得包括
 
 {context_content}
 </verification_context>
 
 <expected_output>
-- ## VERIFICATION PASSED — all checks pass
-- ## ISSUES FOUND — structured issue list
+- ## VERIFICATION PASSED — 所有检查通过
+- ## ISSUES FOUND — 结构化问题列表
 </expected_output>
 ```
 
@@ -261,116 +261,116 @@ Task(
 )
 ```
 
-## 11. Handle Checker Return
+## 11. 处理检查器返回
 
-- **`## VERIFICATION PASSED`:** Display confirmation, proceed to step 13.
-- **`## ISSUES FOUND`:** Display issues, check iteration count, proceed to step 12.
+- **`## VERIFICATION PASSED`：** 显示确认，继续到步骤 13。
+- **`## ISSUES FOUND`：** 显示问题，检查迭代计数，继续到步骤 12。
 
-## 12. Revision Loop (Max 3 Iterations)
+## 12. 修订循环（最多 3 次迭代）
 
-Track `iteration_count` (starts at 1 after initial plan + check).
+跟踪 `iteration_count`（在初始计划 + 检查后从 1 开始）。
 
-**If iteration_count < 3:**
+**如果 iteration_count < 3：**
 
-Display: `Sending back to planner for revision... (iteration {N}/3)`
+显示：`发送回规划器进行修订...（迭代 {N}/3）`
 
 ```bash
 PLANS_CONTENT=$(cat "${PHASE_DIR}"/*-PLAN.md 2>/dev/null)
 ```
 
-Revision prompt:
+修订提示：
 
 ```markdown
 <revision_context>
-**Phase:** {phase_number}
-**Mode:** revision
+**阶段：** {phase_number}
+**模式：** 修订
 
-**Existing plans:** {plans_content}
-**Checker issues:** {structured_issues_from_checker}
+**现有计划：** {plans_content}
+**检查器问题：** {来自检查器的 structured_issues}
 
-**Phase Context:**
-Revisions MUST still honor user decisions.
+**阶段上下文：**
+修订仍必须遵守用户决策。
 {context_content}
 </revision_context>
 
 <instructions>
-Make targeted updates to address checker issues.
-Do NOT replan from scratch unless issues are fundamental.
-Return what changed.
+进行针对性更新以解决检查器问题。
+除非问题是根本性的，否则不要从头重新规划。
+返回更改了什么。
 </instructions>
 ```
 
 ```
 Task(
-  prompt="First, read ~/.claude/agents/gsd-planner.md for your role and instructions.\n\n" + revision_prompt,
+  prompt="首先，读取 ~/.claude/agents/gsd-planner.md 以获取您的角色和说明。\n\n" + revision_prompt,
   subagent_type="general-purpose",
   model="{planner_model}",
   description="Revise Phase {phase} plans"
 )
 ```
 
-After planner returns -> spawn checker again (step 10), increment iteration_count.
+规划器返回后 -> 再次生成检查器（步骤 10），增加 iteration_count。
 
-**If iteration_count >= 3:**
+**如果 iteration_count >= 3：**
 
-Display: `Max iterations reached. {N} issues remain:` + issue list
+显示：`达到最大迭代次数。{N} 个问题仍然存在：` + 问题列表
 
-Offer: 1) Force proceed, 2) Provide guidance and retry, 3) Abandon
+提供：1) 强制继续，2) 提供指导并重试，3) 放弃
 
-## 13. Present Final Status
+## 13. 展示最终状态
 
-Route to `<offer_next>`.
+路由到 `<offer_next>`。
 
 </process>
 
 <offer_next>
-Output this markdown directly (not as a code block):
+直接输出此 markdown（不是作为代码块）：
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► PHASE {X} PLANNED ✓
+ GSD ► 阶段 {X} 已规划 ✓
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Phase {X}: {Name}** — {N} plan(s) in {M} wave(s)
+**阶段 {X}：{Name}** — {M} 个波中的 {N} 个计划
 
-| Wave | Plans | What it builds |
+| 波 | 计划 | 构建内容 |
 |------|-------|----------------|
-| 1    | 01, 02 | [objectives] |
-| 2    | 03     | [objective]  |
+| 1    | 01, 02 | [目标] |
+| 2    | 03     | [目标]  |
 
-Research: {Completed | Used existing | Skipped}
-Verification: {Passed | Passed with override | Skipped}
+研究：{已完成 | 使用现有 | 已跳过}
+验证：{已通过 | 覆盖通过 | 已跳过}
 
 ───────────────────────────────────────────────────────────────
 
-## ▶ Next Up
+## ▶ 接下来
 
-**Execute Phase {X}** — run all {N} plans
+**执行阶段 {X}** — 运行所有 {N} 个计划
 
 /gsd:execute-phase {X}
 
-<sub>/clear first → fresh context window</sub>
+<sub>/clear first → 新的上下文窗口</sub>
 
 ───────────────────────────────────────────────────────────────
 
-**Also available:**
-- cat .planning/phases/{phase-dir}/*-PLAN.md — review plans
-- /gsd:plan-phase {X} --research — re-research first
+**也可用：**
+- cat .planning/phases/{phase-dir}/*-PLAN.md — 审查计划
+- /gsd:plan-phase {X} --research — 首先重新研究
 
 ───────────────────────────────────────────────────────────────
 </offer_next>
 
 <success_criteria>
-- [ ] .planning/ directory validated
-- [ ] Phase validated against roadmap
-- [ ] Phase directory created if needed
-- [ ] CONTEXT.md loaded early (step 4) and passed to ALL agents
-- [ ] Research completed (unless --skip-research or --gaps or exists)
-- [ ] gsd-phase-researcher spawned with CONTEXT.md
-- [ ] Existing plans checked
-- [ ] gsd-planner spawned with CONTEXT.md + RESEARCH.md
-- [ ] Plans created (PLANNING COMPLETE or CHECKPOINT handled)
-- [ ] gsd-plan-checker spawned with CONTEXT.md
-- [ ] Verification passed OR user override OR max iterations with user decision
-- [ ] User sees status between agent spawns
-- [ ] User knows next steps
+- [ ] 验证了 .planning/ 目录
+- [ ] 根据路线图验证了阶段
+- [ ] 如需要创建了阶段目录
+- [ ] 尽早加载了 CONTEXT.md（步骤 4）并传递给所有代理
+- [ ] 研究已完成（除非 --skip-research 或 --gaps 或存在）
+- [ ] 使用 CONTEXT.md 生成了 gsd-phase-researcher
+- [ ] 检查了现有计划
+- [ ] 使用 CONTEXT.md + RESEARCH.md 生成了 gsd-planner
+- [ ] 创建了计划（PLANNING COMPLETE 或处理了 CHECKPOINT）
+- [ ] 使用 CONTEXT.md 生成了 gsd-plan-checker
+- [ ] 验证通过或用户覆盖或达到最大迭代并具有用户决策
+- [ ] 用户在代理生成之间看到状态
+- [ ] 用户知道下一步
 </success_criteria>

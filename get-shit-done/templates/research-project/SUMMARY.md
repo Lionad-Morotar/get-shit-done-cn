@@ -1,170 +1,170 @@
-# Research Summary Template
+# 研究摘要模板
 
-Template for `.planning/research/SUMMARY.md` — executive summary of project research with roadmap implications.
+用于 `.planning/research/SUMMARY.md` 的模板 — 带有路线图影响的项目研究执行摘要。
 
 <template>
 
 ```markdown
-# Project Research Summary
+# 项目研究摘要
 
-**Project:** [name from PROJECT.md]
-**Domain:** [inferred domain type]
-**Researched:** [date]
-**Confidence:** [HIGH/MEDIUM/LOW]
+**项目：** [来自 PROJECT.md 的名称]
+**领域：** [推断的领域类型]
+**研究时间：** [日期]
+**置信度：** [高/中/低]
 
-## Executive Summary
+## 执行摘要
 
-[2-3 paragraph overview of research findings]
+[2-3 段研究结果概述]
 
-- What type of product this is and how experts build it
-- The recommended approach based on research
-- Key risks and how to mitigate them
+- 这是什么类型的产品以及专家如何构建它
+- 基于研究的推荐方法
+- 关键风险以及如何缓解它们
 
-## Key Findings
+## 关键发现
 
-### Recommended Stack
+### 推荐技术栈
 
-[Summary from STACK.md — 1-2 paragraphs]
+[来自 STACK.md 的摘要 — 1-2 段]
 
-**Core technologies:**
-- [Technology]: [purpose] — [why recommended]
-- [Technology]: [purpose] — [why recommended]
-- [Technology]: [purpose] — [why recommended]
+**核心技术：**
+- [技术]：[目的] — [为何推荐]
+- [技术]：[目的] — [为何推荐]
+- [技术]：[目的] — [为何推荐]
 
-### Expected Features
+### 预期功能
 
-[Summary from FEATURES.md]
+[来自 FEATURES.md 的摘要]
 
-**Must have (table stakes):**
-- [Feature] — users expect this
-- [Feature] — users expect this
+**必须具有（基本要素）：**
+- [功能] — 用户期望这个
+- [功能] — 用户期望这个
 
-**Should have (competitive):**
-- [Feature] — differentiator
-- [Feature] — differentiator
+**应该具有（竞争性）：**
+- [功能] — 差异化因素
+- [功能] — 差异化因素
 
-**Defer (v2+):**
-- [Feature] — not essential for launch
+**推迟（v2+）：**
+- [功能] — 启动不是必需的
 
-### Architecture Approach
+### 架构方法
 
-[Summary from ARCHITECTURE.md — 1 paragraph]
+[来自 ARCHITECTURE.md 的摘要 — 1 段]
 
-**Major components:**
-1. [Component] — [responsibility]
-2. [Component] — [responsibility]
-3. [Component] — [responsibility]
+**主要组件：**
+1. [组件] — [职责]
+2. [组件] — [职责]
+3. [组件] — [职责]
 
-### Critical Pitfalls
+### 关键陷阱
 
-[Top 3-5 from PITFALLS.md]
+[来自 PITFALLS.md 的前 3-5 个]
 
-1. **[Pitfall]** — [how to avoid]
-2. **[Pitfall]** — [how to avoid]
-3. **[Pitfall]** — [how to avoid]
+1. **[陷阱]** — [如何避免]
+2. **[陷阱]** — [如何避免]
+3. **[陷阱]** — [如何避免]
 
-## Implications for Roadmap
+## 对路线图的影响
 
-Based on research, suggested phase structure:
+基于研究，建议的阶段结构：
 
-### Phase 1: [Name]
-**Rationale:** [why this comes first based on research]
-**Delivers:** [what this phase produces]
-**Addresses:** [features from FEATURES.md]
-**Avoids:** [pitfall from PITFALLS.md]
+### 阶段 1：[名称]
+**理由：** [基于研究为何这个在前]
+**交付：** [此阶段产生什么]
+**解决：** [来自 FEATURES.md 的功能]
+**避免：** [来自 PITFALLS.md 的陷阱]
 
-### Phase 2: [Name]
-**Rationale:** [why this order]
-**Delivers:** [what this phase produces]
-**Uses:** [stack elements from STACK.md]
-**Implements:** [architecture component]
+### 阶段 2：[名称]
+**理由：** [为何此顺序]
+**交付：** [此阶段产生什么]
+**使用：** [来自 STACK.md 的技术栈元素]
+**实现：** [架构组件]
 
-### Phase 3: [Name]
-**Rationale:** [why this order]
-**Delivers:** [what this phase produces]
+### 阶段 3：[名称]
+**理由：** [为何此顺序]
+**交付：** [此阶段产生什么]
 
-[Continue for suggested phases...]
+[继续建议的阶段...]
 
-### Phase Ordering Rationale
+### 阶段排序理由
 
-- [Why this order based on dependencies discovered]
-- [Why this grouping based on architecture patterns]
-- [How this avoids pitfalls from research]
+- [基于发现的依赖关系为何此顺序]
+- [基于架构模式为何此分组]
+- [如何避免研究中的陷阱]
 
-### Research Flags
+### 研究标志
 
-Phases likely needing deeper research during planning:
-- **Phase [X]:** [reason — e.g., "complex integration, needs API research"]
-- **Phase [Y]:** [reason — e.g., "niche domain, sparse documentation"]
+规划期间可能需要更深入研究的阶段：
+- **阶段 [X]：** [原因 — 例如，"复杂集成，需要 API 研究"]
+- **阶段 [Y]：** [原因 — 例如，"小众领域，文档稀少"]
 
-Phases with standard patterns (skip research-phase):
-- **Phase [X]:** [reason — e.g., "well-documented, established patterns"]
+具有标准模式的阶段（跳过研究阶段）：
+- **阶段 [X]：** [原因 — 例如，"文档完善，既定模式"]
 
-## Confidence Assessment
+## 置信度评估
 
-| Area | Confidence | Notes |
+| 领域 | 置信度 | 注意事项 |
 |------|------------|-------|
-| Stack | [HIGH/MEDIUM/LOW] | [reason] |
-| Features | [HIGH/MEDIUM/LOW] | [reason] |
-| Architecture | [HIGH/MEDIUM/LOW] | [reason] |
-| Pitfalls | [HIGH/MEDIUM/LOW] | [reason] |
+| 技术栈 | [高/中/低] | [原因] |
+| 功能 | [高/中/低] | [原因] |
+| 架构 | [高/中/低] | [原因] |
+| 陷阱 | [高/中/低] | [原因] |
 
-**Overall confidence:** [HIGH/MEDIUM/LOW]
+**整体置信度：** [高/中/低]
 
-### Gaps to Address
+### 需要解决的差距
 
-[Any areas where research was inconclusive or needs validation during implementation]
+[研究不确定或在实施期间需要验证的任何领域]
 
-- [Gap]: [how to handle during planning/execution]
-- [Gap]: [how to handle during planning/execution]
+- [差距]：[在规划/执行期间如何处理]
+- [差距]：[在规划/执行期间如何处理]
 
-## Sources
+## 来源
 
-### Primary (HIGH confidence)
-- [Context7 library ID] — [topics]
-- [Official docs URL] — [what was checked]
+### 主要（高置信度）
+- [Context7 库 ID] — [主题]
+- [官方文档 URL] — [检查的内容]
 
-### Secondary (MEDIUM confidence)
-- [Source] — [finding]
+### 次要（中置信度）
+- [来源] — [发现]
 
-### Tertiary (LOW confidence)
-- [Source] — [finding, needs validation]
+### 第三级（低置信度）
+- [来源] — [发现，需要验证]
 
 ---
-*Research completed: [date]*
-*Ready for roadmap: yes*
+*研究完成：[日期]*
+*准备好路线图：是*
 ```
 
 </template>
 
 <guidelines>
 
-**Executive Summary:**
-- Write for someone who will only read this section
-- Include the key recommendation and main risk
-- 2-3 paragraphs maximum
+**执行摘要：**
+- 为只会阅读此部分的人编写
+- 包括关键建议和主要风险
+- 最多 2-3 段
 
-**Key Findings:**
-- Summarize, don't duplicate full documents
-- Link to detailed docs (STACK.md, FEATURES.md, etc.)
-- Focus on what matters for roadmap decisions
+**关键发现：**
+- 总结，不要重复完整的文档
+- 链接到详细文档（STACK.md、FEATURES.md 等）
+- 专注于对路线图决策重要的内容
 
-**Implications for Roadmap:**
-- This is the most important section
-- Directly informs roadmap creation
-- Be explicit about phase suggestions and rationale
-- Include research flags for each suggested phase
+**对路线图的影响：**
+- 这是最重要的部分
+- 直接通知路线图创建
+- 明确阶段建议和理由
+- 包括每个建议阶段的研究标志
 
-**Confidence Assessment:**
-- Be honest about uncertainty
-- Note gaps that need resolution during planning
-- HIGH = verified with official sources
-- MEDIUM = community consensus, multiple sources agree
-- LOW = single source or inference
+**置信度评估：**
+- 对不确定性要诚实
+- 注意需要在规划期间解决的差距
+- 高 = 通过官方来源验证
+- 中 = 社区共识，多个来源一致
+- 低 = 单个来源或推断
 
-**Integration with roadmap creation:**
-- This file is loaded as context during roadmap creation
-- Phase suggestions here become starting point for roadmap
-- Research flags inform phase planning
+**与路线图创建的集成：**
+- 路线图创建期间将此文件作为上下文加载
+- 这里的阶段建议成为路线图的起点
+- 研究标志通知阶段规划
 
 </guidelines>

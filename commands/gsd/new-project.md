@@ -1,6 +1,6 @@
 ---
 name: gsd:new-project
-description: Initialize a new project with deep context gathering and PROJECT.md
+description: 通过深度上下文收集和 PROJECT.md 初始化新项目
 argument-hint: "[--auto]"
 allowed-tools:
   - Read
@@ -10,22 +10,22 @@ allowed-tools:
   - AskUserQuestion
 ---
 <context>
-**Flags:**
-- `--auto` — Automatic mode. After config questions, runs research → requirements → roadmap without further interaction. Expects idea document via @ reference.
+**标志：**
+- `--auto` — 自动模式。配置问题后，运行研究 → 需求 → 路线图而无需进一步交互。期望通过 @ 引用提供想法文档。
 </context>
 
 <objective>
-Initialize a new project through unified flow: questioning → research (optional) → requirements → roadmap.
+通过统一流程初始化新项目：质疑 → 研究（可选）→ 需求 → 路线图。
 
-**Creates:**
-- `.planning/PROJECT.md` — project context
-- `.planning/config.json` — workflow preferences
-- `.planning/research/` — domain research (optional)
-- `.planning/REQUIREMENTS.md` — scoped requirements
-- `.planning/ROADMAP.md` — phase structure
-- `.planning/STATE.md` — project memory
+**创建：**
+- `.planning/PROJECT.md` — 项目上下文
+- `.planning/config.json` — 工作流偏好
+- `.planning/research/` — 领域研究（可选）
+- `.planning/REQUIREMENTS.md` — 范围需求
+- `.planning/ROADMAP.md` — 阶段结构
+- `.planning/STATE.md` — 项目记忆
 
-**After this command:** Run `/gsd:plan-phase 1` to start execution.
+**此命令后：** 运行 `/gsd:plan-phase 1` 开始执行。
 </objective>
 
 <execution_context>
@@ -37,6 +37,6 @@ Initialize a new project through unified flow: questioning → research (optiona
 </execution_context>
 
 <process>
-Execute the new-project workflow from @~/.claude/get-shit-done/workflows/new-project.md end-to-end.
-Preserve all workflow gates (validation, approvals, commits, routing).
+端到端执行来自 @~/.claude/get-shit-done/workflows/new-project.md 的 new-project 工作流。
+保留所有工作流关卡（验证、批准、提交、路由）。
 </process>

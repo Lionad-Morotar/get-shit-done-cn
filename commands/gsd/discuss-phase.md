@@ -1,7 +1,7 @@
 ---
 name: gsd:discuss-phase
-description: Gather phase context through adaptive questioning before planning
-argument-hint: "<phase>"
+description: 通过自适应质疑在规划之前收集阶段上下文
+argument-hint: "<阶段>"
 allowed-tools:
   - Read
   - Write
@@ -12,15 +12,15 @@ allowed-tools:
 ---
 
 <objective>
-Extract implementation decisions that downstream agents need — researcher and planner will use CONTEXT.md to know what to investigate and what choices are locked.
+提取下游 agent 需要的实现决策 — researcher 和 planner 将使用 CONTEXT.md 来知道要调查什么以及哪些选择已锁定。
 
-**How it works:**
-1. Analyze the phase to identify gray areas (UI, UX, behavior, etc.)
-2. Present gray areas — user selects which to discuss
-3. Deep-dive each selected area until satisfied
-4. Create CONTEXT.md with decisions that guide research and planning
+**工作原理：**
+1. 分析阶段以识别灰色区域（UI、UX、行为等）
+2. 呈现灰色区域 — 用户选择要讨论的区域
+3. 深入探讨每个选定区域直到满意
+4. 创建 CONTEXT.md，其中包含指导研究和规划的决策
 
-**Output:** `{phase}-CONTEXT.md` — decisions clear enough that downstream agents can act without asking the user again
+**输出：** `{phase}-CONTEXT.md` — 决策足够清晰，下游 agent 可以操作而无需再次询问用户
 </objective>
 
 <execution_context>
@@ -29,58 +29,58 @@ Extract implementation decisions that downstream agents need — researcher and 
 </execution_context>
 
 <context>
-Phase number: $ARGUMENTS (required)
+阶段编号: $ARGUMENTS（必需）
 
-**Load project state:**
+**加载项目状态：**
 @.planning/STATE.md
 
-**Load roadmap:**
+**加载路线图：**
 @.planning/ROADMAP.md
 </context>
 
 <process>
-1. Validate phase number (error if missing or not in roadmap)
-2. Check if CONTEXT.md exists (offer update/view/skip if yes)
-3. **Analyze phase** — Identify domain and generate phase-specific gray areas
-4. **Present gray areas** — Multi-select: which to discuss? (NO skip option)
-5. **Deep-dive each area** — 4 questions per area, then offer more/next
-6. **Write CONTEXT.md** — Sections match areas discussed
-7. Offer next steps (research or plan)
+1. 验证阶段编号（如果缺失或不在路线图中则报错）
+2. 检查 CONTEXT.md 是否存在（如果存在则提供更新/查看/跳过）
+3. **分析阶段** — 识别领域并生成阶段特定的灰色区域
+4. **呈现灰色区域** — 多选：要讨论哪些？（无跳过选项）
+5. **深入探讨每个区域** — 每个区域 4 个问题，然后提供更多/下一步
+6. **写入 CONTEXT.md** — 部分与讨论的区域匹配
+7. 提供后续步骤（研究或规划）
 
-**CRITICAL: Scope guardrail**
-- Phase boundary from ROADMAP.md is FIXED
-- Discussion clarifies HOW to implement, not WHETHER to add more
-- If user suggests new capabilities: "That's its own phase. I'll note it for later."
-- Capture deferred ideas — don't lose them, don't act on them
+**关键：范围护栏**
+- ROADMAP.md 中的阶段边界是固定的
+- 讨论澄清如何实现，而不是是否添加更多
+- 如果用户建议新功能："那是它自己的阶段。我会记录它供以后使用。"
+- 捕获延迟的想法 — 不要丢失它们，不要对它们采取行动
 
-**Domain-aware gray areas:**
-Gray areas depend on what's being built. Analyze the phase goal:
-- Something users SEE → layout, density, interactions, states
-- Something users CALL → responses, errors, auth, versioning
-- Something users RUN → output format, flags, modes, error handling
-- Something users READ → structure, tone, depth, flow
-- Something being ORGANIZED → criteria, grouping, naming, exceptions
+**领域感知的灰色区域：**
+灰色区域取决于正在构建的内容。分析阶段目标：
+- 用户看到的东西 → 布局、密度、交互、状态
+- 用户调用的东西 → 响应、错误、认证、版本控制
+- 用户运行的东西 → 输出格式、标志、模式、错误处理
+- 用户阅读的东西 → 结构、语气、深度、流程
+- 正在组织的东西 → 标准、分组、命名、例外
 
-Generate 3-4 **phase-specific** gray areas, not generic categories.
+生成 3-4 个**阶段特定的**灰色区域，而不是通用类别。
 
-**Probing depth:**
-- Ask 4 questions per area before checking
-- "More questions about [area], or move to next?"
-- If more → ask 4 more, check again
-- After all areas → "Ready to create context?"
+**探索深度：**
+- 每个区域问 4 个问题后再检查
+- "关于 [区域] 的更多问题，还是继续下一个？"
+- 如果更多 → 再问 4 个，再次检查
+- 所有区域后 → "准备好创建上下文了吗？"
 
-**Do NOT ask about (Claude handles these):**
-- Technical implementation
-- Architecture choices
-- Performance concerns
-- Scope expansion
+**不要询问（Claude 处理这些）：**
+- 技术实现
+- 架构选择
+- 性能问题
+- 范围扩大
 </process>
 
 <success_criteria>
-- Gray areas identified through intelligent analysis
-- User chose which areas to discuss
-- Each selected area explored until satisfied
-- Scope creep redirected to deferred ideas
-- CONTEXT.md captures decisions, not vague vision
-- User knows next steps
+- 通过智能分析识别灰色区域
+- 用户选择了要讨论的区域
+- 每个选定区域探索到满意
+- 范围蔓延重定向到延迟的想法
+- CONTEXT.md 捕获决策，而不是模糊的愿景
+- 用户知道后续步骤
 </success_criteria>

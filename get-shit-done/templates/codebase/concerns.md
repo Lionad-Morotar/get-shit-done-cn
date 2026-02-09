@@ -1,310 +1,310 @@
-# Codebase Concerns Template
+# 代码库关注点模板
 
-Template for `.planning/codebase/CONCERNS.md` - captures known issues and areas requiring care.
+`.planning/codebase/CONCERNS.md` 的模板——捕获已知问题和需要小心的区域。
 
-**Purpose:** Surface actionable warnings about the codebase. Focused on "what to watch out for when making changes."
+**目的：** 使代码库的可操作警告浮出水面。重点关注"进行更改时需要注意什么。"
 
 ---
 
-## File Template
+## 文件模板
 
 ```markdown
-# Codebase Concerns
+# 代码库关注点
 
-**Analysis Date:** [YYYY-MM-DD]
+**分析日期：** [YYYY-MM-DD]
 
-## Tech Debt
+## 技术债务
 
-**[Area/Component]:**
-- Issue: [What's the shortcut/workaround]
-- Why: [Why it was done this way]
-- Impact: [What breaks or degrades because of it]
-- Fix approach: [How to properly address it]
+**[区域/组件]：**
+- 问题：[什么是指权变/变通方法]
+- 原因：[为什么这样完成]
+- 影响：[因此什么中断或降级]
+- 修复方法：[如何正确解决它]
 
-**[Area/Component]:**
-- Issue: [What's the shortcut/workaround]
-- Why: [Why it was done this way]
-- Impact: [What breaks or degrades because of it]
-- Fix approach: [How to properly address it]
+**[区域/组件]：**
+- 问题：[什么是指权变/变通方法]
+- 原因：[为什么这样完成]
+- 影响：[因此什么中断或降级]
+- 修复方法：[如何正确解决它]
 
-## Known Bugs
+## 已知错误
 
-**[Bug description]:**
-- Symptoms: [What happens]
-- Trigger: [How to reproduce]
-- Workaround: [Temporary mitigation if any]
-- Root cause: [If known]
-- Blocked by: [If waiting on something]
+**[错误描述]：**
+- 症状：[发生了什么]
+- 触发器：[如何重现]
+- 变通方法：[如果有临时缓解措施]
+- 根本原因：[如果已知]
+- 受阻：[如果等待某事]
 
-**[Bug description]:**
-- Symptoms: [What happens]
-- Trigger: [How to reproduce]
-- Workaround: [Temporary mitigation if any]
-- Root cause: [If known]
+**[错误描述]：**
+- 症状：[发生了什么]
+- 触发器：[如何重现]
+- 变通方法：[如果有临时缓解措施]
+- 根本原因：[如果已知]
 
-## Security Considerations
+## 安全考虑
 
-**[Area requiring security care]:**
-- Risk: [What could go wrong]
-- Current mitigation: [What's in place now]
-- Recommendations: [What should be added]
+**[需要安全注意的区域]：**
+- 风险：[可能出什么错]
+- 当前缓解措施：[现在有什么]
+- 建议：[应该添加什么]
 
-**[Area requiring security care]:**
-- Risk: [What could go wrong]
-- Current mitigation: [What's in place now]
-- Recommendations: [What should be added]
+**[需要安全注意的区域]：**
+- 风险：[可能出什么错]
+- 当前缓解措施：[现在有什么]
+- 建议：[应该添加什么]
 
-## Performance Bottlenecks
+## 性能瓶颈
 
-**[Slow operation/endpoint]:**
-- Problem: [What's slow]
-- Measurement: [Actual numbers: "500ms p95", "2s load time"]
-- Cause: [Why it's slow]
-- Improvement path: [How to speed it up]
+**[慢操作/端点]：**
+- 问题：[什么慢]
+- 测量：[实际数字："500ms p95"、"2s 加载时间"]
+- 原因：[为什么慢]
+- 改进路径：[如何加速]
 
-**[Slow operation/endpoint]:**
-- Problem: [What's slow]
-- Measurement: [Actual numbers]
-- Cause: [Why it's slow]
-- Improvement path: [How to speed it up]
+**[慢操作/端点]：**
+- 问题：[什么慢]
+- 测量：[实际数字]
+- 原因：[为什么慢]
+- 改进路径：[如何加速]
 
-## Fragile Areas
+## 脆弱区域
 
-**[Component/Module]:**
-- Why fragile: [What makes it break easily]
-- Common failures: [What typically goes wrong]
-- Safe modification: [How to change it without breaking]
-- Test coverage: [Is it tested? Gaps?]
+**[组件/模块]：**
+- 为什么脆弱：[什么使其容易中断]
+- 常见失败：[通常出什么问题]
+- 安全修改：[如何在不中断的情况下更改它]
+- 测试覆盖：[是否经过测试？空白？]
 
-**[Component/Module]:**
-- Why fragile: [What makes it break easily]
-- Common failures: [What typically goes wrong]
-- Safe modification: [How to change it without breaking]
-- Test coverage: [Is it tested? Gaps?]
+**[组件/模块]：**
+- 为什么脆弱：[什么使其容易中断]
+- 常见失败：[通常出什么问题]
+- 安全修改：[如何在不中断的情况下更改它]
+- 测试覆盖：[是否经过测试？空白？]
 
-## Scaling Limits
+## 扩展限制
 
-**[Resource/System]:**
-- Current capacity: [Numbers: "100 req/sec", "10k users"]
-- Limit: [Where it breaks]
-- Symptoms at limit: [What happens]
-- Scaling path: [How to increase capacity]
+**[资源/系统]：**
+- 当前容量：[数字："100 req/sec"、"10k 用户"]
+- 限制：[在哪里中断]
+- 限制时的症状：[发生什么]
+- 扩展路径：[如何增加容量]
 
-## Dependencies at Risk
+## 有风险的依赖项
 
-**[Package/Service]:**
-- Risk: [e.g., "deprecated", "unmaintained", "breaking changes coming"]
-- Impact: [What breaks if it fails]
-- Migration plan: [Alternative or upgrade path]
+**[包/服务]：**
+- 风险：[例如，"已弃用"、"不维护"、"即将发生重大更改"]
+- 影响：[如果失败什么中断]
+- 迁移计划：[替代或升级路径]
 
-## Missing Critical Features
+## 缺少关键功能
 
-**[Feature gap]:**
-- Problem: [What's missing]
-- Current workaround: [How users cope]
-- Blocks: [What can't be done without it]
-- Implementation complexity: [Rough effort estimate]
+**[功能空白]：**
+- 问题：[缺少什么]
+- 当前变通方法：[用户如何应对]
+- 阻塞：[没有它不能做什么]
+- 实现复杂性：[粗略的工作量估计]
 
-## Test Coverage Gaps
+## 测试覆盖空白
 
-**[Untested area]:**
-- What's not tested: [Specific functionality]
-- Risk: [What could break unnoticed]
-- Priority: [High/Medium/Low]
-- Difficulty to test: [Why it's not tested yet]
+**[未测试区域]：**
+- 未测试什么：[特定功能]
+- 风险：[可能不知不觉中断什么]
+- 优先级：[高/中/低]
+- 测试难度：[为什么尚未测试]
 
 ---
 
-*Concerns audit: [date]*
-*Update as issues are fixed or new ones discovered*
+*关注点审计：[日期]*
+*问题已修复或发现新问题时更新*
 ```
 
 <good_examples>
 ```markdown
-# Codebase Concerns
+# 代码库关注点
 
-**Analysis Date:** 2025-01-20
+**分析日期：** 2025-01-20
 
-## Tech Debt
+## 技术债务
 
-**Database queries in React components:**
-- Issue: Direct Supabase queries in 15+ page components instead of server actions
-- Files: `app/dashboard/page.tsx`, `app/profile/page.tsx`, `app/courses/[id]/page.tsx`, `app/settings/page.tsx` (and 11 more in `app/`)
-- Why: Rapid prototyping during MVP phase
-- Impact: Can't implement RLS properly, exposes DB structure to client
-- Fix approach: Move all queries to server actions in `app/actions/`, add proper RLS policies
+**React 组件中的数据库查询：**
+- 问题：在 15+ 个页面组件中直接进行 Supabase 查询，而不是使用服务器操作
+- 文件：`app/dashboard/page.tsx`、`app/profile/page.tsx`、`app/courses/[id]/page.tsx`、`app/settings/page.tsx`（以及 `app/` 中的另外 11 个）
+- 原因：MVP 阶段期间的快速原型制作
+- 影响：无法正确实现 RLS，向客户端暴露 DB 结构
+- 修复方法：将所有查询移至 `app/actions/` 中的服务器操作，添加适当的 RLS 策略
 
-**Manual webhook signature validation:**
-- Issue: Copy-pasted Stripe webhook verification code in 3 different endpoints
-- Files: `app/api/webhooks/stripe/route.ts`, `app/api/webhooks/checkout/route.ts`, `app/api/webhooks/subscription/route.ts`
-- Why: Each webhook added ad-hoc without abstraction
-- Impact: Easy to miss verification in new webhooks (security risk)
-- Fix approach: Create shared `lib/stripe/validate-webhook.ts` middleware
+**手动 webhook 签名验证：**
+- 问题：在 3 个不同的端点中复制粘贴了 Stripe webhook 验证代码
+- 文件：`app/api/webhooks/stripe/route.ts`、`app/api/webhooks/checkout/route.ts`、`app/api/webhooks/subscription/route.ts`
+- 原因：每个 webhook 都是临时添加的，没有抽象
+- 影响：很容易在新的 webhook 中遗漏验证（安全风险）
+- 修复方法：创建共享的 `lib/stripe/validate-webhook.ts` 中间件
 
-## Known Bugs
+## 已知错误
 
-**Race condition in subscription updates:**
-- Symptoms: User shows as "free" tier for 5-10 seconds after successful payment
-- Trigger: Fast navigation after Stripe checkout redirect, before webhook processes
-- Files: `app/checkout/success/page.tsx` (redirect handler), `app/api/webhooks/stripe/route.ts` (webhook)
-- Workaround: Stripe webhook eventually updates status (self-heals)
-- Root cause: Webhook processing slower than user navigation, no optimistic UI update
-- Fix: Add polling in `app/checkout/success/page.tsx` after redirect
+**订阅更新中的竞态条件：**
+- 症状：成功付款后用户显示为"免费"层级 5-10 秒
+- 触发器：Stripe 结账重定向后的快速导航，在 webhook 处理之前
+- 文件：`app/checkout/success/page.tsx`（重定向处理器）、`app/api/webhooks/stripe/route.ts`（webhook）
+- 变通方法：Stripe webhook 最终更新状态（自愈）
+- 根本原因：Webhook 处理比用户导航慢，没有乐观 UI 更新
+- 修复：在重定向后的 `app/checkout/success/page.tsx` 中添加轮询
 
-**Inconsistent session state after logout:**
-- Symptoms: User redirected to /dashboard after logout instead of /login
-- Trigger: Logout via button in mobile nav (desktop works fine)
-- File: `components/MobileNav.tsx` (line ~45, logout handler)
-- Workaround: Manual URL navigation to /login works
-- Root cause: Mobile nav component not awaiting supabase.auth.signOut()
-- Fix: Add await to logout handler in `components/MobileNav.tsx`
+**注销后会话状态不一致：**
+- 症状：注销后用户重定向到 /dashboard 而不是 /login
+- 触发器：通过移动导航中的按钮注销（桌面正常工作）
+- 文件：`components/MobileNav.tsx`（第 ~45 行，注销处理器）
+- 变通方法：手动 URL 导航到 /login 有效
+- 根本原因：移动导航组件未等待 supabase.auth.signOut()
+- 修复：在 `components/MobileNav.tsx` 的注销处理器中添加 await
 
-## Security Considerations
+## 安全考虑
 
-**Admin role check client-side only:**
-- Risk: Admin dashboard pages check isAdmin from Supabase client, no server verification
-- Files: `app/admin/page.tsx`, `app/admin/users/page.tsx`, `components/AdminGuard.tsx`
-- Current mitigation: None (relying on UI hiding)
-- Recommendations: Add middleware to admin routes in `middleware.ts`, verify role server-side
+**仅客户端检查管理员角色：**
+- 风险：管理员仪表板页面从 Supabase 客户端检查 isAdmin，没有服务器验证
+- 文件：`app/admin/page.tsx`、`app/admin/users/page.tsx`、`components/AdminGuard.tsx`
+- 当前缓解措施：无（依赖 UI 隐藏）
+- 建议：在 `middleware.ts` 中向管理路由添加中间件，服务器端验证角色
 
-**Unvalidated file uploads:**
-- Risk: Users can upload any file type to avatar bucket (no size/type validation)
-- File: `components/AvatarUpload.tsx` (upload handler)
-- Current mitigation: Supabase bucket limits to 2MB (configured in dashboard)
-- Recommendations: Add file type validation (image/* only) in `lib/storage/validate.ts`
+**未验证的文件上传：**
+- 风险：用户可以将任何文件类型上传到头像存储桶（没有大小/类型验证）
+- 文件：`components/AvatarUpload.tsx`（上传处理器）
+- 当前缓解措施：Supabase 存储桶限制为 2MB（在仪表板中配置）
+- 建议：在 `lib/storage/validate.ts` 中添加文件类型验证（仅 image/*）
 
-## Performance Bottlenecks
+## 性能瓶颈
 
-**/api/courses endpoint:**
-- Problem: Fetching all courses with nested lessons and authors
-- File: `app/api/courses/route.ts`
-- Measurement: 1.2s p95 response time with 50+ courses
-- Cause: N+1 query pattern (separate query per course for lessons)
-- Improvement path: Use Prisma include to eager-load lessons in `lib/db/courses.ts`, add Redis caching
+**/api/courses 端点：**
+- 问题：获取所有课程，包括嵌套的课时和作者
+- 文件：`app/api/courses/route.ts`
+- 测量：50+ 门课程时 1.2s p95 响应时间
+- 原因：N+1 查询模式（每门课程单独查询课时）
+- 改进路径：使用 Prisma include 在 `lib/db/courses.ts` 中急加载课时，添加 Redis 缓存
 
-**Dashboard initial load:**
-- Problem: Waterfall of 5 serial API calls on mount
-- File: `app/dashboard/page.tsx`
-- Measurement: 3.5s until interactive on slow 3G
-- Cause: Each component fetches own data independently
-- Improvement path: Convert to Server Component with single parallel fetch
+**仪表板初始加载：**
+- 问题：挂载时 5 个串行 API 调用的瀑布
+- 文件：`app/dashboard/page.tsx`
+- 测量：在慢速 3G 上 3.5s 直到交互
+- 原因：每个组件独立获取自己的数据
+- 改进路径：转换为具有单个并行获取的服务器组件
 
-## Fragile Areas
+## 脆弱区域
 
-**Authentication middleware chain:**
-- File: `middleware.ts`
-- Why fragile: 4 different middleware functions run in specific order (auth -> role -> subscription -> logging)
-- Common failures: Middleware order change breaks everything, hard to debug
-- Safe modification: Add tests before changing order, document dependencies in comments
-- Test coverage: No integration tests for middleware chain (only unit tests)
+**身份验证中间件链：**
+- 文件：`middleware.ts`
+- 为什么脆弱：4 个不同的中间件函数按特定顺序运行（auth -> role -> subscription -> logging）
+- 常见失败：中间件顺序更改会破坏所有内容，难以调试
+- 安全修改：在更改顺序之前添加测试，在注释中记录依赖关系
+- 测试覆盖：没有中间件链的集成测试（仅单元测试）
 
-**Stripe webhook event handling:**
-- File: `app/api/webhooks/stripe/route.ts`
-- Why fragile: Giant switch statement with 12 event types, shared transaction logic
-- Common failures: New event type added without handling, partial DB updates on error
-- Safe modification: Extract each event handler to `lib/stripe/handlers/*.ts`
-- Test coverage: Only 3 of 12 event types have tests
+**Stripe webhook 事件处理：**
+- 文件：`app/api/webhooks/stripe/route.ts`
+- 为什么脆弱：带有 12 个事件类型的大型 switch 语句，共享事务逻辑
+- 常见失败：添加新事件类型而没有处理，错误时部分 DB 更新
+- 安全修改：将每个事件处理器提取到 `lib/stripe/handlers/*.ts`
+- 测试覆盖：12 个事件类型中只有 3 个有测试
 
-## Scaling Limits
+## 扩展限制
 
-**Supabase Free Tier:**
-- Current capacity: 500MB database, 1GB file storage, 2GB bandwidth/month
-- Limit: ~5000 users estimated before hitting limits
-- Symptoms at limit: 429 rate limit errors, DB writes fail
-- Scaling path: Upgrade to Pro ($25/mo) extends to 8GB DB, 100GB storage
+**Supabase 免费层：**
+- 当前容量：500MB 数据库、1GB 文件存储、2GB 带宽/月
+- 限制：估计约 5000 用户才会达到限制
+- 限制时的症状：429 速率限制错误，DB 写入失败
+- 扩展路径：升级到 Pro（$25/月）扩展到 8GB DB、100GB 存储
 
-**Server-side render blocking:**
-- Current capacity: ~50 concurrent users before slowdown
-- Limit: Vercel Hobby plan (10s function timeout, 100GB-hrs/mo)
-- Symptoms at limit: 504 gateway timeouts on course pages
-- Scaling path: Upgrade to Vercel Pro ($20/mo), add edge caching
+**服务器端渲染阻塞：**
+- 当前容量：~50 个并发用户才会减速
+- 限制：Vercel Hobby 计划（10s 函数超时、100GB-hrs/月）
+- 限制时的症状：课程页面上的 504 网关超时
+- 扩展路径：升级到 Vercel Pro（$20/月），添加边缘缓存
 
-## Dependencies at Risk
+## 有风险的依赖项
 
-**react-hot-toast:**
-- Risk: Unmaintained (last update 18 months ago), React 19 compatibility unknown
-- Impact: Toast notifications break, no graceful degradation
-- Migration plan: Switch to sonner (actively maintained, similar API)
+**react-hot-toast：**
+- 风险：不维护（18 个月前最后更新），React 19 兼容性未知
+- 影响：Toast 通知中断，没有优雅降级
+- 迁移计划：切换到 sonner（积极维护，类似的 API）
 
-## Missing Critical Features
+## 缺少关键功能
 
-**Payment failure handling:**
-- Problem: No retry mechanism or user notification when subscription payment fails
-- Current workaround: Users manually re-enter payment info (if they notice)
-- Blocks: Can't retain users with expired cards, no dunning process
-- Implementation complexity: Medium (Stripe webhooks + email flow + UI)
+**支付失败处理：**
+- 问题：订阅付款失败时没有重试机制或用户通知
+- 当前变通方法：用户手动重新输入支付信息（如果他们注意到）
+- 阻塞：无法保留过期卡的用户，没有催收流程
+- 实现复杂性：中等（Stripe webhook + 电子邮件流程 + UI）
 
-**Course progress tracking:**
-- Problem: No persistent state for which lessons completed
-- Current workaround: Users manually track progress
-- Blocks: Can't show completion percentage, can't recommend next lesson
-- Implementation complexity: Low (add completed_lessons junction table)
+**课程进度跟踪：**
+- 问题：没有哪些课时完成的持久状态
+- 当前变通方法：用户手动跟踪进度
+- 阻塞：无法显示完成百分比，无法推荐下一课时
+- 实现复杂性：低（添加 completed_lessons 联结表）
 
-## Test Coverage Gaps
+## 测试覆盖空白
 
-**Payment flow end-to-end:**
-- What's not tested: Full Stripe checkout -> webhook -> subscription activation flow
-- Risk: Payment processing could break silently (has happened twice)
-- Priority: High
-- Difficulty to test: Need Stripe test fixtures and webhook simulation setup
+**支付流端到端：**
+- 未测试什么：完整的 Stripe 结账 -> webhook -> 订阅激活流程
+- 风险：支付处理可能静默中断（已发生两次）
+- 优先级：高
+- 测试难度：需要 Stripe 测试夹具和 webhook 模拟设置
 
-**Error boundary behavior:**
-- What's not tested: How app behaves when components throw errors
-- Risk: White screen of death for users, no error reporting
-- Priority: Medium
-- Difficulty to test: Need to intentionally trigger errors in test environment
+**错误边界行为：**
+- 未测试什么：当组件抛出错误时应用程序的行为
+- 风险：用户白屏死机，没有错误报告
+- 优先级：中
+- 测试难度：需要在测试环境中故意触发错误
 
 ---
 
-*Concerns audit: 2025-01-20*
-*Update as issues are fixed or new ones discovered*
+*关注点审计：2025-01-20*
+*问题已修复或发现新问题时更新*
 ```
 </good_examples>
 
 <guidelines>
-**What belongs in CONCERNS.md:**
-- Tech debt with clear impact and fix approach
-- Known bugs with reproduction steps
-- Security gaps and mitigation recommendations
-- Performance bottlenecks with measurements
-- Fragile code that breaks easily
-- Scaling limits with numbers
-- Dependencies that need attention
-- Missing features that block workflows
-- Test coverage gaps
+**什么属于 CONCERNS.md：**
+- 具有明确影响和修复方法的技术债务
+- 具有重现步骤的已知错误
+- 安全漏洞和缓解建议
+- 具有测量值的性能瓶颈
+- 容易中断的脆弱代码
+- 具有数字的扩展限制
+- 需要注意的依赖项
+- 阻塞工作流的缺失功能
+- 测试覆盖空白
 
-**What does NOT belong here:**
-- Opinions without evidence ("code is messy")
-- Complaints without solutions ("auth sucks")
-- Future feature ideas (that's for product planning)
-- Normal TODOs (those live in code comments)
-- Architectural decisions that are working fine
-- Minor code style issues
+**什么不属于这里：**
+- 没有证据的意见（"代码很乱"）
+- 没有解决方案的抱怨（"auth 很差"）
+- 未来功能想法（那是用于产品规划）
+- 普通的 TODO（那些存在于代码注释中）
+- 工作正常的架构决策
+- 次要代码风格问题
 
-**When filling this template:**
-- **Always include file paths** - Concerns without locations are not actionable. Use backticks: `src/file.ts`
-- Be specific with measurements ("500ms p95" not "slow")
-- Include reproduction steps for bugs
-- Suggest fix approaches, not just problems
-- Focus on actionable items
-- Prioritize by risk/impact
-- Update as issues get resolved
-- Add new concerns as discovered
+**填充此模板时：**
+- **始终包括文件路径** - 没有位置的关切点不是可操作的。使用反引号：`src/file.ts`
+- 具体的测量（"500ms p95" 而不是"慢"）
+- 包括错误的重现步骤
+- 建议修复方法，而不仅仅是问题
+- 专注于可操作项目
+- 按风险/影响优先级排序
+- 问题解决时更新
+- 发现新关切点时添加
 
-**Tone guidelines:**
-- Professional, not emotional ("N+1 query pattern" not "terrible queries")
-- Solution-oriented ("Fix: add index" not "needs fixing")
-- Risk-focused ("Could expose user data" not "security is bad")
-- Factual ("3.5s load time" not "really slow")
+**语气指南：**
+- 专业，而不是情绪化（"N+1 查询模式"而不是"糟糕的查询"）
+- 以解决方案为导向（"修复：添加索引"而不是"需要修复"）
+- 以风险为中心（"可能暴露用户数据"而不是"安全很糟糕"）
+- 事实性（"3.5s 加载时间"而不是"真的很慢"）
 
-**Useful for phase planning when:**
-- Deciding what to work on next
-- Estimating risk of changes
-- Understanding where to be careful
-- Prioritizing improvements
-- Onboarding new Claude contexts
-- Planning refactoring work
+**在以下情况下对阶段规划有用：**
+- 决定接下来做什么
+- 评估更改的风险
+- 了解在哪里需要小心
+- 优先考虑改进
+- 新的 Claude 上下文入职
+- 规划重构工作
 
-**How this gets populated:**
-Explore agents detect these during codebase mapping. Manual additions welcome for human-discovered issues. This is living documentation, not a complaint list.
+**如何填充：**
+探索代理在代码库映射期间检测到这些。手动添加欢迎人类发现的问题。这是活文档，而不是投诉清单。
 </guidelines>

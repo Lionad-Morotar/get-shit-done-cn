@@ -1,126 +1,126 @@
 #!/usr/bin/env node
 
 /**
- * GSD Tools — CLI utility for GSD workflow operations
+ * GSD 工具集 — GSD 工作流操作的 CLI 工具
  *
- * Replaces repetitive inline bash patterns across ~50 GSD command/workflow/agent files.
- * Centralizes: config parsing, model resolution, phase lookup, git commits, summary verification.
+ * 替代约 50 个 GSD 命令/工作流/代理文件中重复的内联 bash 模式。
+ * 集中管理:配置解析、模型解析、阶段查找、git 提交、摘要验证。
  *
- * Usage: node gsd-tools.js <command> [args] [--raw]
+ * 用法: node gsd-tools.js <命令> [参数] [--raw]
  *
- * Atomic Commands:
- *   state load                         Load project config + state
- *   state update <field> <value>       Update a STATE.md field
- *   state get [section]                Get STATE.md content or section
- *   state patch --field val ...        Batch update STATE.md fields
- *   resolve-model <agent-type>         Get model for agent based on profile
- *   find-phase <phase>                 Find phase directory by number
- *   commit <message> [--files f1 f2]   Commit planning docs
- *   verify-summary <path>              Verify a SUMMARY.md file
- *   generate-slug <text>               Convert text to URL-safe slug
- *   current-timestamp [format]         Get timestamp (full|date|filename)
- *   list-todos [area]                  Count and enumerate pending todos
- *   verify-path-exists <path>          Check file/directory existence
- *   config-ensure-section              Initialize .planning/config.json
- *   history-digest                     Aggregate all SUMMARY.md data
- *   summary-extract <path> [--fields]  Extract structured data from SUMMARY.md
- *   state-snapshot                     Structured parse of STATE.md
- *   phase-plan-index <phase>           Index plans with waves and status
- *   websearch <query>                  Search web via Brave API (if configured)
+ * 原子命令:
+ *   state load                         加载项目配置 + 状态
+ *   state update <字段> <值>           更新 STATE.md 字段
+ *   state get [章节]                   获取 STATE.md 内容或章节
+ *   state patch --field val ...        批量更新 STATE.md 字段
+ *   resolve-model <代理类型>           根据配置文件获取代理模型
+ *   find-phase <阶段>                  通过编号查找阶段目录
+ *   commit <消息> [--files f1 f2]      提交规划文档
+ *   verify-summary <路径>              验证 SUMMARY.md 文件
+ *   generate-slug <文本>               将文本转换为 URL 安全的 slug
+ *   current-timestamp [格式]           获取时间戳 (full|date|filename)
+ *   list-todos [区域]                  统计并列出待办事项
+ *   verify-path-exists <路径>          检查文件/目录是否存在
+ *   config-ensure-section              初始化 .planning/config.json
+ *   history-digest                     汇总所有 SUMMARY.md 数据
+ *   summary-extract <路径> [--fields]  从 SUMMARY.md 提取结构化数据
+ *   state-snapshot                     结构化解析 STATE.md
+ *   phase-plan-index <阶段>            索引计划的波次和状态
+ *   websearch <查询>                   通过 Brave API 搜索网络(如果已配置)
  *     [--limit N] [--freshness day|week|month]
  *
- * Phase Operations:
- *   phase next-decimal <phase>         Calculate next decimal phase number
- *   phase add <description>            Append new phase to roadmap + create dir
- *   phase insert <after> <description> Insert decimal phase after existing
- *   phase remove <phase> [--force]     Remove phase, renumber all subsequent
- *   phase complete <phase>             Mark phase done, update state + roadmap
+ * 阶段操作:
+ *   phase next-decimal <阶段>          计算下一个十进制阶段编号
+ *   phase add <描述>                   将新阶段追加到路线图 + 创建目录
+ *   phase insert <之后> <描述>         在现有阶段后插入十进制阶段
+ *   phase remove <阶段> [--force]      删除阶段,重新编号所有后续阶段
+ *   phase complete <阶段>              标记阶段完成,更新状态 + 路线图
  *
- * Roadmap Operations:
- *   roadmap get-phase <phase>          Extract phase section from ROADMAP.md
- *   roadmap analyze                    Full roadmap parse with disk status
+ * 路线图操作:
+ *   roadmap get-phase <阶段>           从 ROADMAP.md 提取阶段章节
+ *   roadmap analyze                    完整路线图解析及磁盘状态
  *
- * Milestone Operations:
- *   milestone complete <version>       Archive milestone, create MILESTONES.md
- *     [--name <name>]
+ * 里程碑操作:
+ *   milestone complete <版本>          归档里程碑,创建 MILESTONES.md
+ *     [--name <名称>]
  *
- * Validation:
- *   validate consistency               Check phase numbering, disk/roadmap sync
+ * 验证:
+ *   validate consistency               检查阶段编号、磁盘/路线图同步
  *
- * Progress:
- *   progress [json|table|bar]          Render progress in various formats
+ * 进度:
+ *   progress [json|table|bar]          以各种格式渲染进度
  *
- * Todos:
- *   todo complete <filename>           Move todo from pending to completed
+ * 待办事项:
+ *   todo complete <文件名>             将待办事项从待处理移至已完成
  *
- * Scaffolding:
- *   scaffold context --phase <N>       Create CONTEXT.md template
- *   scaffold uat --phase <N>           Create UAT.md template
- *   scaffold verification --phase <N>  Create VERIFICATION.md template
- *   scaffold phase-dir --phase <N>     Create phase directory
- *     --name <name>
+ * 脚手架:
+ *   scaffold context --phase <N>       创建 CONTEXT.md 模板
+ *   scaffold uat --phase <N>           创建 UAT.md 模板
+ *   scaffold verification --phase <N>  创建 VERIFICATION.md 模板
+ *   scaffold phase-dir --phase <N>     创建阶段目录
+ *     --name <名称>
  *
- * Frontmatter CRUD:
- *   frontmatter get <file> [--field k] Extract frontmatter as JSON
- *   frontmatter set <file> --field k   Update single frontmatter field
+ * Frontmatter 增删改查:
+ *   frontmatter get <文件> [--field k] 以 JSON 格式提取 frontmatter
+ *   frontmatter set <文件> --field k   更新单个 frontmatter 字段
  *     --value jsonVal
- *   frontmatter merge <file>           Merge JSON into frontmatter
+ *   frontmatter merge <文件>           将 JSON 合并到 frontmatter
  *     --data '{json}'
- *   frontmatter validate <file>        Validate required fields
+ *   frontmatter validate <文件>        验证必填字段
  *     --schema plan|summary|verification
  *
- * Verification Suite:
- *   verify plan-structure <file>       Check PLAN.md structure + tasks
- *   verify phase-completeness <phase>  Check all plans have summaries
- *   verify references <file>           Check @-refs + paths resolve
- *   verify commits <h1> [h2] ...      Batch verify commit hashes
- *   verify artifacts <plan-file>       Check must_haves.artifacts
- *   verify key-links <plan-file>       Check must_haves.key_links
+ * 验证套件:
+ *   verify plan-structure <文件>       检查 PLAN.md 结构 + 任务
+ *   verify phase-completeness <阶段>   检查所有计划是否都有摘要
+ *   verify references <文件>           检查 @-引用 + 路径是否可解析
+ *   verify commits <h1> [h2] ...       批量验证提交哈希
+ *   verify artifacts <计划文件>        检查 must_haves.artifacts
+ *   verify key-links <计划文件>        检查 must_haves.key_links
  *
- * Template Fill:
- *   template fill summary --phase N    Create pre-filled SUMMARY.md
+ * 模板填充:
+ *   template fill summary --phase N    创建预填充的 SUMMARY.md
  *     [--plan M] [--name "..."]
  *     [--fields '{json}']
- *   template fill plan --phase N       Create pre-filled PLAN.md
+ *   template fill plan --phase N       创建预填充的 PLAN.md
  *     [--plan M] [--type execute|tdd]
  *     [--wave N] [--fields '{json}']
- *   template fill verification         Create pre-filled VERIFICATION.md
+ *   template fill verification         创建预填充的 VERIFICATION.md
  *     --phase N [--fields '{json}']
  *
- * State Progression:
- *   state advance-plan                 Increment plan counter
- *   state record-metric --phase N      Record execution metrics
+ * 状态推进:
+ *   state advance-plan                 递增计划计数器
+ *   state record-metric --phase N      记录执行指标
  *     --plan M --duration Xmin
  *     [--tasks N] [--files N]
- *   state update-progress              Recalculate progress bar
- *   state add-decision --summary "..."  Add decision to STATE.md
+ *   state update-progress              重新计算进度条
+ *   state add-decision --summary "..."  向 STATE.md 添加决策
  *     [--phase N] [--rationale "..."]
- *   state add-blocker --text "..."     Add blocker
- *   state resolve-blocker --text "..." Remove blocker
- *   state record-session               Update session continuity
+ *   state add-blocker --text "..."     添加阻塞项
+ *   state resolve-blocker --text "..." 移除阻塞项
+ *   state record-session               更新会话连续性
  *     --stopped-at "..."
- *     [--resume-file path]
+ *     [--resume-file 路径]
  *
- * Compound Commands (workflow-specific initialization):
- *   init execute-phase <phase>         All context for execute-phase workflow
- *   init plan-phase <phase>            All context for plan-phase workflow
- *   init new-project                   All context for new-project workflow
- *   init new-milestone                 All context for new-milestone workflow
- *   init quick <description>           All context for quick workflow
- *   init resume                        All context for resume-project workflow
- *   init verify-work <phase>           All context for verify-work workflow
- *   init phase-op <phase>              Generic phase operation context
- *   init todos [area]                  All context for todo workflows
- *   init milestone-op                  All context for milestone operations
- *   init map-codebase                  All context for map-codebase workflow
- *   init progress                      All context for progress workflow
+ * 复合命令(特定工作流初始化):
+ *   init execute-phase <阶段>         execute-phase 工作流的所有上下文
+ *   init plan-phase <阶段>             plan-phase 工作流的所有上下文
+ *   init new-project                   new-project 工作流的所有上下文
+ *   init new-milestone                 new-milestone 工作流的所有上下文
+ *   init quick <描述>                  quick 工作流的所有上下文
+ *   init resume                        resume-project 工作流的所有上下文
+ *   init verify-work <阶段>            verify-work 工作流的所有上下文
+ *   init phase-op <阶段>               通用阶段操作上下文
+ *   init todos [区域]                  待办事项工作流的所有上下文
+ *   init milestone-op                  里程碑操作的所有上下文
+ *   init map-codebase                  map-codebase 工作流的所有上下文
+ *   init progress                      progress 工作流的所有上下文
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// ─── Model Profile Table ─────────────────────────────────────────────────────
+// ─── 模型配置表 ─────────────────────────────────────────────────────
 
 const MODEL_PROFILES = {
   'gsd-planner':              { quality: 'opus', balanced: 'opus',   budget: 'sonnet' },
@@ -136,8 +136,9 @@ const MODEL_PROFILES = {
   'gsd-integration-checker':  { quality: 'sonnet', balanced: 'sonnet', budget: 'haiku' },
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── 辅助函数 ──────────────────────────────────────────────────────────────────
 
+// 解析 --include 标志
 function parseIncludeFlag(args) {
   const includeIndex = args.indexOf('--include');
   if (includeIndex === -1) return new Set();
@@ -146,6 +147,7 @@ function parseIncludeFlag(args) {
   return new Set(includeValue.split(',').map(s => s.trim()));
 }
 
+// 安全读取文件
 function safeReadFile(filePath) {
   try {
     return fs.readFileSync(filePath, 'utf-8');
@@ -154,6 +156,7 @@ function safeReadFile(filePath) {
   }
 }
 
+// 加载配置
 function loadConfig(cwd) {
   const configPath = path.join(cwd, '.planning', 'config.json');
   const defaults = {
@@ -174,6 +177,7 @@ function loadConfig(cwd) {
     const raw = fs.readFileSync(configPath, 'utf-8');
     const parsed = JSON.parse(raw);
 
+    // 获取配置值
     const get = (key, nested) => {
       if (parsed[key] !== undefined) return parsed[key];
       if (nested && parsed[nested.section] && parsed[nested.section][nested.field] !== undefined) {
@@ -207,6 +211,7 @@ function loadConfig(cwd) {
   }
 }
 
+// 检查路径是否被 git 忽略
 function isGitIgnored(cwd, targetPath) {
   try {
     execSync('git check-ignore -q -- ' + targetPath.replace(/[^a-zA-Z0-9._\-/]/g, ''), {
@@ -219,6 +224,7 @@ function isGitIgnored(cwd, targetPath) {
   }
 }
 
+// 执行 git 命令
 function execGit(cwd, args) {
   try {
     const escaped = args.map(a => {
@@ -240,6 +246,7 @@ function execGit(cwd, args) {
   }
 }
 
+// 标准化阶段名称(填充前导零)
 function normalizePhaseName(phase) {
   const match = phase.match(/^(\d+(?:\.\d+)?)/);
   if (!match) return phase;
@@ -249,6 +256,7 @@ function normalizePhaseName(phase) {
   return parts.length > 1 ? `${padded}.${parts[1]}` : padded;
 }
 
+// 提取并解析 frontmatter
 function extractFrontmatter(content) {
   const frontmatter = {};
   const match = content.match(/^---\n([\s\S]+?)\n---/);
@@ -257,54 +265,54 @@ function extractFrontmatter(content) {
   const yaml = match[1];
   const lines = yaml.split('\n');
 
-  // Stack to track nested objects: [{obj, key, indent}]
-  // obj = object to write to, key = current key collecting array items, indent = indentation level
+  // 栈用于跟踪嵌套对象: [{obj, key, indent}]
+  // obj = 要写入的对象, key = 当前收集数组项的键, indent = 缩进级别
   let stack = [{ obj: frontmatter, key: null, indent: -1 }];
 
   for (const line of lines) {
-    // Skip empty lines
+    // 跳过空行
     if (line.trim() === '') continue;
 
-    // Calculate indentation (number of leading spaces)
+    // 计算缩进(前导空格数)
     const indentMatch = line.match(/^(\s*)/);
     const indent = indentMatch ? indentMatch[1].length : 0;
 
-    // Pop stack back to appropriate level
+    // 将栈弹出回适当级别
     while (stack.length > 1 && indent <= stack[stack.length - 1].indent) {
       stack.pop();
     }
 
     const current = stack[stack.length - 1];
 
-    // Check for key: value pattern
+    // 检查 key: value 模式
     const keyMatch = line.match(/^(\s*)([a-zA-Z0-9_-]+):\s*(.*)/);
     if (keyMatch) {
       const key = keyMatch[2];
       const value = keyMatch[3].trim();
 
       if (value === '' || value === '[') {
-        // Key with no value or opening bracket — could be nested object or array
-        // We'll determine based on next lines, for now create placeholder
+        // 没有值或左方括号的键 - 可能是嵌套对象或数组
+        // 我们将根据下一行确定,现在创建占位符
         current.obj[key] = value === '[' ? [] : {};
         current.key = null;
-        // Push new context for potential nested content
+        // 为潜在的嵌套内容推送新上下文
         stack.push({ obj: current.obj[key], key: null, indent });
       } else if (value.startsWith('[') && value.endsWith(']')) {
-        // Inline array: key: [a, b, c]
+        // 内联数组: key: [a, b, c]
         current.obj[key] = value.slice(1, -1).split(',').map(s => s.trim().replace(/^["']|["']$/g, '')).filter(Boolean);
         current.key = null;
       } else {
-        // Simple key: value
+        // 简单的 key: value
         current.obj[key] = value.replace(/^["']|["']$/g, '');
         current.key = null;
       }
     } else if (line.trim().startsWith('- ')) {
-      // Array item
+      // 数组项
       const itemValue = line.trim().slice(2).replace(/^["']|["']$/g, '');
 
-      // If current context is an empty object, convert to array
+      // 如果当前上下文是空对象,转换为数组
       if (typeof current.obj === 'object' && !Array.isArray(current.obj) && Object.keys(current.obj).length === 0) {
-        // Find the key in parent that points to this object and convert it
+        // 在父级中指向此对象的键并将其转换
         const parent = stack.length > 1 ? stack[stack.length - 2] : null;
         if (parent) {
           for (const k of Object.keys(parent.obj)) {
@@ -324,6 +332,7 @@ function extractFrontmatter(content) {
   return frontmatter;
 }
 
+// 重建 frontmatter YAML 字符串
 function reconstructFrontmatter(obj) {
   const lines = [];
   for (const [key, value] of Object.entries(obj)) {
@@ -388,6 +397,7 @@ function reconstructFrontmatter(obj) {
   return lines.join('\n');
 }
 
+// 拼接 frontmatter 到内容
 function spliceFrontmatter(content, newObj) {
   const yamlStr = reconstructFrontmatter(newObj);
   const match = content.match(/^---\n[\s\S]+?\n---/);
@@ -397,40 +407,41 @@ function spliceFrontmatter(content, newObj) {
   return `---\n${yamlStr}\n---\n\n` + content;
 }
 
+// 解析 must_haves 中的特定块
 function parseMustHavesBlock(content, blockName) {
-  // Extract a specific block from must_haves in raw frontmatter YAML
-  // Handles 3-level nesting: must_haves > artifacts/key_links > [{path, provides, ...}]
+  // 从原始 frontmatter YAML 的 must_haves 中提取特定块
+  // 处理 3 级嵌套: must_haves > artifacts/key_links > [{path, provides, ...}]
   const fmMatch = content.match(/^---\n([\s\S]+?)\n---/);
   if (!fmMatch) return [];
 
   const yaml = fmMatch[1];
-  // Find the block (e.g., "truths:", "artifacts:", "key_links:")
+  // 查找块(例如 "truths:", "artifacts:", "key_links:")
   const blockPattern = new RegExp(`^\\s{4}${blockName}:\\s*$`, 'm');
   const blockStart = yaml.search(blockPattern);
   if (blockStart === -1) return [];
 
   const afterBlock = yaml.slice(blockStart);
-  const blockLines = afterBlock.split('\n').slice(1); // skip the header line
+  const blockLines = afterBlock.split('\n').slice(1); // 跳过标题行
 
   const items = [];
   let current = null;
 
   for (const line of blockLines) {
-    // Stop at same or lower indent level (non-continuation)
+    // 在相同或更低缩进级别停止(非续行)
     if (line.trim() === '') continue;
     const indent = line.match(/^(\s*)/)[1].length;
-    if (indent <= 4 && line.trim() !== '') break; // back to must_haves level or higher
+    if (indent <= 4 && line.trim() !== '') break; // 回到 must_haves 级别或更高
 
     if (line.match(/^\s{6}-\s+/)) {
-      // New list item at 6-space indent
+      // 6 空格缩进的新列表项
       if (current) items.push(current);
       current = {};
-      // Check if it's a simple string item
+      // 检查是否是简单字符串项
       const simpleMatch = line.match(/^\s{6}-\s+"?([^"]+)"?\s*$/);
       if (simpleMatch && !line.includes(':')) {
         current = simpleMatch[1];
       } else {
-        // Key-value on same line as dash: "- path: value"
+        // 破折号同一行上的键值对: "- path: value"
         const kvMatch = line.match(/^\s{6}-\s+(\w+):\s*"?([^"]*)"?\s*$/);
         if (kvMatch) {
           current = {};
@@ -438,17 +449,17 @@ function parseMustHavesBlock(content, blockName) {
         }
       }
     } else if (current && typeof current === 'object') {
-      // Continuation key-value at 8+ space indent
+      // 8+ 空格缩进的续行键值对
       const kvMatch = line.match(/^\s{8,}(\w+):\s*"?([^"]*)"?\s*$/);
       if (kvMatch) {
         const val = kvMatch[2];
-        // Try to parse as number
+        // 尝试解析为数字
         current[kvMatch[1]] = /^\d+$/.test(val) ? parseInt(val, 10) : val;
       }
-      // Array items under a key
+      // 键下的数组项
       const arrMatch = line.match(/^\s{10,}-\s+"?([^"]+)"?\s*$/);
       if (arrMatch) {
-        // Find the last key added and convert to array
+        // 查找最后添加的键并转换为数组
         const keys = Object.keys(current);
         const lastKey = keys[keys.length - 1];
         if (lastKey && !Array.isArray(current[lastKey])) {
@@ -463,6 +474,7 @@ function parseMustHavesBlock(content, blockName) {
   return items;
 }
 
+// 输出结果
 function output(result, raw, rawValue) {
   if (raw && rawValue !== undefined) {
     process.stdout.write(String(rawValue));
@@ -472,13 +484,15 @@ function output(result, raw, rawValue) {
   process.exit(0);
 }
 
+// 输出错误并退出
 function error(message) {
   process.stderr.write('Error: ' + message + '\n');
   process.exit(1);
 }
 
-// ─── Commands ─────────────────────────────────────────────────────────────────
+// ─── 命令 ─────────────────────────────────────────────────────────────────
 
+// 生成 URL 安全的 slug
 function cmdGenerateSlug(text, raw) {
   if (!text) {
     error('text required for slug generation');
@@ -493,6 +507,7 @@ function cmdGenerateSlug(text, raw) {
   output(result, raw, slug);
 }
 
+// 获取当前时间戳
 function cmdCurrentTimestamp(format, raw) {
   const now = new Date();
   let result;
@@ -513,6 +528,7 @@ function cmdCurrentTimestamp(format, raw) {
   output({ timestamp: result }, raw, result);
 }
 
+// 列出待办事项
 function cmdListTodos(cwd, area, raw) {
   const pendingDir = path.join(cwd, '.planning', 'todos', 'pending');
 
@@ -550,6 +566,7 @@ function cmdListTodos(cwd, area, raw) {
   output(result, raw, count.toString());
 }
 
+// 验证路径是否存在
 function cmdVerifyPathExists(cwd, targetPath, raw) {
   if (!targetPath) {
     error('path required for verification');
@@ -568,11 +585,12 @@ function cmdVerifyPathExists(cwd, targetPath, raw) {
   }
 }
 
+// 确保配置文件存在
 function cmdConfigEnsureSection(cwd, raw) {
   const configPath = path.join(cwd, '.planning', 'config.json');
   const planningDir = path.join(cwd, '.planning');
 
-  // Ensure .planning directory exists
+  // 确保 .planning 目录存在
   try {
     if (!fs.existsSync(planningDir)) {
       fs.mkdirSync(planningDir, { recursive: true });
@@ -581,19 +599,19 @@ function cmdConfigEnsureSection(cwd, raw) {
     error('Failed to create .planning directory: ' + err.message);
   }
 
-  // Check if config already exists
+  // 检查配置是否已存在
   if (fs.existsSync(configPath)) {
     const result = { created: false, reason: 'already_exists' };
     output(result, raw, 'exists');
     return;
   }
 
-  // Detect Brave Search API key availability
+  // 检测 Brave Search API 密钥可用性
   const homedir = require('os').homedir();
   const braveKeyFile = path.join(homedir, '.gsd', 'brave_api_key');
   const hasBraveSearch = !!(process.env.BRAVE_API_KEY || fs.existsSync(braveKeyFile));
 
-  // Create default config
+  // 创建默认配置
   const defaults = {
     model_profile: 'balanced',
     commit_docs: true,
@@ -619,6 +637,7 @@ function cmdConfigEnsureSection(cwd, raw) {
   }
 }
 
+// 设置配置值
 function cmdConfigSet(cwd, keyPath, value, raw) {
   const configPath = path.join(cwd, '.planning', 'config.json');
 
@@ -626,13 +645,13 @@ function cmdConfigSet(cwd, keyPath, value, raw) {
     error('Usage: config-set <key.path> <value>');
   }
 
-  // Parse value (handle booleans and numbers)
+  // 解析值(处理布尔值和数字)
   let parsedValue = value;
   if (value === 'true') parsedValue = true;
   else if (value === 'false') parsedValue = false;
   else if (!isNaN(value) && value !== '') parsedValue = Number(value);
 
-  // Load existing config or start with empty object
+  // 加载现有配置或从空对象开始
   let config = {};
   try {
     if (fs.existsSync(configPath)) {
@@ -642,7 +661,7 @@ function cmdConfigSet(cwd, keyPath, value, raw) {
     error('Failed to read config.json: ' + err.message);
   }
 
-  // Set nested value using dot notation (e.g., "workflow.research")
+  // 使用点符号设置嵌套值(例如 "workflow.research")
   const keys = keyPath.split('.');
   let current = config;
   for (let i = 0; i < keys.length - 1; i++) {
@@ -654,7 +673,7 @@ function cmdConfigSet(cwd, keyPath, value, raw) {
   }
   current[keys[keys.length - 1]] = parsedValue;
 
-  // Write back
+  // 写回
   try {
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
     const result = { updated: true, key: keyPath, value: parsedValue };
@@ -664,6 +683,7 @@ function cmdConfigSet(cwd, keyPath, value, raw) {
   }
 }
 
+// 生成历史摘要
 function cmdHistoryDigest(cwd, raw) {
   const phasesDir = path.join(cwd, '.planning', 'phases');
   const digest = { phases: {}, decisions: [], tech_stack: new Set() };
@@ -700,42 +720,42 @@ function cmdHistoryDigest(cwd, raw) {
             };
           }
 
-          // Merge provides
+          // 合并 provides
           if (fm['dependency-graph'] && fm['dependency-graph'].provides) {
             fm['dependency-graph'].provides.forEach(p => digest.phases[phaseNum].provides.add(p));
           } else if (fm.provides) {
             fm.provides.forEach(p => digest.phases[phaseNum].provides.add(p));
           }
 
-          // Merge affects
+          // 合并 affects
           if (fm['dependency-graph'] && fm['dependency-graph'].affects) {
             fm['dependency-graph'].affects.forEach(a => digest.phases[phaseNum].affects.add(a));
           }
 
-          // Merge patterns
+          // 合并 patterns
           if (fm['patterns-established']) {
             fm['patterns-established'].forEach(p => digest.phases[phaseNum].patterns.add(p));
           }
 
-          // Merge decisions
+          // 合并 decisions
           if (fm['key-decisions']) {
             fm['key-decisions'].forEach(d => {
               digest.decisions.push({ phase: phaseNum, decision: d });
             });
           }
 
-          // Merge tech stack
+          // 合并 tech stack
           if (fm['tech-stack'] && fm['tech-stack'].added) {
             fm['tech-stack'].added.forEach(t => digest.tech_stack.add(typeof t === 'string' ? t : t.name));
           }
 
         } catch (e) {
-          // Skip malformed summaries
+          // 跳过格式错误的摘要
         }
       }
     }
 
-    // Convert Sets to Arrays for JSON output
+    // 将 Set 转换为 Array 以便 JSON 输出
     Object.keys(digest.phases).forEach(p => {
       digest.phases[p].provides = [...digest.phases[p].provides];
       digest.phases[p].affects = [...digest.phases[p].affects];
@@ -749,11 +769,12 @@ function cmdHistoryDigest(cwd, raw) {
   }
 }
 
+// 列出阶段
 function cmdPhasesList(cwd, options, raw) {
   const phasesDir = path.join(cwd, '.planning', 'phases');
   const { type, phase } = options;
 
-  // If no phases directory, return empty
+  // 如果没有阶段目录,返回空
   if (!fs.existsSync(phasesDir)) {
     if (type) {
       output({ files: [], count: 0 }, raw, '');
@@ -764,18 +785,18 @@ function cmdPhasesList(cwd, options, raw) {
   }
 
   try {
-    // Get all phase directories
+    // 获取所有阶段目录
     const entries = fs.readdirSync(phasesDir, { withFileTypes: true });
     let dirs = entries.filter(e => e.isDirectory()).map(e => e.name);
 
-    // Sort numerically (handles decimals: 01, 02, 02.1, 02.2, 03)
+    // 按数字排序(处理十进制: 01, 02, 02.1, 02.2, 03)
     dirs.sort((a, b) => {
       const aNum = parseFloat(a.match(/^(\d+(?:\.\d+)?)/)?.[1] || '0');
       const bNum = parseFloat(b.match(/^(\d+(?:\.\d+)?)/)?.[1] || '0');
       return aNum - bNum;
     });
 
-    // If filtering by phase number
+    // 如果按阶段编号过滤
     if (phase) {
       const normalized = normalizePhaseName(phase);
       const match = dirs.find(d => d.startsWith(normalized));
@@ -786,7 +807,7 @@ function cmdPhasesList(cwd, options, raw) {
       dirs = [match];
     }
 
-    // If listing files of a specific type
+    // 如果列出特定类型的文件
     if (type) {
       const files = [];
       for (const dir of dirs) {
@@ -814,13 +835,14 @@ function cmdPhasesList(cwd, options, raw) {
       return;
     }
 
-    // Default: list directories
+    // 默认:列出目录
     output({ directories: dirs, count: dirs.length }, raw, dirs.join('\n'));
   } catch (e) {
     error('Failed to list phases: ' + e.message);
   }
 }
 
+// 从路线图获取阶段信息
 function cmdRoadmapGetPhase(cwd, phaseNum, raw) {
   const roadmapPath = path.join(cwd, '.planning', 'ROADMAP.md');
 
@@ -832,10 +854,10 @@ function cmdRoadmapGetPhase(cwd, phaseNum, raw) {
   try {
     const content = fs.readFileSync(roadmapPath, 'utf-8');
 
-    // Escape special regex chars in phase number, handle decimal
+    // 转义阶段编号中的特殊正则字符,处理十进制
     const escapedPhase = phaseNum.replace(/\./g, '\\.');
 
-    // Match "### Phase X:" or "### Phase X.Y:" with optional name
+    // 匹配 "### Phase X:" 或 "### Phase X.Y:" 及可选名称
     const phasePattern = new RegExp(
       `###\\s*Phase\\s+${escapedPhase}:\\s*([^\\n]+)`,
       'i'
@@ -850,7 +872,7 @@ function cmdRoadmapGetPhase(cwd, phaseNum, raw) {
     const phaseName = headerMatch[1].trim();
     const headerIndex = headerMatch.index;
 
-    // Find the end of this section (next ### or end of file)
+    // 查找此章节的结尾(下一个 ### 或文件结尾)
     const restOfContent = content.slice(headerIndex);
     const nextHeaderMatch = restOfContent.match(/\n###\s+Phase\s+\d/i);
     const sectionEnd = nextHeaderMatch
@@ -859,7 +881,7 @@ function cmdRoadmapGetPhase(cwd, phaseNum, raw) {
 
     const section = content.slice(headerIndex, sectionEnd).trim();
 
-    // Extract goal if present
+    // 如果存在目标,提取它
     const goalMatch = section.match(/\*\*Goal:\*\*\s*([^\n]+)/i);
     const goal = goalMatch ? goalMatch[1].trim() : null;
 
@@ -879,11 +901,12 @@ function cmdRoadmapGetPhase(cwd, phaseNum, raw) {
   }
 }
 
+// 计算下一个十进制阶段编号
 function cmdPhaseNextDecimal(cwd, basePhase, raw) {
   const phasesDir = path.join(cwd, '.planning', 'phases');
   const normalized = normalizePhaseName(basePhase);
 
-  // Check if phases directory exists
+  // 检查阶段目录是否存在
   if (!fs.existsSync(phasesDir)) {
     output(
       {
@@ -902,10 +925,10 @@ function cmdPhaseNextDecimal(cwd, basePhase, raw) {
     const entries = fs.readdirSync(phasesDir, { withFileTypes: true });
     const dirs = entries.filter(e => e.isDirectory()).map(e => e.name);
 
-    // Check if base phase exists
+    // 检查基础阶段是否存在
     const baseExists = dirs.some(d => d.startsWith(normalized + '-') || d === normalized);
 
-    // Find existing decimal phases for this base
+    // 查找此基础阶段现有的十进制阶段
     const decimalPattern = new RegExp(`^${normalized}\\.(\\d+)`);
     const existingDecimals = [];
 
@@ -916,14 +939,14 @@ function cmdPhaseNextDecimal(cwd, basePhase, raw) {
       }
     }
 
-    // Sort numerically
+    // 按数字排序
     existingDecimals.sort((a, b) => {
       const aNum = parseFloat(a);
       const bNum = parseFloat(b);
       return aNum - bNum;
     });
 
-    // Calculate next decimal
+    // 计算下一个十进制编号
     let nextDecimal;
     if (existingDecimals.length === 0) {
       nextDecimal = `${normalized}.1`;
@@ -948,6 +971,7 @@ function cmdPhaseNextDecimal(cwd, basePhase, raw) {
   }
 }
 
+// 加载状态
 function cmdStateLoad(cwd, raw) {
   const config = loadConfig(cwd);
   const planningDir = path.join(cwd, '.planning');
@@ -969,7 +993,7 @@ function cmdStateLoad(cwd, raw) {
     config_exists: configExists,
   };
 
-  // For --raw, output a condensed key=value format
+  // 对于 --raw,输出压缩的 key=value 格式
   if (raw) {
     const c = config;
     const lines = [
@@ -993,6 +1017,7 @@ function cmdStateLoad(cwd, raw) {
   output(result);
 }
 
+// 获取状态字段
 function cmdStateGet(cwd, section, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   try {
@@ -1003,10 +1028,10 @@ function cmdStateGet(cwd, section, raw) {
       return;
     }
 
-    // Try to find markdown section or field
+    // 尝试查找 markdown 章节或字段
     const fieldEscaped = section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
-    // Check for **field:** value
+    // 检查 **field:** 值
     const fieldPattern = new RegExp(`\\*\\*${fieldEscaped}:\\*\\*\\s*(.*)`, 'i');
     const fieldMatch = content.match(fieldPattern);
     if (fieldMatch) {
@@ -1014,7 +1039,7 @@ function cmdStateGet(cwd, section, raw) {
       return;
     }
 
-    // Check for ## Section
+    // 检查 ## 章节
     const sectionPattern = new RegExp(`##\\s*${fieldEscaped}\\s*\n([\\s\\S]*?)(?=\\n##|$)`, 'i');
     const sectionMatch = content.match(sectionPattern);
     if (sectionMatch) {
@@ -1028,6 +1053,7 @@ function cmdStateGet(cwd, section, raw) {
   }
 }
 
+// 批量更新状态字段
 function cmdStatePatch(cwd, patches, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   try {
@@ -1056,6 +1082,7 @@ function cmdStatePatch(cwd, patches, raw) {
   }
 }
 
+// 更新状态字段
 function cmdStateUpdate(cwd, field, value) {
   if (!field || value === undefined) {
     error('field and value required for state update');
@@ -1078,14 +1105,16 @@ function cmdStateUpdate(cwd, field, value) {
   }
 }
 
-// ─── State Progression Engine ────────────────────────────────────────────────
+// ─── 状态推进引擎 ────────────────────────────────────────────────
 
+// 从内容中提取字段
 function stateExtractField(content, fieldName) {
   const pattern = new RegExp(`\\*\\*${fieldName}:\\*\\*\\s*(.+)`, 'i');
   const match = content.match(pattern);
   return match ? match[1].trim() : null;
 }
 
+// 替换内容中的字段
 function stateReplaceField(content, fieldName, newValue) {
   const escaped = fieldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pattern = new RegExp(`(\\*\\*${escaped}:\\*\\*\\s*)(.*)`, 'i');
@@ -1095,6 +1124,7 @@ function stateReplaceField(content, fieldName, newValue) {
   return null;
 }
 
+// 推进计划计数器
 function cmdStateAdvancePlan(cwd, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   if (!fs.existsSync(statePath)) { output({ error: 'STATE.md not found' }, raw); return; }
@@ -1124,6 +1154,7 @@ function cmdStateAdvancePlan(cwd, raw) {
   }
 }
 
+// 记录执行指标
 function cmdStateRecordMetric(cwd, options, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   if (!fs.existsSync(statePath)) { output({ error: 'STATE.md not found' }, raw); return; }
@@ -1136,7 +1167,7 @@ function cmdStateRecordMetric(cwd, options, raw) {
     return;
   }
 
-  // Find Performance Metrics section and its table
+  // 查找性能指标章节及其表格
   const metricsPattern = /(##\s*Performance Metrics[\s\S]*?\n\|[^\n]+\n\|[-|\s]+\n)([\s\S]*?)(?=\n##|\n$|$)/i;
   const metricsMatch = content.match(metricsPattern);
 
@@ -1159,13 +1190,14 @@ function cmdStateRecordMetric(cwd, options, raw) {
   }
 }
 
+// 更新进度条
 function cmdStateUpdateProgress(cwd, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   if (!fs.existsSync(statePath)) { output({ error: 'STATE.md not found' }, raw); return; }
 
   let content = fs.readFileSync(statePath, 'utf-8');
 
-  // Count summaries across all phases
+  // 统计所有阶段的摘要
   const phasesDir = path.join(cwd, '.planning', 'phases');
   let totalPlans = 0;
   let totalSummaries = 0;
@@ -1196,6 +1228,7 @@ function cmdStateUpdateProgress(cwd, raw) {
   }
 }
 
+// 添加决策记录
 function cmdStateAddDecision(cwd, options, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   if (!fs.existsSync(statePath)) { output({ error: 'STATE.md not found' }, raw); return; }
@@ -1206,13 +1239,13 @@ function cmdStateAddDecision(cwd, options, raw) {
   let content = fs.readFileSync(statePath, 'utf-8');
   const entry = `- [Phase ${phase || '?'}]: ${summary}${rationale ? ` — ${rationale}` : ''}`;
 
-  // Find Decisions section (various heading patterns)
+  // 查找决策章节(各种标题模式)
   const sectionPattern = /(###?\s*(?:Decisions|Decisions Made|Accumulated.*Decisions)\s*\n)([\s\S]*?)(?=\n###?|\n##[^#]|$)/i;
   const match = content.match(sectionPattern);
 
   if (match) {
     let sectionBody = match[2];
-    // Remove placeholders
+    // 移除占位符
     sectionBody = sectionBody.replace(/None yet\.?\s*\n?/gi, '').replace(/No decisions yet\.?\s*\n?/gi, '');
     sectionBody = sectionBody.trimEnd() + '\n' + entry + '\n';
     content = content.replace(sectionPattern, `${match[1]}${sectionBody}`);
@@ -1223,6 +1256,7 @@ function cmdStateAddDecision(cwd, options, raw) {
   }
 }
 
+// 添加阻塞项
 function cmdStateAddBlocker(cwd, text, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   if (!fs.existsSync(statePath)) { output({ error: 'STATE.md not found' }, raw); return; }
@@ -1246,6 +1280,7 @@ function cmdStateAddBlocker(cwd, text, raw) {
   }
 }
 
+// 解决阻塞项
 function cmdStateResolveBlocker(cwd, text, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   if (!fs.existsSync(statePath)) { output({ error: 'STATE.md not found' }, raw); return; }
@@ -1265,7 +1300,7 @@ function cmdStateResolveBlocker(cwd, text, raw) {
     });
 
     let newBody = filtered.join('\n');
-    // If section is now empty, add placeholder
+    // 如果章节现在为空,添加占位符
     if (!newBody.trim() || !newBody.includes('- ')) {
       newBody = 'None\n';
     }
@@ -1278,6 +1313,7 @@ function cmdStateResolveBlocker(cwd, text, raw) {
   }
 }
 
+// 记录会话信息
 function cmdStateRecordSession(cwd, options, raw) {
   const statePath = path.join(cwd, '.planning', 'STATE.md');
   if (!fs.existsSync(statePath)) { output({ error: 'STATE.md not found' }, raw); return; }
@@ -1286,20 +1322,20 @@ function cmdStateRecordSession(cwd, options, raw) {
   const now = new Date().toISOString();
   const updated = [];
 
-  // Update Last session / Last Date
+  // 更新 Last session / Last Date
   let result = stateReplaceField(content, 'Last session', now);
   if (result) { content = result; updated.push('Last session'); }
   result = stateReplaceField(content, 'Last Date', now);
   if (result) { content = result; updated.push('Last Date'); }
 
-  // Update Stopped at
+  // 更新 Stopped at
   if (options.stopped_at) {
     result = stateReplaceField(content, 'Stopped At', options.stopped_at);
     if (!result) result = stateReplaceField(content, 'Stopped at', options.stopped_at);
     if (result) { content = result; updated.push('Stopped At'); }
   }
 
-  // Update Resume file
+  // 更新 Resume file
   const resumeFile = options.resume_file || 'None';
   result = stateReplaceField(content, 'Resume File', resumeFile);
   if (!result) result = stateReplaceField(content, 'Resume file', resumeFile);
@@ -1313,6 +1349,7 @@ function cmdStateRecordSession(cwd, options, raw) {
   }
 }
 
+// 解析代理模型
 function cmdResolveModel(cwd, agentType, raw) {
   if (!agentType) {
     error('agent-type required');
@@ -1333,6 +1370,7 @@ function cmdResolveModel(cwd, agentType, raw) {
   output(result, raw, model);
 }
 
+// 查找阶段
 function cmdFindPhase(cwd, phase, raw) {
   if (!phase) {
     error('phase identifier required');
@@ -1377,6 +1415,7 @@ function cmdFindPhase(cwd, phase, raw) {
   }
 }
 
+// 提交更改
 function cmdCommit(cwd, message, files, raw, amend) {
   if (!message && !amend) {
     error('commit message required');
@@ -1384,27 +1423,27 @@ function cmdCommit(cwd, message, files, raw, amend) {
 
   const config = loadConfig(cwd);
 
-  // Check commit_docs config
+  // 检查 commit_docs 配置
   if (!config.commit_docs) {
     const result = { committed: false, hash: null, reason: 'skipped_commit_docs_false' };
     output(result, raw, 'skipped');
     return;
   }
 
-  // Check if .planning is gitignored
+  // 检查 .planning 是否被 git 忽略
   if (isGitIgnored(cwd, '.planning')) {
     const result = { committed: false, hash: null, reason: 'skipped_gitignored' };
     output(result, raw, 'skipped');
     return;
   }
 
-  // Stage files
+  // 暂存文件
   const filesToStage = files && files.length > 0 ? files : ['.planning/'];
   for (const file of filesToStage) {
     execGit(cwd, ['add', file]);
   }
 
-  // Commit
+  // 提交
   const commitArgs = amend ? ['commit', '--amend', '--no-edit'] : ['commit', '-m', message];
   const commitResult = execGit(cwd, commitArgs);
   if (commitResult.exitCode !== 0) {
@@ -1425,6 +1464,7 @@ function cmdCommit(cwd, message, files, raw, amend) {
   output(result, raw, hash || 'committed');
 }
 
+// 验证摘要文件
 function cmdVerifySummary(cwd, summaryPath, checkFileCount, raw) {
   if (!summaryPath) {
     error('summary-path required');
@@ -1433,7 +1473,7 @@ function cmdVerifySummary(cwd, summaryPath, checkFileCount, raw) {
   const fullPath = path.join(cwd, summaryPath);
   const checkCount = checkFileCount || 2;
 
-  // Check 1: Summary exists
+  // 检查 1: 摘要存在
   if (!fs.existsSync(fullPath)) {
     const result = {
       passed: false,
@@ -1452,7 +1492,7 @@ function cmdVerifySummary(cwd, summaryPath, checkFileCount, raw) {
   const content = fs.readFileSync(fullPath, 'utf-8');
   const errors = [];
 
-  // Check 2: Spot-check files mentioned in summary
+  // 检查 2: 抽查摘要中提到的文件
   const mentionedFiles = new Set();
   const patterns = [
     /`([^`]+\.[a-zA-Z]+)`/g,
@@ -1477,7 +1517,7 @@ function cmdVerifySummary(cwd, summaryPath, checkFileCount, raw) {
     }
   }
 
-  // Check 3: Commits exist
+  // 检查 3: 提交存在
   const commitHashPattern = /\b[0-9a-f]{7,40}\b/g;
   const hashes = content.match(commitHashPattern) || [];
   let commitsExist = false;
@@ -1491,7 +1531,7 @@ function cmdVerifySummary(cwd, summaryPath, checkFileCount, raw) {
     }
   }
 
-  // Check 4: Self-check section
+  // 检查 4: 自检章节
   let selfCheck = 'not_found';
   const selfCheckPattern = /##\s*(?:Self[- ]?Check|Verification|Quality Check)/i;
   if (selfCheckPattern.test(content)) {
@@ -1521,6 +1561,7 @@ function cmdVerifySummary(cwd, summaryPath, checkFileCount, raw) {
   output(result, raw, passed ? 'passed' : 'failed');
 }
 
+// 选择合适的模板
 function cmdTemplateSelect(cwd, planPath, raw) {
   if (!planPath) {
     error('plan-path required');
@@ -1530,14 +1571,14 @@ function cmdTemplateSelect(cwd, planPath, raw) {
     const fullPath = path.join(cwd, planPath);
     const content = fs.readFileSync(fullPath, 'utf-8');
     
-    // Simple heuristics
+    // 简单启发式方法
     const taskMatch = content.match(/###\s*Task\s*\d+/g) || [];
     const taskCount = taskMatch.length;
     
     const decisionMatch = content.match(/decision/gi) || [];
     const hasDecisions = decisionMatch.length > 0;
     
-    // Count file mentions
+    // 统计文件提及
     const fileMentions = new Set();
     const filePattern = /`([^`]+\.[a-zA-Z]+)`/g;
     let m;
@@ -1562,11 +1603,12 @@ function cmdTemplateSelect(cwd, planPath, raw) {
     const result = { template, type, taskCount, fileCount, hasDecisions };
     output(result, raw, template);
   } catch (e) {
-    // Fallback to standard
+    // 回退到标准模板
     output({ template: 'templates/summary-standard.md', type: 'standard', error: e.message }, raw, 'templates/summary-standard.md');
   }
 }
 
+// 填充模板
 function cmdTemplateFill(cwd, templateType, options, raw) {
   if (!templateType) { error('template type required: summary, plan, or verification'); }
   if (!options.phase) { error('--phase required'); }
@@ -1733,6 +1775,7 @@ function cmdTemplateFill(cwd, templateType, options, raw) {
   output({ created: true, path: relPath, template: templateType }, raw, relPath);
 }
 
+// 索引阶段计划
 function cmdPhasePlanIndex(cwd, phase, raw) {
   if (!phase) {
     error('phase required for phase-plan-index');
@@ -1741,7 +1784,7 @@ function cmdPhasePlanIndex(cwd, phase, raw) {
   const phasesDir = path.join(cwd, '.planning', 'phases');
   const normalized = normalizePhaseName(phase);
 
-  // Find phase directory
+  // 查找阶段目录
   let phaseDir = null;
   let phaseDirName = null;
   try {
@@ -1753,7 +1796,7 @@ function cmdPhasePlanIndex(cwd, phase, raw) {
       phaseDirName = match;
     }
   } catch {
-    // phases dir doesn't exist
+    // phases 目录不存在
   }
 
   if (!phaseDir) {
@@ -1761,12 +1804,12 @@ function cmdPhasePlanIndex(cwd, phase, raw) {
     return;
   }
 
-  // Get all files in phase directory
+  // 获取阶段目录中的所有文件
   const phaseFiles = fs.readdirSync(phaseDir);
   const planFiles = phaseFiles.filter(f => f.endsWith('-PLAN.md') || f === 'PLAN.md').sort();
   const summaryFiles = phaseFiles.filter(f => f.endsWith('-SUMMARY.md') || f === 'SUMMARY.md');
 
-  // Build set of plan IDs with summaries
+  // 构建有摘要的计划 ID 集合
   const completedPlanIds = new Set(
     summaryFiles.map(s => s.replace('-SUMMARY.md', '').replace('SUMMARY.md', ''))
   );
@@ -1782,7 +1825,7 @@ function cmdPhasePlanIndex(cwd, phase, raw) {
     const content = fs.readFileSync(planPath, 'utf-8');
     const fm = extractFrontmatter(content);
 
-    // Count tasks (## Task N patterns)
+    // 统计任务(## Task N 模式)
     const taskMatches = content.match(/##\s*Task\s*\d+/gi) || [];
     const taskCount = taskMatches.length;
 
@@ -1852,13 +1895,14 @@ function cmdStateSnapshot(cwd, raw) {
   const content = fs.readFileSync(statePath, 'utf-8');
 
   // Helper to extract **Field:** value patterns
+  // 提取字段的辅助函数
   const extractField = (fieldName) => {
-    const pattern = new RegExp(`\\*\\*${fieldName}:\\*\\*\\s*(.+)`, 'i');
+    const pattern = new RegExp(`\\*\\*${fieldName}:\\*\\*\\s*([^\n]+)`, 'i');
     const match = content.match(pattern);
     return match ? match[1].trim() : null;
   };
 
-  // Extract basic fields
+  // 提取基本字段
   const currentPhase = extractField('Current Phase');
   const currentPhaseName = extractField('Current Phase Name');
   const totalPhasesRaw = extractField('Total Phases');
@@ -1870,12 +1914,12 @@ function cmdStateSnapshot(cwd, raw) {
   const lastActivityDesc = extractField('Last Activity Description');
   const pausedAt = extractField('Paused At');
 
-  // Parse numeric fields
+  // 解析数字字段
   const totalPhases = totalPhasesRaw ? parseInt(totalPhasesRaw, 10) : null;
   const totalPlansInPhase = totalPlansRaw ? parseInt(totalPlansRaw, 10) : null;
   const progressPercent = progressRaw ? parseInt(progressRaw.replace('%', ''), 10) : null;
 
-  // Extract decisions table
+  // 提取决策表格
   const decisions = [];
   const decisionsMatch = content.match(/##\s*Decisions Made[\s\S]*?\n\|[^\n]+\n\|[-|\s]+\n([\s\S]*?)(?=\n##|\n$|$)/i);
   if (decisionsMatch) {
@@ -1893,7 +1937,7 @@ function cmdStateSnapshot(cwd, raw) {
     }
   }
 
-  // Extract blockers list
+  // 提取阻塞项列表
   const blockers = [];
   const blockersMatch = content.match(/##\s*Blockers\s*\n([\s\S]*?)(?=\n##|$)/i);
   if (blockersMatch) {
@@ -1904,7 +1948,7 @@ function cmdStateSnapshot(cwd, raw) {
     }
   }
 
-  // Extract session info
+  // 提取会话信息
   const session = {
     last_date: null,
     stopped_at: null,
@@ -1942,6 +1986,7 @@ function cmdStateSnapshot(cwd, raw) {
   output(result, raw);
 }
 
+// 提取摘要数据
 function cmdSummaryExtract(cwd, summaryPath, fields, raw) {
   if (!summaryPath) {
     error('summary-path required for summary-extract');
@@ -1957,7 +2002,7 @@ function cmdSummaryExtract(cwd, summaryPath, fields, raw) {
   const content = fs.readFileSync(fullPath, 'utf-8');
   const fm = extractFrontmatter(content);
 
-  // Parse key-decisions into structured format
+  // 将 key-decisions 解析为结构化格式
   const parseDecisions = (decisionsList) => {
     if (!decisionsList || !Array.isArray(decisionsList)) return [];
     return decisionsList.map(d => {
@@ -1972,7 +2017,7 @@ function cmdSummaryExtract(cwd, summaryPath, fields, raw) {
     });
   };
 
-  // Build full result
+  // 构建完整结果
   const fullResult = {
     path: summaryPath,
     one_liner: fm['one-liner'] || null,
@@ -1982,7 +2027,7 @@ function cmdSummaryExtract(cwd, summaryPath, fields, raw) {
     decisions: parseDecisions(fm['key-decisions']),
   };
 
-  // If fields specified, filter to only those fields
+  // 如果指定了字段,则仅过滤这些字段
   if (fields && fields.length > 0) {
     const filtered = { path: summaryPath };
     for (const field of fields) {
@@ -1997,13 +2042,14 @@ function cmdSummaryExtract(cwd, summaryPath, fields, raw) {
   output(fullResult, raw);
 }
 
-// ─── Web Search (Brave API) ──────────────────────────────────────────────────
+// ─── 网络搜索(Brave API) ──────────────────────────────────────────────────
 
+// 执行网络搜索
 async function cmdWebsearch(query, options, raw) {
   const apiKey = process.env.BRAVE_API_KEY;
 
   if (!apiKey) {
-    // No key = silent skip, agent falls back to built-in WebSearch
+    // 没有密钥 = 静默跳过,代理回退到内置 WebSearch
     output({ available: false, reason: 'BRAVE_API_KEY not set' }, raw, '');
     return;
   }
@@ -2106,12 +2152,14 @@ function cmdFrontmatterMerge(cwd, filePath, data, raw) {
   output({ merged: true, fields: Object.keys(mergeData) }, raw, 'true');
 }
 
+// Frontmatter 模式定义
 const FRONTMATTER_SCHEMAS = {
   plan: { required: ['phase', 'plan', 'type', 'wave', 'depends_on', 'files_modified', 'autonomous', 'must_haves'] },
   summary: { required: ['phase', 'plan', 'subsystem', 'tags', 'duration', 'completed'] },
   verification: { required: ['phase', 'verified', 'status', 'score'] },
 };
 
+// 验证 frontmatter
 function cmdFrontmatterValidate(cwd, filePath, schemaName, raw) {
   if (!filePath || !schemaName) { error('file and schema required'); }
   const schema = FRONTMATTER_SCHEMAS[schemaName];
@@ -2125,8 +2173,9 @@ function cmdFrontmatterValidate(cwd, filePath, schemaName, raw) {
   output({ valid: missing.length === 0, missing, present, schema: schemaName }, raw, missing.length === 0 ? 'valid' : 'invalid');
 }
 
-// ─── Verification Suite ──────────────────────────────────────────────────────
+// ─── 验证套件 ──────────────────────────────────────────────────────
 
+// 验证计划结构
 function cmdVerifyPlanStructure(cwd, filePath, raw) {
   if (!filePath) { error('file path required'); }
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(cwd, filePath);
@@ -2137,13 +2186,13 @@ function cmdVerifyPlanStructure(cwd, filePath, raw) {
   const errors = [];
   const warnings = [];
 
-  // Check required frontmatter fields
+  // 检查必需的 frontmatter 字段
   const required = ['phase', 'plan', 'type', 'wave', 'depends_on', 'files_modified', 'autonomous', 'must_haves'];
   for (const field of required) {
     if (fm[field] === undefined) errors.push(`Missing required frontmatter field: ${field}`);
   }
 
-  // Parse and check task elements
+  // 解析并检查任务元素
   const taskPattern = /<task[^>]*>([\s\S]*?)<\/task>/g;
   const tasks = [];
   let taskMatch;
@@ -2167,12 +2216,12 @@ function cmdVerifyPlanStructure(cwd, filePath, raw) {
 
   if (tasks.length === 0) warnings.push('No <task> elements found');
 
-  // Wave/depends_on consistency
+  // Wave/depends_on 一致性检查
   if (fm.wave && parseInt(fm.wave) > 1 && (!fm.depends_on || (Array.isArray(fm.depends_on) && fm.depends_on.length === 0))) {
     warnings.push('Wave > 1 but depends_on is empty');
   }
 
-  // Autonomous/checkpoint consistency
+  // 自主/检查点一致性检查
   const hasCheckpoints = /<task\s+type=["']?checkpoint/.test(content);
   if (hasCheckpoints && fm.autonomous !== 'false' && fm.autonomous !== false) {
     errors.push('Has checkpoint tasks but autonomous is not false');
@@ -2188,6 +2237,7 @@ function cmdVerifyPlanStructure(cwd, filePath, raw) {
   }, raw, errors.length === 0 ? 'valid' : 'invalid');
 }
 
+// 验证阶段完整性
 function cmdVerifyPhaseCompleteness(cwd, phase, raw) {
   if (!phase) { error('phase required'); }
   const phaseInfo = findPhaseInternal(cwd, phase);
@@ -2200,24 +2250,24 @@ function cmdVerifyPhaseCompleteness(cwd, phase, raw) {
   const warnings = [];
   const phaseDir = path.join(cwd, phaseInfo.directory);
 
-  // List plans and summaries
+  // 列出计划和摘要
   let files;
   try { files = fs.readdirSync(phaseDir); } catch { output({ error: 'Cannot read phase directory' }, raw); return; }
 
   const plans = files.filter(f => f.match(/-PLAN\.md$/i));
   const summaries = files.filter(f => f.match(/-SUMMARY\.md$/i));
 
-  // Extract plan IDs (everything before -PLAN.md)
+  // 提取计划 ID(-PLAN.md 之前的所有内容)
   const planIds = new Set(plans.map(p => p.replace(/-PLAN\.md$/i, '')));
   const summaryIds = new Set(summaries.map(s => s.replace(/-SUMMARY\.md$/i, '')));
 
-  // Plans without summaries
+  // 没有摘要的计划
   const incompletePlans = [...planIds].filter(id => !summaryIds.has(id));
   if (incompletePlans.length > 0) {
     errors.push(`Plans without summaries: ${incompletePlans.join(', ')}`);
   }
 
-  // Summaries without plans (orphans)
+  // 没有计划的摘要(孤立摘要)
   const orphanSummaries = [...summaryIds].filter(id => !planIds.has(id));
   if (orphanSummaries.length > 0) {
     warnings.push(`Summaries without plans: ${orphanSummaries.join(', ')}`);
@@ -2235,6 +2285,7 @@ function cmdVerifyPhaseCompleteness(cwd, phase, raw) {
   }, raw, errors.length === 0 ? 'complete' : 'incomplete');
 }
 
+// 验证引用
 function cmdVerifyReferences(cwd, filePath, raw) {
   if (!filePath) { error('file path required'); }
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(cwd, filePath);
@@ -2244,7 +2295,7 @@ function cmdVerifyReferences(cwd, filePath, raw) {
   const found = [];
   const missing = [];
 
-  // Find @-references: @path/to/file (must contain / to be a file path)
+  // 查找 @-引用: @path/to/file (必须包含 / 才是文件路径)
   const atRefs = content.match(/@([^\s\n,)]+\/[^\s\n,)]+)/g) || [];
   for (const ref of atRefs) {
     const cleanRef = ref.slice(1); // remove @
@@ -2258,7 +2309,7 @@ function cmdVerifyReferences(cwd, filePath, raw) {
     }
   }
 
-  // Find backtick file paths that look like real paths (contain / and have extension)
+  // 查找看起来像真实路径的反引号文件路径(包含 / 且有扩展名)
   const backtickRefs = content.match(/`([^`]+\/[^`]+\.[a-zA-Z]{1,10})`/g) || [];
   for (const ref of backtickRefs) {
     const cleanRef = ref.slice(1, -1); // remove backticks
@@ -2280,6 +2331,7 @@ function cmdVerifyReferences(cwd, filePath, raw) {
   }, raw, missing.length === 0 ? 'valid' : 'invalid');
 }
 
+// 验证提交哈希
 function cmdVerifyCommits(cwd, hashes, raw) {
   if (!hashes || hashes.length === 0) { error('At least one commit hash required'); }
 
@@ -2302,6 +2354,7 @@ function cmdVerifyCommits(cwd, hashes, raw) {
   }, raw, invalid.length === 0 ? 'valid' : 'invalid');
 }
 
+// 验证构建产物
 function cmdVerifyArtifacts(cwd, planFilePath, raw) {
   if (!planFilePath) { error('plan file path required'); }
   const fullPath = path.isAbsolute(planFilePath) ? planFilePath : path.join(cwd, planFilePath);
@@ -2357,6 +2410,7 @@ function cmdVerifyArtifacts(cwd, planFilePath, raw) {
   }, raw, passed === results.length ? 'valid' : 'invalid');
 }
 
+// 验证关键链接
 function cmdVerifyKeyLinks(cwd, planFilePath, raw) {
   if (!planFilePath) { error('plan file path required'); }
   const fullPath = path.isAbsolute(planFilePath) ? planFilePath : path.join(cwd, planFilePath);
@@ -2417,8 +2471,9 @@ function cmdVerifyKeyLinks(cwd, planFilePath, raw) {
   }, raw, verified === results.length ? 'valid' : 'invalid');
 }
 
-// ─── Roadmap Analysis ─────────────────────────────────────────────────────────
+// ─── 路线图分析 ─────────────────────────────────────────────────────────
 
+// 分析路线图
 function cmdRoadmapAnalyze(cwd, raw) {
   const roadmapPath = path.join(cwd, '.planning', 'ROADMAP.md');
 
@@ -2430,7 +2485,7 @@ function cmdRoadmapAnalyze(cwd, raw) {
   const content = fs.readFileSync(roadmapPath, 'utf-8');
   const phasesDir = path.join(cwd, '.planning', 'phases');
 
-  // Extract all phase headings: ### Phase N: Name
+  // 提取所有阶段标题: ### Phase N: Name
   const phasePattern = /###\s*Phase\s+(\d+(?:\.\d+)?)\s*:\s*([^\n]+)/gi;
   const phases = [];
   let match;
@@ -2535,8 +2590,9 @@ function cmdRoadmapAnalyze(cwd, raw) {
   output(result, raw);
 }
 
-// ─── Phase Add ────────────────────────────────────────────────────────────────
+// ─── 阶段添加 ────────────────────────────────────────────────────────────────
 
+// 添加阶段
 function cmdPhaseAdd(cwd, description, raw) {
   if (!description) {
     error('description required for phase add');
@@ -2592,8 +2648,9 @@ function cmdPhaseAdd(cwd, description, raw) {
   output(result, raw, paddedNum);
 }
 
-// ─── Phase Insert (Decimal) ──────────────────────────────────────────────────
+// ─── 阶段插入(十进制) ──────────────────────────────────────────────────
 
+// 插入阶段
 function cmdPhaseInsert(cwd, afterPhase, description, raw) {
   if (!afterPhase || !description) {
     error('after-phase and description required for phase insert');
@@ -2672,8 +2729,9 @@ function cmdPhaseInsert(cwd, afterPhase, description, raw) {
   output(result, raw, decimalPhase);
 }
 
-// ─── Phase Remove ─────────────────────────────────────────────────────────────
+// ─── 阶段删除 ─────────────────────────────────────────────────────────────
 
+// 删除阶段
 function cmdPhaseRemove(cwd, targetPhase, options, raw) {
   if (!targetPhase) {
     error('phase number required for phase remove');
@@ -2925,8 +2983,9 @@ function cmdPhaseRemove(cwd, targetPhase, options, raw) {
   output(result, raw);
 }
 
-// ─── Phase Complete (Transition) ──────────────────────────────────────────────
+// ─── 阶段完成(过渡) ──────────────────────────────────────────────
 
+// 完成阶段
 function cmdPhaseComplete(cwd, phaseNum, raw) {
   if (!phaseNum) {
     error('phase number required for phase complete');
@@ -3067,8 +3126,9 @@ function cmdPhaseComplete(cwd, phaseNum, raw) {
   output(result, raw);
 }
 
-// ─── Milestone Complete ───────────────────────────────────────────────────────
+// ─── 里程碑完成 ───────────────────────────────────────────────────────
 
+// 完成里程碑
 function cmdMilestoneComplete(cwd, version, options, raw) {
   if (!version) {
     error('version required for milestone complete (e.g., v1.0)');
@@ -3187,8 +3247,9 @@ function cmdMilestoneComplete(cwd, version, options, raw) {
   output(result, raw);
 }
 
-// ─── Validate Consistency ─────────────────────────────────────────────────────
+// ─── 验证一致性 ─────────────────────────────────────────────────────
 
+// 验证一致性
 function cmdValidateConsistency(cwd, raw) {
   const roadmapPath = path.join(cwd, '.planning', 'ROADMAP.md');
   const phasesDir = path.join(cwd, '.planning', 'phases');
@@ -3309,8 +3370,9 @@ function cmdValidateConsistency(cwd, raw) {
   output({ passed, errors, warnings, warning_count: warnings.length }, raw, passed ? 'passed' : 'failed');
 }
 
-// ─── Progress Render ──────────────────────────────────────────────────────────
+// ─── 进度渲染 ──────────────────────────────────────────────────────────
 
+// 渲染进度
 function cmdProgressRender(cwd, format, raw) {
   const phasesDir = path.join(cwd, '.planning', 'phases');
   const roadmapPath = path.join(cwd, '.planning', 'ROADMAP.md');
@@ -3383,8 +3445,9 @@ function cmdProgressRender(cwd, format, raw) {
   }
 }
 
-// ─── Todo Complete ────────────────────────────────────────────────────────────
+// ─── 待办事项完成 ────────────────────────────────────────────────────────────
 
+// 完成待办事项
 function cmdTodoComplete(cwd, filename, raw) {
   if (!filename) {
     error('filename required for todo complete');
@@ -3412,8 +3475,9 @@ function cmdTodoComplete(cwd, filename, raw) {
   output({ completed: true, file: filename, date: today }, raw, 'completed');
 }
 
-// ─── Scaffold ─────────────────────────────────────────────────────────────────
+// ─── 脚手架 ─────────────────────────────────────────────────────────────────
 
+// 创建脚手架
 function cmdScaffold(cwd, type, options, raw) {
   const { phase, name } = options;
   const padded = phase ? normalizePhaseName(phase) : '00';
@@ -3548,6 +3612,7 @@ function generateSlugInternal(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+// 获取里程碑信息
 function getMilestoneInfo(cwd) {
   try {
     const roadmap = fs.readFileSync(path.join(cwd, '.planning', 'ROADMAP.md'), 'utf-8');

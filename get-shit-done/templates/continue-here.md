@@ -1,6 +1,6 @@
-# Continue-Here Template
+# 从这里继续模板
 
-Copy and fill this structure for `.planning/phases/XX-name/.continue-here.md`:
+为 `.planning/phases/XX-name/.continue-here.md` 复制并填写此结构：
 
 ```yaml
 ---
@@ -14,65 +14,65 @@ last_updated: 2025-01-15T14:30:00Z
 
 ```markdown
 <current_state>
-[Where exactly are we? What's the immediate context?]
+[我们确切在哪里？直接的上下文是什么？]
 </current_state>
 
 <completed_work>
-[What got done this session - be specific]
+[本次会话完成了什么 — 要具体]
 
-- Task 1: [name] - Done
-- Task 2: [name] - Done
-- Task 3: [name] - In progress, [what's done on it]
+- 任务 1：[名称] - 已完成
+- 任务 2：[名称] - 已完成
+- 任务 3：[名称] - 进行中，[已完成的部分]
 </completed_work>
 
 <remaining_work>
-[What's left in this phase]
+[本阶段剩余的工作]
 
-- Task 3: [name] - [what's left to do]
-- Task 4: [name] - Not started
-- Task 5: [name] - Not started
+- 任务 3：[名称] - [剩余待完成]
+- 任务 4：[名称] - 未开始
+- 任务 5：[名称] - 未开始
 </remaining_work>
 
 <decisions_made>
-[Key decisions and why - so next session doesn't re-debate]
+[关键决策及原因 — 以便下次会话不再重新讨论]
 
-- Decided to use [X] because [reason]
-- Chose [approach] over [alternative] because [reason]
+- 决定使用 [X] 因为 [原因]
+- 选择 [方法] 而非 [替代方案] 因为 [原因]
 </decisions_made>
 
 <blockers>
-[Anything stuck or waiting on external factors]
+[任何卡住或等待外部因素的事情]
 
-- [Blocker 1]: [status/workaround]
+- [阻碍 1]：[状态/变通方法]
 </blockers>
 
 <context>
-[Mental state, "vibe", anything that helps resume smoothly]
+[精神状态、"氛围"、任何有助于顺利恢复的内容]
 
-[What were you thinking about? What was the plan?
-This is the "pick up exactly where you left off" context.]
+[你在思考什么？计划是什么？
+这是"精确地从你离开的地方继续"的上下文。]
 </context>
 
 <next_action>
-[The very first thing to do when resuming]
+[恢复时第一件要做的事]
 
-Start with: [specific action]
+从：[具体行动] 开始
 </next_action>
 ```
 
 <yaml_fields>
-Required YAML frontmatter:
+必需的 YAML 前置元数据：
 
-- `phase`: Directory name (e.g., `02-authentication`)
-- `task`: Current task number
-- `total_tasks`: How many tasks in phase
-- `status`: `in_progress`, `blocked`, `almost_done`
-- `last_updated`: ISO timestamp
+- `phase`：目录名称（例如，`02-authentication`）
+- `task`：当前任务编号
+- `total_tasks`：阶段中有多少任务
+- `status`：`in_progress`、`blocked`、`almost_done`
+- `last_updated`：ISO 时间戳
 </yaml_fields>
 
 <guidelines>
-- Be specific enough that a fresh Claude instance understands immediately
-- Include WHY decisions were made, not just what
-- The `<next_action>` should be actionable without reading anything else
-- This file gets DELETED after resume - it's not permanent storage
+- 要足够具体，让新的 Claude 实例立即理解
+- 包含做出决策的原因，而不仅仅是决策内容
+- `<next_action>` 应该在不阅读其他任何内容的情况下可执行
+- 此文件在恢复后被删除 — 它不是永久存储
 </guidelines>

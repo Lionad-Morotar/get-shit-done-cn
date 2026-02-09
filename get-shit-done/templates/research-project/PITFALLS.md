@@ -1,200 +1,200 @@
-# Pitfalls Research Template
+# 陷阱研究模板
 
-Template for `.planning/research/PITFALLS.md` — common mistakes to avoid in the project domain.
+用于 `.planning/research/PITFALLS.md` 的模板 — 项目领域要避免的常见错误。
 
 <template>
 
 ```markdown
-# Pitfalls Research
+# 陷阱研究
 
-**Domain:** [domain type]
-**Researched:** [date]
-**Confidence:** [HIGH/MEDIUM/LOW]
+**领域：** [领域类型]
+**研究时间：** [日期]
+**置信度：** [高/中/低]
 
-## Critical Pitfalls
+## 关键陷阱
 
-### Pitfall 1: [Name]
+### 陷阱 1：[名称]
 
-**What goes wrong:**
-[Description of the failure mode]
+**出了什么问题：**
+[失败模式的描述]
 
-**Why it happens:**
-[Root cause — why developers make this mistake]
+**为何发生：**
+[根本原因 — 为何开发人员犯此错误]
 
-**How to avoid:**
-[Specific prevention strategy]
+**如何避免：**
+[具体的预防策略]
 
-**Warning signs:**
-[How to detect this early before it becomes a problem]
+**警告信号：**
+[如何在成为问题之前早期检测]
 
-**Phase to address:**
-[Which roadmap phase should prevent this]
-
----
-
-### Pitfall 2: [Name]
-
-**What goes wrong:**
-[Description of the failure mode]
-
-**Why it happens:**
-[Root cause — why developers make this mistake]
-
-**How to avoid:**
-[Specific prevention strategy]
-
-**Warning signs:**
-[How to detect this early before it becomes a problem]
-
-**Phase to address:**
-[Which roadmap phase should prevent this]
+**处理阶段：**
+[哪个路线图阶段应该预防此问题]
 
 ---
 
-### Pitfall 3: [Name]
+### 陷阱 2：[名称]
 
-**What goes wrong:**
-[Description of the failure mode]
+**出了什么问题：**
+[失败模式的描述]
 
-**Why it happens:**
-[Root cause — why developers make this mistake]
+**为何发生：**
+[根本原因 — 为何开发人员犯此错误]
 
-**How to avoid:**
-[Specific prevention strategy]
+**如何避免：**
+[具体的预防策略]
 
-**Warning signs:**
-[How to detect this early before it becomes a problem]
+**警告信号：**
+[如何在成为问题之前早期检测]
 
-**Phase to address:**
-[Which roadmap phase should prevent this]
+**处理阶段：**
+[哪个路线图阶段应该预防此问题]
 
 ---
 
-[Continue for all critical pitfalls...]
+### 陷阱 3：[名称]
 
-## Technical Debt Patterns
+**出了什么问题：**
+[失败模式的描述]
 
-Shortcuts that seem reasonable but create long-term problems.
+**为何发生：**
+[根本原因 — 为何开发人员犯此错误]
 
-| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+**如何避免：**
+[具体的预防策略]
+
+**警告信号：**
+[如何在成为问题之前早期检测]
+
+**处理阶段：**
+[哪个路线图阶段应该预防此问题]
+
+---
+
+[继续所有关键陷阱...]
+
+## 技术债务模式
+
+看起来合理但会产生长期问题的捷径。
+
+| 捷径 | 立即利益 | 长期成本 | 何时可接受 |
 |----------|-------------------|----------------|-----------------|
-| [shortcut] | [benefit] | [cost] | [conditions, or "never"] |
-| [shortcut] | [benefit] | [cost] | [conditions, or "never"] |
-| [shortcut] | [benefit] | [cost] | [conditions, or "never"] |
+| [捷径] | [利益] | [成本] | [条件，或"永不"] |
+| [捷径] | [利益] | [成本] | [条件，或"永不"] |
+| [捷径] | [利益] | [成本] | [条件，或"永不"] |
 
-## Integration Gotchas
+## 集成陷阱
 
-Common mistakes when connecting to external services.
+连接到外部服务时的常见错误。
 
-| Integration | Common Mistake | Correct Approach |
+| 集成 | 常见错误 | 正确方法 |
 |-------------|----------------|------------------|
-| [service] | [what people do wrong] | [what to do instead] |
-| [service] | [what people do wrong] | [what to do instead] |
-| [service] | [what people do wrong] | [what to do instead] |
+| [服务] | [人们做错了什么] | [改为做什么] |
+| [服务] | [人们做错了什么] | [改为做什么] |
+| [服务] | [人们做错了什么] | [改为做什么] |
 
-## Performance Traps
+## 性能陷阱
 
-Patterns that work at small scale but fail as usage grows.
+小规模下有效但随着使用增长而失败的模式。
 
-| Trap | Symptoms | Prevention | When It Breaks |
+| 陷阱 | 症状 | 预防 | 何时崩溃 |
 |------|----------|------------|----------------|
-| [trap] | [how you notice] | [how to avoid] | [scale threshold] |
-| [trap] | [how you notice] | [how to avoid] | [scale threshold] |
-| [trap] | [how you notice] | [how to avoid] | [scale threshold] |
+| [陷阱] | [如何注意] | [如何避免] | [规模阈值] |
+| [陷阱] | [如何注意] | [如何避免] | [规模阈值] |
+| [陷阱] | [如何注意] | [如何避免] | [规模阈值] |
 
-## Security Mistakes
+## 安全错误
 
-Domain-specific security issues beyond general web security.
+超出一般 Web 安全的特定领域安全问题。
 
-| Mistake | Risk | Prevention |
+| 错误 | 风险 | 预防 |
 |---------|------|------------|
-| [mistake] | [what could happen] | [how to avoid] |
-| [mistake] | [what could happen] | [how to avoid] |
-| [mistake] | [what could happen] | [how to avoid] |
+| [错误] | [可能发生什么] | [如何避免] |
+| [错误] | [可能发生什么] | [如何避免] |
+| [错误] | [可能发生什么] | [如何避免] |
 
-## UX Pitfalls
+## UX 陷阱
 
-Common user experience mistakes in this domain.
+此领域中常见的用户体验错误。
 
-| Pitfall | User Impact | Better Approach |
+| 陷阱 | 用户影响 | 更好的方法 |
 |---------|-------------|-----------------|
-| [pitfall] | [how users suffer] | [what to do instead] |
-| [pitfall] | [how users suffer] | [what to do instead] |
-| [pitfall] | [how users suffer] | [what to do instead] |
+| [陷阱] | [用户如何受苦] | [改为做什么] |
+| [陷阱] | [用户如何受苦] | [改为做什么] |
+| [陷阱] | [用户如何受苦] | [改为做什么] |
 
-## "Looks Done But Isn't" Checklist
+## "看起来完成但实际没有"检查清单
 
-Things that appear complete but are missing critical pieces.
+看起来完成但缺少关键部分的事情。
 
-- [ ] **[Feature]:** Often missing [thing] — verify [check]
-- [ ] **[Feature]:** Often missing [thing] — verify [check]
-- [ ] **[Feature]:** Often missing [thing] — verify [check]
-- [ ] **[Feature]:** Often missing [thing] — verify [check]
+- [ ] **[功能]：** 经常缺少[东西] — 验证[检查]
+- [ ] **[功能]：** 经常缺少[东西] — 验证[检查]
+- [ ] **[功能]：** 经常缺少[东西] — 验证[检查]
+- [ ] **[功能]：** 经常缺少[东西] — 验证[检查]
 
-## Recovery Strategies
+## 恢复策略
 
-When pitfalls occur despite prevention, how to recover.
+尽管预防但陷阱发生时，如何恢复。
 
-| Pitfall | Recovery Cost | Recovery Steps |
+| 陷阱 | 恢复成本 | 恢复步骤 |
 |---------|---------------|----------------|
-| [pitfall] | LOW/MEDIUM/HIGH | [what to do] |
-| [pitfall] | LOW/MEDIUM/HIGH | [what to do] |
-| [pitfall] | LOW/MEDIUM/HIGH | [what to do] |
+| [陷阱] | 低/中/高 | [做什么] |
+| [陷阱] | 低/中/高 | [做什么] |
+| [陷阱] | 低/中/高 | [做什么] |
 
-## Pitfall-to-Phase Mapping
+## 陷阱到阶段映射
 
-How roadmap phases should address these pitfalls.
+路线图阶段应如何解决这些陷阱。
 
-| Pitfall | Prevention Phase | Verification |
+| 陷阱 | 预防阶段 | 验证 |
 |---------|------------------|--------------|
-| [pitfall] | Phase [X] | [how to verify prevention worked] |
-| [pitfall] | Phase [X] | [how to verify prevention worked] |
-| [pitfall] | Phase [X] | [how to verify prevention worked] |
+| [陷阱] | 阶段 [X] | [如何验证预防有效] |
+| [陷阱] | 阶段 [X] | [如何验证预防有效] |
+| [陷阱] | 阶段 [X] | [如何验证预防有效] |
 
-## Sources
+## 来源
 
-- [Post-mortems referenced]
-- [Community discussions]
-- [Official "gotchas" documentation]
-- [Personal experience / known issues]
+- [参考的事后分析]
+- [社区讨论]
+- [官方"陷阱"文档]
+- [个人经验 / 已知问题]
 
 ---
-*Pitfalls research for: [domain]*
-*Researched: [date]*
+*陷阱研究用于：[领域]*
+*研究时间：[日期]*
 ```
 
 </template>
 
 <guidelines>
 
-**Critical Pitfalls:**
-- Focus on domain-specific issues, not generic mistakes
-- Include warning signs — early detection prevents disasters
-- Link to specific phases — makes pitfalls actionable
+**关键陷阱：**
+- 专注于特定领域的问题，而不是一般性错误
+- 包括警告信号 — 早期检测可防止灾难
+- 链接到特定阶段 — 使陷阱可操作
 
-**Technical Debt:**
-- Be realistic — some shortcuts are acceptable
-- Note when shortcuts are "never acceptable" vs. "only in MVP"
-- Include the long-term cost to inform tradeoff decisions
+**技术债务：**
+- 现实一点 — 一些捷径是可以接受的
+- 注意捷径何时是"永不接受"与"仅在 MVP 中"
+- 包括长期成本以告知权衡决策
 
-**Performance Traps:**
-- Include scale thresholds ("breaks at 10k users")
-- Focus on what's relevant for this project's expected scale
-- Don't over-engineer for hypothetical scale
+**性能陷阱：**
+- 包括规模阈值（"在 1 万用户时崩溃"）
+- 专注于与此项目预期规模相关的内容
+- 不要为假设的规模过度设计
 
-**Security Mistakes:**
-- Beyond OWASP basics — domain-specific issues
-- Example: Community platforms have different security concerns than e-commerce
-- Include risk level to prioritize
+**安全错误：**
+- 超越 OWASP 基础 — 特定领域的问题
+- 示例：社区平台与电子商务有不同的安全关注点
+- 包括风险级别以进行优先级排序
 
-**"Looks Done But Isn't":**
-- Checklist format for verification during execution
-- Common in demos vs. production
-- Prevents "it works on my machine" issues
+**"看起来完成但实际没有"：**
+- 执行期间验证的检查清单格式
+- 在演示与生产中常见
+- 防止"在我的机器上工作"的问题
 
-**Pitfall-to-Phase Mapping:**
-- Critical for roadmap creation
-- Each pitfall should map to a phase that prevents it
-- Informs phase ordering and success criteria
+**陷阱到阶段映射：**
+- 对路线图创建至关重要
+- 每个陷阱应映射到预防它的阶段
+- 通知阶段排序和成功标准
 
 </guidelines>

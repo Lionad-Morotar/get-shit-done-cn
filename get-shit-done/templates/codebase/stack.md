@@ -1,186 +1,186 @@
-# Technology Stack Template
+# 技术栈模板
 
-Template for `.planning/codebase/STACK.md` - captures the technology foundation.
+`.planning/codebase/STACK.md` 的模板——捕获技术基础。
 
-**Purpose:** Document what technologies run this codebase. Focused on "what executes when you run the code."
+**目的：** 记录运行此代码库的技术。重点关注"运行代码时执行什么。"
 
 ---
 
-## File Template
+## 文件模板
 
 ```markdown
-# Technology Stack
+# 技术栈
 
-**Analysis Date:** [YYYY-MM-DD]
+**分析日期：** [YYYY-MM-DD]
 
-## Languages
+## 语言
 
-**Primary:**
-- [Language] [Version] - [Where used: e.g., "all application code"]
+**主要：**
+- [语言] [版本] - [使用位置：例如，"所有应用程序代码"]
 
-**Secondary:**
-- [Language] [Version] - [Where used: e.g., "build scripts, tooling"]
+**次要：**
+- [语言] [版本] - [使用位置：例如，"构建脚本、工具"]
 
-## Runtime
+## 运行时
 
-**Environment:**
-- [Runtime] [Version] - [e.g., "Node.js 20.x"]
-- [Additional requirements if any]
+**环境：**
+- [运行时] [版本] - [例如，"Node.js 20.x"]
+- [如果有其他要求]
 
-**Package Manager:**
-- [Manager] [Version] - [e.g., "npm 10.x"]
-- Lockfile: [e.g., "package-lock.json present"]
+**包管理器：**
+- [管理器] [版本] - [例如，"npm 10.x"]
+- 锁文件：[例如，"存在 package-lock.json"]
 
-## Frameworks
+## 框架
 
-**Core:**
-- [Framework] [Version] - [Purpose: e.g., "web server", "UI framework"]
+**核心：**
+- [框架] [版本] - [目的：例如，"Web 服务器"、"UI 框架"]
 
-**Testing:**
-- [Framework] [Version] - [e.g., "Jest for unit tests"]
-- [Framework] [Version] - [e.g., "Playwright for E2E"]
+**测试：**
+- [框架] [版本] - [例如，"用于单元测试的 Jest"]
+- [框架] [版本] - [例如，"用于 E2E 的 Playwright"]
 
-**Build/Dev:**
-- [Tool] [Version] - [e.g., "Vite for bundling"]
-- [Tool] [Version] - [e.g., "TypeScript compiler"]
+**构建/开发：**
+- [工具] [版本] - [例如，"用于打包的 Vite"]
+- [工具] [版本] - [例如，"TypeScript 编译器"]
 
-## Key Dependencies
+## 关键依赖项
 
-[Only include dependencies critical to understanding the stack - limit to 5-10 most important]
+[仅包括对理解栈至关重要的依赖项 - 限制为 5-10 个最重要的]
 
-**Critical:**
-- [Package] [Version] - [Why it matters: e.g., "authentication", "database access"]
-- [Package] [Version] - [Why it matters]
+**关键：**
+- [包] [版本] - [重要性：例如，"身份验证"、"数据库访问"]
+- [包] [版本] - [重要性]
 
-**Infrastructure:**
-- [Package] [Version] - [e.g., "Express for HTTP routing"]
-- [Package] [Version] - [e.g., "PostgreSQL client"]
+**基础设施：**
+- [包] [版本] - [例如，"用于 HTTP 路由的 Express"]
+- [包] [版本] - [例如，"PostgreSQL 客户端"]
 
-## Configuration
+## 配置
 
-**Environment:**
-- [How configured: e.g., ".env files", "environment variables"]
-- [Key configs: e.g., "DATABASE_URL, API_KEY required"]
+**环境：**
+- [配置方式：例如，".env 文件"、"环境变量"]
+- [关键配置：例如，"需要 DATABASE_URL、API_KEY"]
 
-**Build:**
-- [Build config files: e.g., "vite.config.ts, tsconfig.json"]
+**构建：**
+- [构建配置文件：例如，"vite.config.ts、tsconfig.json"]
 
-## Platform Requirements
+## 平台要求
 
-**Development:**
-- [OS requirements or "any platform"]
-- [Additional tooling: e.g., "Docker for local DB"]
+**开发：**
+- [操作系统要求或"任何平台"]
+- [其他工具：例如，"用于本地数据库的 Docker"]
 
-**Production:**
-- [Deployment target: e.g., "Vercel", "AWS Lambda", "Docker container"]
-- [Version requirements]
+**生产：**
+- [部署目标：例如，"Vercel"、"AWS Lambda"、"Docker 容器"]
+- [版本要求]
 
 ---
 
-*Stack analysis: [date]*
-*Update after major dependency changes*
+*栈分析：[日期]*
+*主要依赖项更改后更新*
 ```
 
 <good_examples>
 ```markdown
-# Technology Stack
+# 技术栈
 
-**Analysis Date:** 2025-01-20
+**分析日期：** 2025-01-20
 
-## Languages
+## 语言
 
-**Primary:**
-- TypeScript 5.3 - All application code
+**主要：**
+- TypeScript 5.3 - 所有应用程序代码
 
-**Secondary:**
-- JavaScript - Build scripts, config files
+**次要：**
+- JavaScript - 构建脚本、配置文件
 
-## Runtime
+## 运行时
 
-**Environment:**
+**环境：**
 - Node.js 20.x (LTS)
-- No browser runtime (CLI tool only)
+- 无浏览器运行时（仅 CLI 工具）
 
-**Package Manager:**
+**包管理器：**
 - npm 10.x
-- Lockfile: `package-lock.json` present
+- 锁文件：存在 `package-lock.json`
 
-## Frameworks
+## 框架
 
-**Core:**
-- None (vanilla Node.js CLI)
+**核心：**
+- 无（vanilla Node.js CLI）
 
-**Testing:**
-- Vitest 1.0 - Unit tests
-- tsx - TypeScript execution without build step
+**测试：**
+- Vitest 1.0 - 单元测试
+- tsx - 无构建步骤的 TypeScript 执行
 
-**Build/Dev:**
-- TypeScript 5.3 - Compilation to JavaScript
-- esbuild - Used by Vitest for fast transforms
+**构建/开发：**
+- TypeScript 5.3 - 编译为 JavaScript
+- esbuild - 被 Vitest 用于快速转换
 
-## Key Dependencies
+## 关键依赖项
 
-**Critical:**
-- commander 11.x - CLI argument parsing and command structure
-- chalk 5.x - Terminal output styling
-- fs-extra 11.x - Extended file system operations
+**关键：**
+- commander 11.x - CLI 参数解析和命令结构
+- chalk 5.x - 终端输出样式
+- fs-extra 11.x - 扩展文件系统操作
 
-**Infrastructure:**
-- Node.js built-ins - fs, path, child_process for file operations
+**基础设施：**
+- Node.js 内置 - 用于文件操作的 fs、path、child_process
 
-## Configuration
+## 配置
 
-**Environment:**
-- No environment variables required
-- Configuration via CLI flags only
+**环境：**
+- 不需要环境变量
+- 仅通过 CLI 标志配置
 
-**Build:**
-- `tsconfig.json` - TypeScript compiler options
-- `vitest.config.ts` - Test runner configuration
+**构建：**
+- `tsconfig.json` - TypeScript 编译器选项
+- `vitest.config.ts` - 测试运行器配置
 
-## Platform Requirements
+## 平台要求
 
-**Development:**
-- macOS/Linux/Windows (any platform with Node.js)
-- No external dependencies
+**开发：**
+- macOS/Linux/Windows（任何具有 Node.js 的平台）
+- 无外部依赖项
 
-**Production:**
-- Distributed as npm package
-- Installed globally via npm install -g
-- Runs on user's Node.js installation
+**生产：**
+- 作为 npm 包分发
+- 通过 npm install -g 全局安装
+- 在用户的 Node.js 安装上运行
 
 ---
 
-*Stack analysis: 2025-01-20*
-*Update after major dependency changes*
+*栈分析：2025-01-20*
+*主要依赖项更改后更新*
 ```
 </good_examples>
 
 <guidelines>
-**What belongs in STACK.md:**
-- Languages and versions
-- Runtime requirements (Node, Bun, Deno, browser)
-- Package manager and lockfile
-- Framework choices
-- Critical dependencies (limit to 5-10 most important)
-- Build tooling
-- Platform/deployment requirements
+**什么属于 STACK.md：**
+- 语言和版本
+- 运行时要求（Node、Bun、Deno、浏览器）
+- 包管理器和锁文件
+- 框架选择
+- 关键依赖项（限制为 5-10 个最重要的）
+- 构建工具
+- 平台/部署要求
 
-**What does NOT belong here:**
-- File structure (that's STRUCTURE.md)
-- Architectural patterns (that's ARCHITECTURE.md)
-- Every dependency in package.json (only critical ones)
-- Implementation details (defer to code)
+**什么不属于这里：**
+- 文件结构（那是 STRUCTURE.md）
+- 架构模式（那是 ARCHITECTURE.md）
+- package.json 中的每个依赖项（仅关键依赖项）
+- 实现细节（推迟到代码）
 
-**When filling this template:**
-- Check package.json for dependencies
-- Note runtime version from .nvmrc or package.json engines
-- Include only dependencies that affect understanding (not every utility)
-- Specify versions only when version matters (breaking changes, compatibility)
+**填充此模板时：**
+- 检查 package.json 以获取依赖项
+- 从 .nvmrc 或 package.json 引擎注意运行时版本
+- 仅包括影响理解的依赖项（不是每个工具）
+- 仅在版本重要时指定版本（重大更改、兼容性）
 
-**Useful for phase planning when:**
-- Adding new dependencies (check compatibility)
-- Upgrading frameworks (know what's in use)
-- Choosing implementation approach (must work with existing stack)
-- Understanding build requirements
+**在以下情况下对阶段规划有用：**
+- 添加新依赖项（检查兼容性）
+- 升级框架（了解正在使用的内容）
+- 选择实现方法（必须与现有栈一起使用）
+- 了解构建要求
 </guidelines>

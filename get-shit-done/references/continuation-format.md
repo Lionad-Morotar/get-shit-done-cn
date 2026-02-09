@@ -1,244 +1,244 @@
-# Continuation Format
+# 延续格式
 
-Standard format for presenting next steps after completing a command or workflow.
+完成命令或工作流后展示后续步骤的标准格式。
 
-## Core Structure
-
-```
----
-
-## ▶ Next Up
-
-**{identifier}: {name}** — {one-line description}
-
-`{command to copy-paste}`
-
-<sub>`/clear` first → fresh context window</sub>
-
----
-
-**Also available:**
-- `{alternative option 1}` — description
-- `{alternative option 2}` — description
-
----
-```
-
-## Format Rules
-
-1. **Always show what it is** — name + description, never just a command path
-2. **Pull context from source** — ROADMAP.md for phases, PLAN.md `<objective>` for plans
-3. **Command in inline code** — backticks, easy to copy-paste, renders as clickable link
-4. **`/clear` explanation** — always include, keeps it concise but explains why
-5. **"Also available" not "Other options"** — sounds more app-like
-6. **Visual separators** — `---` above and below to make it stand out
-
-## Variants
-
-### Execute Next Plan
+## 核心结构
 
 ```
 ---
 
-## ▶ Next Up
+## ▶ 接下来
 
-**02-03: Refresh Token Rotation** — Add /api/auth/refresh with sliding expiry
+**{标识符}: {名称}** — {单行描述}
+
+`{可复制粘贴的命令}`
+
+<sub>`/clear` 首先执行 → 清空上下文窗口</sub>
+
+---
+
+**也可选择:**
+- `{替代选项 1}` — 描述
+- `{替代选项 2}` — 描述
+
+---
+```
+
+## 格式规则
+
+1. **始终显示内容** — 名称 + 描述,永远不要只显示命令路径
+2. **从来源提取上下文** — 阶段从 ROADMAP.md 提取,计划从 PLAN.md `<objective>` 提取
+3. **命令使用行内代码** — 反引号,易于复制粘贴,渲染为可点击链接
+4. **`/clear` 说明** — 始终包含,保持简洁但解释原因
+5. **"Also available" 而非 "Other options"** — 听起来更像应用程序
+6. **视觉分隔符** — 上下各使用 `---` 使其突出
+
+## 变体
+
+### 执行下一个计划
+
+```
+---
+
+## ▶ 接下来
+
+**02-03: 刷新令牌轮换** — 添加带有滑动过期期的 /api/auth/refresh
 
 `/gsd:execute-phase 2`
 
-<sub>`/clear` first → fresh context window</sub>
+<sub>`/clear` 首先执行 → 清空上下文窗口</sub>
 
 ---
 
-**Also available:**
-- Review plan before executing
-- `/gsd:list-phase-assumptions 2` — check assumptions
+**也可选择:**
+- 执行前审查计划
+- `/gsd:list-phase-assumptions 2` — 检查假设
 
 ---
 ```
 
-### Execute Final Plan in Phase
+### 执行阶段中的最后一个计划
 
-Add note that this is the last plan and what comes after:
+添加说明,指出这是最后一个计划及后续内容:
 
 ```
 ---
 
-## ▶ Next Up
+## ▶ 接下来
 
-**02-03: Refresh Token Rotation** — Add /api/auth/refresh with sliding expiry
-<sub>Final plan in Phase 2</sub>
+**02-03: 刷新令牌轮换** — 添加带有滑动过期期的 /api/auth/refresh
+<sub>阶段 2 的最后一个计划</sub>
 
 `/gsd:execute-phase 2`
 
-<sub>`/clear` first → fresh context window</sub>
+<sub>`/clear` 首先执行 → 清空上下文窗口</sub>
 
 ---
 
-**After this completes:**
-- Phase 2 → Phase 3 transition
-- Next: **Phase 3: Core Features** — User dashboard and settings
+**完成后:**
+- 阶段 2 → 阶段 3 过渡
+- 接下来: **阶段 3: 核心功能** — 用户仪表板和设置
 
 ---
 ```
 
-### Plan a Phase
+### 规划阶段
 
 ```
 ---
 
-## ▶ Next Up
+## ▶ 接下来
 
-**Phase 2: Authentication** — JWT login flow with refresh tokens
+**阶段 2: 认证** — 带有刷新令牌的 JWT 登录流程
 
 `/gsd:plan-phase 2`
 
-<sub>`/clear` first → fresh context window</sub>
+<sub>`/clear` 首先执行 → 清空上下文窗口</sub>
 
 ---
 
-**Also available:**
-- `/gsd:discuss-phase 2` — gather context first
-- `/gsd:research-phase 2` — investigate unknowns
-- Review roadmap
+**也可选择:**
+- `/gsd:discuss-phase 2` — 首先收集上下文
+- `/gsd:research-phase 2` — 调查未知内容
+- 审查路线图
 
 ---
 ```
 
-### Phase Complete, Ready for Next
+### 阶段完成,准备进行下一步
 
-Show completion status before next action:
+在下一步操作之前显示完成状态:
 
 ```
 ---
 
-## ✓ Phase 2 Complete
+## ✓ 阶段 2 完成
 
-3/3 plans executed
+3/3 计划已执行
 
-## ▶ Next Up
+## ▶ 接下来
 
-**Phase 3: Core Features** — User dashboard, settings, and data export
+**阶段 3: 核心功能** — 用户仪表板、设置和数据导出
 
 `/gsd:plan-phase 3`
 
-<sub>`/clear` first → fresh context window</sub>
+<sub>`/clear` 首先执行 → 清空上下文窗口</sub>
 
 ---
 
-**Also available:**
-- `/gsd:discuss-phase 3` — gather context first
-- `/gsd:research-phase 3` — investigate unknowns
-- Review what Phase 2 built
-
----
-```
-
-### Multiple Equal Options
-
-When there's no clear primary action:
-
-```
----
-
-## ▶ Next Up
-
-**Phase 3: Core Features** — User dashboard, settings, and data export
-
-**To plan directly:** `/gsd:plan-phase 3`
-
-**To discuss context first:** `/gsd:discuss-phase 3`
-
-**To research unknowns:** `/gsd:research-phase 3`
-
-<sub>`/clear` first → fresh context window</sub>
+**也可选择:**
+- `/gsd:discuss-phase 3` — 首先收集上下文
+- `/gsd:research-phase 3` — 调查未知内容
+- 审查阶段 2 构建的内容
 
 ---
 ```
 
-### Milestone Complete
+### 多个平等选项
+
+当没有明确的主要操作时:
 
 ```
 ---
 
-## 🎉 Milestone v1.0 Complete
+## ▶ 接下来
 
-All 4 phases shipped
+**阶段 3: 核心功能** — 用户仪表板、设置和数据导出
 
-## ▶ Next Up
+**直接规划:** `/gsd:plan-phase 3`
 
-**Start v1.1** — questioning → research → requirements → roadmap
+**首先讨论上下文:** `/gsd:discuss-phase 3`
+
+**研究未知内容:** `/gsd:research-phase 3`
+
+<sub>`/clear` 首先执行 → 清空上下文窗口</sub>
+
+---
+```
+
+### 里程碑完成
+
+```
+---
+
+## 🎉 里程碑 v1.0 完成
+
+全部 4 个阶段已交付
+
+## ▶ 接下来
+
+**开始 v1.1** — 质疑 → 研究 → 需求 → 路线图
 
 `/gsd:new-milestone`
 
-<sub>`/clear` first → fresh context window</sub>
+<sub>`/clear` 首先执行 → 清空上下文窗口</sub>
 
 ---
 ```
 
-## Pulling Context
+## 提取上下文
 
-### For phases (from ROADMAP.md):
-
-```markdown
-### Phase 2: Authentication
-**Goal**: JWT login flow with refresh tokens
-```
-
-Extract: `**Phase 2: Authentication** — JWT login flow with refresh tokens`
-
-### For plans (from ROADMAP.md):
+### 对于阶段(从 ROADMAP.md):
 
 ```markdown
-Plans:
-- [ ] 02-03: Add refresh token rotation
+### 阶段 2: 认证
+**目标**: 带有刷新令牌的 JWT 登录流程
 ```
 
-Or from PLAN.md `<objective>`:
+提取: `**阶段 2: 认证** — 带有刷新令牌的 JWT 登录流程`
+
+### 对于计划(从 ROADMAP.md):
+
+```markdown
+计划:
+- [ ] 02-03: 添加刷新令牌轮换
+```
+
+或从 PLAN.md `<objective>`:
 
 ```xml
 <objective>
-Add refresh token rotation with sliding expiry window.
+添加带有滑动过期期的刷新令牌轮换。
 
-Purpose: Extend session lifetime without compromising security.
+目的: 在不妥协安全性的情况下延长会话生命周期。
 </objective>
 ```
 
-Extract: `**02-03: Refresh Token Rotation** — Add /api/auth/refresh with sliding expiry`
+提取: `**02-03: 刷新令牌轮换** — 添加带有滑动过期期的 /api/auth/refresh`
 
-## Anti-Patterns
+## 反模式
 
-### Don't: Command-only (no context)
+### 不要: 仅命令(无上下文)
 
 ```
-## To Continue
+## 继续
 
-Run `/clear`, then paste:
+运行 `/clear`,然后粘贴:
 /gsd:execute-phase 2
 ```
 
-User has no idea what 02-03 is about.
+用户不知道 02-03 是什么。
 
-### Don't: Missing /clear explanation
+### 不要: 缺少 /clear 说明
 
 ```
 `/gsd:plan-phase 3`
 
-Run /clear first.
+首先运行 /clear。
 ```
 
-Doesn't explain why. User might skip it.
+没有解释原因。用户可能会跳过它。
 
-### Don't: "Other options" language
+### 不要: "Other options" 措辞
 
 ```
-Other options:
-- Review roadmap
+其他选项:
+- 审查路线图
 ```
 
-Sounds like an afterthought. Use "Also available:" instead.
+听起来像事后补充。使用 "Also available:" 代替。
 
-### Don't: Fenced code blocks for commands
+### 不要: 命令使用围栏代码块
 
 ```
 ```
@@ -246,4 +246,4 @@ Sounds like an afterthought. Use "Also available:" instead.
 ```
 ```
 
-Fenced blocks inside templates create nesting ambiguity. Use inline backticks instead.
+模板内的围栏块会产生嵌套歧义。改用行内反引号。

@@ -1,22 +1,22 @@
 <purpose>
-Interactive configuration of GSD workflow agents (research, plan_check, verifier) and model profile selection via multi-question prompt. Updates .planning/config.json with user preferences.
+通过多问题提示交互式配置 GSD 工作流程代理（研究、计划检查、验证器）和模型配置选择。使用用户偏好更新 .planning/config.json。
 </purpose>
 
 <required_reading>
-Read all files referenced by the invoking prompt's execution_context before starting.
+在开始之前读取调用提示的 execution_context 引用的所有文件。
 </required_reading>
 
 <process>
 
 <step name="ensure_and_load_config">
-Ensure config exists and load current state:
+确保配置存在并加载当前状态：
 
 ```bash
 node ~/.claude/get-shit-done/bin/gsd-tools.js config-ensure-section
 INIT=$(node ~/.claude/get-shit-done/bin/gsd-tools.js state load)
 ```
 
-Creates `.planning/config.json` with defaults if missing and loads current config values.
+如果缺少，这将使用默认值创建 `.planning/config.json` 并加载当前配置值。
 </step>
 
 <step name="read_current">
@@ -24,64 +24,64 @@ Creates `.planning/config.json` with defaults if missing and loads current confi
 cat .planning/config.json
 ```
 
-Parse current values (default to `true` if not present):
-- `workflow.research` — spawn researcher during plan-phase
-- `workflow.plan_check` — spawn plan checker during plan-phase
-- `workflow.verifier` — spawn verifier during execute-phase
-- `model_profile` — which model each agent uses (default: `balanced`)
-- `git.branching_strategy` — branching approach (default: `"none"`)
+解析当前值（如果不存在则默认为 `true`）：
+- `workflow.research` — 在 plan-phase 期间生成研究者
+- `workflow.plan_check` — 在 plan-phase 期间生成计划检查器
+- `workflow.verifier` — 在 execute-phase 期间生成验证器
+- `model_profile` — 每个代理使用哪个模型（默认：`balanced`）
+- `git.branching_strategy` — 分支方法（默认：`"none"`）
 </step>
 
 <step name="present_settings">
-Use AskUserQuestion with current values pre-selected:
+使用 AskUserQuestion 并预先选择当前值：
 
 ```
 AskUserQuestion([
   {
-    question: "Which model profile for agents?",
+    question: "代理使用哪个模型配置？",
     header: "Model",
     multiSelect: false,
     options: [
-      { label: "Quality", description: "Opus everywhere except verification (highest cost)" },
-      { label: "Balanced (Recommended)", description: "Opus for planning, Sonnet for execution/verification" },
-      { label: "Budget", description: "Sonnet for writing, Haiku for research/verification (lowest cost)" }
+      { label: "质量", description: "到处使用 Opus，除了验证（最高成本）" },
+      { label: "平衡（推荐）", description: "规划使用 Opus，执行/验证使用 Sonnet" },
+      { label: "预算", description: "写作使用 Sonnet，研究/验证使用 Haiku（最低成本）" }
     ]
   },
   {
-    question: "Spawn Plan Researcher? (researches domain before planning)",
+    question: "生成计划研究者？（在规划之前研究领域）",
     header: "Research",
     multiSelect: false,
     options: [
-      { label: "Yes", description: "Research phase goals before planning" },
-      { label: "No", description: "Skip research, plan directly" }
+      { label: "是", description: "在规划之前研究阶段目标" },
+      { label: "否", description: "跳过研究，直接规划" }
     ]
   },
   {
-    question: "Spawn Plan Checker? (verifies plans before execution)",
+    question: "生成计划检查器？（在执行之前验证计划）",
     header: "Plan Check",
     multiSelect: false,
     options: [
-      { label: "Yes", description: "Verify plans meet phase goals" },
-      { label: "No", description: "Skip plan verification" }
+      { label: "是", description: "验证计划满足阶段目标" },
+      { label: "否", description: "跳过计划验证" }
     ]
   },
   {
-    question: "Spawn Execution Verifier? (verifies phase completion)",
+    question: "生成执行验证器？（验证阶段完成）",
     header: "Verifier",
     multiSelect: false,
     options: [
-      { label: "Yes", description: "Verify must-haves after execution" },
-      { label: "No", description: "Skip post-execution verification" }
+      { label: "是", description: "在执行后验证 must-haves" },
+      { label: "否", description: "跳过执行后验证" }
     ]
   },
   {
-    question: "Git branching strategy?",
+    question: "Git 分支策略？",
     header: "Branching",
     multiSelect: false,
     options: [
-      { label: "None (Recommended)", description: "Commit directly to current branch" },
-      { label: "Per Phase", description: "Create branch for each phase (gsd/phase-{N}-{name})" },
-      { label: "Per Milestone", description: "Create branch for entire milestone (gsd/{version}-{name})" }
+      { label: "无（推荐）", description: "直接提交到当前分支" },
+      { label: "每个阶段", description: "为每个阶段创建分支 (gsd/phase-{N}-{name})" },
+      { label: "每个里程碑", description: "为整个里程碑创建分支 (gsd/{version}-{name})" }
     ]
   }
 ])
@@ -89,7 +89,7 @@ AskUserQuestion([
 </step>
 
 <step name="update_config">
-Merge new settings into existing config.json:
+将新设置合并到现有 config.json：
 
 ```json
 {
@@ -106,40 +106,40 @@ Merge new settings into existing config.json:
 }
 ```
 
-Write updated config to `.planning/config.json`.
+将更新的配置写入 `.planning/config.json`。
 </step>
 
 <step name="confirm">
-Display:
+显示：
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► SETTINGS UPDATED
+ GSD ► 设置已更新
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-| Setting              | Value |
+| 设置              | 值 |
 |----------------------|-------|
-| Model Profile        | {quality/balanced/budget} |
-| Plan Researcher      | {On/Off} |
-| Plan Checker         | {On/Off} |
-| Execution Verifier   | {On/Off} |
-| Git Branching        | {None/Per Phase/Per Milestone} |
+| 模型配置        | {quality/balanced/budget} |
+| 计划研究者      | {On/Off} |
+| 计划检查器         | {On/Off} |
+| 执行验证器   | {On/Off} |
+| Git 分支        | {None/Per Phase/Per Milestone} |
 
-These settings apply to future /gsd:plan-phase and /gsd:execute-phase runs.
+这些设置应用于未来的 /gsd:plan-phase 和 /gsd:execute-phase 运行。
 
-Quick commands:
-- /gsd:set-profile <profile> — switch model profile
-- /gsd:plan-phase --research — force research
-- /gsd:plan-phase --skip-research — skip research
-- /gsd:plan-phase --skip-verify — skip plan check
+快速命令：
+- /gsd:set-profile <profile> — 切换模型配置
+- /gsd:plan-phase --research — 强制研究
+- /gsd:plan-phase --skip-research — 跳过研究
+- /gsd:plan-phase --skip-verify — 跳过计划检查
 ```
 </step>
 
 </process>
 
 <success_criteria>
-- [ ] Current config read
-- [ ] User presented with 5 settings (profile + 3 workflow toggles + git branching)
-- [ ] Config updated with model_profile, workflow, and git sections
-- [ ] Changes confirmed to user
-</success_criteria>
+- [ ] 已读取当前配置
+- [ ] 向用户展示 5 个设置（配置 + 3 个工作流程切换 + git 分支）
+- [ ] 已更新配置并带有 model_profile、workflow 和 git 部分
+- [ ] 已向用户确认更改
+      </success_criteria>

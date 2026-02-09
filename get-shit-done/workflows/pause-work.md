@@ -1,40 +1,40 @@
 <purpose>
-Create `.continue-here.md` handoff file to preserve complete work state across sessions. Enables seamless resumption with full context restoration.
+创建 `.continue-here.md` 交接文件以跨会话保留完整工作状态。启用完全上下文恢复的无缝恢复。
 </purpose>
 
 <required_reading>
-Read all files referenced by the invoking prompt's execution_context before starting.
+在开始之前读取调用提示的 execution_context 引用的所有文件。
 </required_reading>
 
 <process>
 
 <step name="detect">
-Find current phase directory from most recently modified files:
+从最近修改的文件中查找当前阶段目录：
 
 ```bash
-# Find most recent phase directory with work
+# 查找最近有工作的阶段目录
 ls -lt .planning/phases/*/PLAN.md 2>/dev/null | head -1 | grep -oP 'phases/\K[^/]+'
 ```
 
-If no active phase detected, ask user which phase they're pausing work on.
+如果未检测到活动阶段，询问用户他们正在暂停哪个阶段的工作。
 </step>
 
 <step name="gather">
-**Collect complete state for handoff:**
+**收集交接的完整状态：**
 
-1. **Current position**: Which phase, which plan, which task
-2. **Work completed**: What got done this session
-3. **Work remaining**: What's left in current plan/phase
-4. **Decisions made**: Key decisions and rationale
-5. **Blockers/issues**: Anything stuck
-6. **Mental context**: The approach, next steps, "vibe"
-7. **Files modified**: What's changed but not committed
+1. **当前位置**：哪个阶段、哪个计划、哪个任务
+2. **已完成的工作**：本次会话完成了什么
+3. **剩余的工作**：当前计划/阶段中还剩下什么
+4. **已做出的决策**：关键决策和理由
+5. **阻塞因素/问题**：任何卡住的东西
+6. **思维上下文**：方法、下一步、"氛围"
+7. **已修改的文件**：已更改但未提交的内容
 
-Ask user for clarifications if needed via conversational questions.
+如需要，通过对话问题询问用户以获取澄清。
 </step>
 
 <step name="write">
-**Write handoff to `.planning/phases/XX-name/.continue-here.md`:**
+**将交接写入 `.planning/phases/XX-name/.continue-here.md`：**
 
 ```markdown
 ---
@@ -42,49 +42,49 @@ phase: XX-name
 task: 3
 total_tasks: 7
 status: in_progress
-last_updated: [timestamp from current-timestamp]
+last_updated: [来自 current-timestamp 的时间戳]
 ---
 
 <current_state>
-[Where exactly are we? Immediate context]
+[我们确切在哪里？立即上下文]
 </current_state>
 
 <completed_work>
 
-- Task 1: [name] - Done
-- Task 2: [name] - Done
-- Task 3: [name] - In progress, [what's done]
+- Task 1：[name] - 已完成
+- Task 2：[name] - 已完成
+- Task 3：[name] - 进行中，[已完成的内容]
 </completed_work>
 
 <remaining_work>
 
-- Task 3: [what's left]
-- Task 4: Not started
-- Task 5: Not started
+- Task 3：[剩余内容]
+- Task 4：未开始
+- Task 5：未开始
 </remaining_work>
 
 <decisions_made>
 
-- Decided to use [X] because [reason]
-- Chose [approach] over [alternative] because [reason]
+- 决定使用 [X]，因为 [理由]
+- 选择 [方法] 而不是 [替代方案]，因为 [理由]
 </decisions_made>
 
 <blockers>
-- [Blocker 1]: [status/workaround]
+- [阻塞因素 1]：[状态/解决方法]
 </blockers>
 
 <context>
-[Mental state, what were you thinking, the plan]
+[思维状态，你在想什么，计划]
 </context>
 
 <next_action>
-Start with: [specific first action when resuming]
+开始于：[恢复时的具体第一个操作]
 </next_action>
 ```
 
-Be specific enough for a fresh Claude to understand immediately.
+足够具体以便新的 Claude 立即理解。
 
-Use `current-timestamp` for last_updated field. You can use init todos (which provides timestamps) or call directly:
+对 last_updated 字段使用 `current-timestamp`。您可以使用 init todos（提供时间戳）或直接调用：
 ```bash
 timestamp=$(node ~/.claude/get-shit-done/bin/gsd-tools.js current-timestamp full --raw)
 ```
@@ -92,22 +92,22 @@ timestamp=$(node ~/.claude/get-shit-done/bin/gsd-tools.js current-timestamp full
 
 <step name="commit">
 ```bash
-node ~/.claude/get-shit-done/bin/gsd-tools.js commit "wip: [phase-name] paused at task [X]/[Y]" --files .planning/phases/*/.continue-here.md
+node ~/.claude/get-shit-done/bin/gsd-tools.js commit "wip: [phase-name] 在任务 [X]/[Y] 处暂停" --files .planning/phases/*/.continue-here.md
 ```
 </step>
 
 <step name="confirm">
 ```
-✓ Handoff created: .planning/phases/[XX-name]/.continue-here.md
+✓ 交接已创建：.planning/phases/[XX-name]/.continue-here.md
 
-Current state:
+当前状态：
 
-- Phase: [XX-name]
-- Task: [X] of [Y]
-- Status: [in_progress/blocked]
-- Committed as WIP
+- 阶段：[XX-name]
+- 任务：[Y] 个中的 [X]
+- 状态：[in_progress/blocked]
+- 已提交为 WIP
 
-To resume: /gsd:resume-work
+要恢复：/gsd:resume-work
 
 ```
 </step>
@@ -115,8 +115,8 @@ To resume: /gsd:resume-work
 </process>
 
 <success_criteria>
-- [ ] .continue-here.md created in correct phase directory
-- [ ] All sections filled with specific content
-- [ ] Committed as WIP
-- [ ] User knows location and how to resume
-</success_criteria>
+- [ ] 在正确的阶段目录中创建了 .continue-here.md
+- [ ] 所有部分都填充了具体内容
+- [ ] 已提交为 WIP
+- [ ] 用户知道位置和如何恢复
+      </success_criteria>

@@ -1,48 +1,48 @@
 ---
 phase: XX-name
 plan: YY
-subsystem: [primary category]
-tags: [searchable tech]
+subsystem: [主要类别]
+tags: [可搜索的技术]
 provides:
-  - [bullet list of what was built/delivered]
-affects: [list of phase names or keywords]
+  - [构建/交付的内容的项目符号列表]
+affects: [阶段名称或关键字的列表]
 tech-stack:
-  added: [libraries/tools]
-  patterns: [architectural/code patterns]
+  added: [库/工具]
+  patterns: [架构/代码模式]
 key-files:
-  created: [important files created]
-  modified: [important files modified]
+  created: [创建的重要文件]
+  modified: [修改的重要文件]
 key-decisions:
-  - "Decision 1"
+  - "决策 1"
 duration: Xmin
 completed: YYYY-MM-DD
 ---
 
-# Phase [X]: [Name] Summary
+# 阶段 [X]: [名称] 摘要
 
-**[Substantive one-liner describing outcome]**
+**[描述结果的有意义的一句话]**
 
-## Performance
-- **Duration:** [time]
-- **Tasks:** [count completed]
-- **Files modified:** [count]
+## 性能
+- **持续时间：** [时间]
+- **任务：** [已完成计数]
+- **修改的文件：** [计数]
 
-## Accomplishments
-- [Key outcome 1]
-- [Key outcome 2]
+## 成就
+- [关键结果 1]
+- [关键结果 2]
 
-## Task Commits
-1. **Task 1: [task name]** - `hash`
-2. **Task 2: [task name]** - `hash`
-3. **Task 3: [task name]** - `hash`
+## 任务提交
+1. **任务 1：[任务名称]** - `hash`
+2. **任务 2：[任务名称]** - `hash`
+3. **任务 3：[任务名称]** - `hash`
 
-## Files Created/Modified
-- `path/to/file.ts` - What it does
-- `path/to/another.ts` - What it does
+## 创建/修改的文件
+- `path/to/file.ts` - 功能
+- `path/to/another.ts` - 功能
 
-## Decisions & Deviations
-[Key decisions or "None - followed plan as specified"]
-[Minor deviations if any, or "None"]
+## 决策与偏离
+[关键决策或"无 - 按照规范遵循计划"]
+[如果有小的偏离，或"无"]
 
-## Next Phase Readiness
-[What's ready for next phase]
+## 下一阶段就绪
+[为下一阶段准备的内容]

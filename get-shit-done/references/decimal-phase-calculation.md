@@ -1,15 +1,15 @@
-# Decimal Phase Calculation
+# 十进制阶段计算
 
-Calculate the next decimal phase number for urgent insertions.
+为紧急插入计算下一个十进制阶段编号。
 
-## Using gsd-tools
+## 使用 gsd-tools
 
 ```bash
-# Get next decimal phase after phase 6
+# 获取阶段 6 之后的下一个十进制阶段
 node ~/.claude/get-shit-done/bin/gsd-tools.js phase next-decimal 6
 ```
 
-Output:
+输出:
 ```json
 {
   "found": true,
@@ -19,7 +19,7 @@ Output:
 }
 ```
 
-With existing decimals:
+带有现有十进制阶段:
 ```json
 {
   "found": true,
@@ -29,7 +29,7 @@ With existing decimals:
 }
 ```
 
-## Extract Values
+## 提取值
 
 ```bash
 DECIMAL_INFO=$(node ~/.claude/get-shit-done/bin/gsd-tools.js phase next-decimal "${AFTER_PHASE}")
@@ -37,24 +37,24 @@ DECIMAL_PHASE=$(echo "$DECIMAL_INFO" | jq -r '.next')
 BASE_PHASE=$(echo "$DECIMAL_INFO" | jq -r '.base_phase')
 ```
 
-Or with --raw flag:
+或使用 --raw 标志:
 ```bash
 DECIMAL_PHASE=$(node ~/.claude/get-shit-done/bin/gsd-tools.js phase next-decimal "${AFTER_PHASE}" --raw)
-# Returns just: 06.1
+# 仅返回: 06.1
 ```
 
-## Examples
+## 示例
 
-| Existing Phases | Next Phase |
+| 现有阶段 | 下一个阶段 |
 |-----------------|------------|
-| 06 only | 06.1 |
+| 06 仅 | 06.1 |
 | 06, 06.1 | 06.2 |
 | 06, 06.1, 06.2 | 06.3 |
-| 06, 06.1, 06.3 (gap) | 06.4 |
+| 06, 06.1, 06.3 (间隔) | 06.4 |
 
-## Directory Naming
+## 目录命名
 
-Decimal phase directories use the full decimal number:
+十进制阶段目录使用完整的十进制数字:
 
 ```bash
 SLUG=$(node ~/.claude/get-shit-done/bin/gsd-tools.js generate-slug "$DESCRIPTION" --raw)
@@ -62,4 +62,4 @@ PHASE_DIR=".planning/phases/${DECIMAL_PHASE}-${SLUG}"
 mkdir -p "$PHASE_DIR"
 ```
 
-Example: `.planning/phases/06.1-fix-critical-auth-bug/`
+示例: `.planning/phases/06.1-fix-critical-auth-bug/`
