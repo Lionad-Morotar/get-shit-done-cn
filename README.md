@@ -1,10 +1,10 @@
 <div align="center">
 
-# GET SHIT DONE
+# 把事情搞定
 
-**A light-weight and powerful meta-prompting, context engineering and spec-driven development system for Claude Code, OpenCode, and Gemini CLI.**
+**一款轻量而强大的元提示、上下文工程和规范驱动开发系统,适用于 Claude Code、OpenCode 和 Gemini CLI。**
 
-**Solves context rot — the quality degradation that happens as Claude fills its context window.**
+**解决上下文腐烂 — 当 Claude 填满其上下文窗口时发生的质量下降问题。**
 
 [![npm version](https://img.shields.io/npm/v/get-shit-done-cc?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/get-shit-done-cc)
 [![npm downloads](https://img.shields.io/npm/dm/get-shit-done-cc?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/get-shit-done-cc)
@@ -18,7 +18,7 @@
 npx get-shit-done-cc@latest
 ```
 
-**Works on Mac, Windows, and Linux.**
+**适用于 Mac、Windows 和 Linux。**
 
 <br>
 
@@ -26,97 +26,97 @@ npx get-shit-done-cc@latest
 
 <br>
 
-*"If you know clearly what you want, this WILL build it for you. No bs."*
+*"如果你清楚自己想要什么,这系统会为你构建出来。没有废话。"*
 
-*"I've done SpecKit, OpenSpec and Taskmaster — this has produced the best results for me."*
+*"我用过 SpecKit、OpenSpec 和 Taskmaster — 这个为我产生了最好的结果。"*
 
-*"By far the most powerful addition to my Claude Code. Nothing over-engineered. Literally just gets shit done."*
+*"这是我的 Claude Code 最强大的补充。没有过度设计。真的就是能把事情搞定。"*
 
 <br>
 
-**Trusted by engineers at Amazon, Google, Shopify, and Webflow.**
+**受到 Amazon、Google、Shopify 和 Webflow 工程师的信赖。**
 
-[Why I Built This](#why-i-built-this) · [How It Works](#how-it-works) · [Commands](#commands) · [Why It Works](#why-it-works)
+[为什么构建这个](#为什么构建这个) · [如何工作](#如何工作) · [命令](#命令) · [为什么有效](#为什么有效)
 
 </div>
 
 ---
 
-## Why I Built This
+## 为什么构建这个
 
-I'm a solo developer. I don't write code — Claude Code does.
+我是一个独立开发者。我不写代码 — Claude Code 来写。
 
-Other spec-driven development tools exist; BMAD, Speckit... But they all seem to make things way more complicated than they need to be (sprint ceremonies, story points, stakeholder syncs, retrospectives, Jira workflows) or lack real big picture understanding of what you're building. I'm not a 50-person software company. I don't want to play enterprise theater. I'm just a creative person trying to build great things that work.
+其他的规范驱动开发工具也存在;BMAD、Speckit... 但它们似乎都把事情搞得比需要的复杂得多(冲刺仪式、故事点、利益相关者同步、回顾会议、Jira 工作流)或者缺乏对你正在构建的东西的真正大局理解。我不是一家 50 人的软件公司。我不想扮演企业剧场的角色。我只是一个有创造力的人,试图构建能够正常运行的优秀作品。
 
-So I built GSD. The complexity is in the system, not in your workflow. Behind the scenes: context engineering, XML prompt formatting, subagent orchestration, state management. What you see: a few commands that just work.
+所以我构建了 GSD。复杂性在系统中,而不是在你的工作流中。在幕后:上下文工程、XML 提示格式化、subagent 编排、状态管理。你看到的:几个就能正常工作的命令。
 
-The system gives Claude everything it needs to do the work *and* verify it. I trust the workflow. It just does a good job.
+系统为 Claude 提供完成工作*并*验证工作所需的一切。我信任这个工作流。它就是做得很好。
 
-That's what this is. No enterprise roleplay bullshit. Just an incredibly effective system for building cool stuff consistently using Claude Code.
+这就是这个项目的本质。没有企业角色扮演的废话。只是一个使用 Claude Code 持续构建酷东西的极其有效的系统。
 
 — **TÂCHES**
 
 ---
 
-Vibecoding has a bad reputation. You describe what you want, AI generates code, and you get inconsistent garbage that falls apart at scale.
+Vibecoding 名声不佳。你描述你想要的东西,AI 生成代码,你得到不一致的垃圾,在规模化时就崩溃了。
 
-GSD fixes that. It's the context engineering layer that makes Claude Code reliable. Describe your idea, let the system extract everything it needs to know, and let Claude Code get to work.
-
----
-
-## Who This Is For
-
-People who want to describe what they want and have it built correctly — without pretending they're running a 50-person engineering org.
+GSD 修复了这个问题。它是使 Claude Code 可靠的上下文工程层。描述你的想法,让系统提取它需要知道的一切,然后让 Claude Code 开始工作。
 
 ---
 
-## Getting Started
+## 适用对象
+
+那些想要描述自己想要的东西并让它被正确构建的人 — 而不需要假装自己在运营一家 50 人的工程组织。
+
+---
+
+## 快速开始
 
 ```bash
 npx get-shit-done-cc@latest
 ```
 
-The installer prompts you to choose:
-1. **Runtime** — Claude Code, OpenCode, Gemini, or all
-2. **Location** — Global (all projects) or local (current project only)
+安装程序会提示你选择:
+1. **运行时** — Claude Code、OpenCode、Gemini 或全部
+2. **位置** — 全局(所有项目)或本地(仅当前项目)
 
-Verify with `/gsd:help` inside your chosen runtime.
+在你选择的运行时中使用 `/gsd:help` 进行验证。
 
-### Staying Updated
+### 保持更新
 
-GSD evolves fast. Update periodically:
+GSD 发展很快。定期更新:
 
 ```bash
 npx get-shit-done-cc@latest
 ```
 
 <details>
-<summary><strong>Non-interactive Install (Docker, CI, Scripts)</strong></summary>
+<summary><strong>非交互式安装 (Docker、CI、脚本)</strong></summary>
 
 ```bash
 # Claude Code
-npx get-shit-done-cc --claude --global   # Install to ~/.claude/
-npx get-shit-done-cc --claude --local    # Install to ./.claude/
+npx get-shit-done-cc --claude --global   # 安装到 ~/.claude/
+npx get-shit-done-cc --claude --local    # 安装到 ./.claude/
 
-# OpenCode (open source, free models)
-npx get-shit-done-cc --opencode --global # Install to ~/.config/opencode/
+# OpenCode (开源,免费模型)
+npx get-shit-done-cc --opencode --global # 安装到 ~/.config/opencode/
 
 # Gemini CLI
-npx get-shit-done-cc --gemini --global   # Install to ~/.gemini/
+npx get-shit-done-cc --gemini --global   # 安装到 ~/.gemini/
 
-# All runtimes
-npx get-shit-done-cc --all --global      # Install to all directories
+# 所有运行时
+npx get-shit-done-cc --all --global      # 安装到所有目录
 ```
 
-Use `--global` (`-g`) or `--local` (`-l`) to skip the location prompt.
-Use `--claude`, `--opencode`, `--gemini`, or `--all` to skip the runtime prompt.
+使用 `--global` (`-g`) 或 `--local` (`-l`) 跳过位置提示。
+使用 `--claude`、`--opencode`、`--gemini` 或 `--all` 跳过运行时提示。
 
 </details>
 
 <details>
-<summary><strong>Development Installation</strong></summary>
+<summary><strong>开发安装</strong></summary>
 
-Clone the repository and run the installer locally:
+克隆仓库并在本地运行安装程序:
 
 ```bash
 git clone https://github.com/glittercowboy/get-shit-done.git
@@ -124,25 +124,25 @@ cd get-shit-done
 node bin/install.js --claude --local
 ```
 
-Installs to `./.claude/` for testing modifications before contributing.
+安装到 `./.claude/` 以便在贡献前测试修改。
 
 </details>
 
-### Recommended: Skip Permissions Mode
+### 推荐:跳过权限模式
 
-GSD is designed for frictionless automation. Run Claude Code with:
+GSD 专为无摩擦自动化而设计。使用以下命令运行 Claude Code:
 
 ```bash
 claude --dangerously-skip-permissions
 ```
 
 > [!TIP]
-> This is how GSD is intended to be used — stopping to approve `date` and `git commit` 50 times defeats the purpose.
+> 这就是 GSD 的预期使用方式 — 停下来批准 `date` 和 `git commit` 50 次会违背初衷。
 
 <details>
-<summary><strong>Alternative: Granular Permissions</strong></summary>
+<summary><strong>替代方案:细粒度权限</strong></summary>
 
-If you prefer not to use that flag, add this to your project's `.claude/settings.json`:
+如果你不想使用该标志,请将其添加到项目的 `.claude/settings.json`:
 
 ```json
 {
@@ -174,118 +174,118 @@ If you prefer not to use that flag, add this to your project's `.claude/settings
 
 ---
 
-## How It Works
+## 如何工作
 
-> **Already have code?** Run `/gsd:map-codebase` first. It spawns parallel agents to analyze your stack, architecture, conventions, and concerns. Then `/gsd:new-project` knows your codebase — questions focus on what you're adding, and planning automatically loads your patterns.
+> **已有代码?** 首先运行 `/gsd:map-codebase`。它会生成并行代理来分析你的技术栈、架构、约定和关注点。然后 `/gsd:new-project` 就会知道你的代码库 — 问题专注于你正在添加的内容,规划会自动加载你的模式。
 
-### 1. Initialize Project
+### 1. 初始化项目
 
 ```
 /gsd:new-project
 ```
 
-One command, one flow. The system:
+一个命令,一个流程。系统会:
 
-1. **Questions** — Asks until it understands your idea completely (goals, constraints, tech preferences, edge cases)
-2. **Research** — Spawns parallel agents to investigate the domain (optional but recommended)
-3. **Requirements** — Extracts what's v1, v2, and out of scope
-4. **Roadmap** — Creates phases mapped to requirements
+1. **提问** — 一直提问直到完全理解你的想法(目标、约束、技术偏好、边缘情况)
+2. **研究** — 生成并行代理来调查领域(可选但推荐)
+3. **需求** — 提取什么是 v1、v2 和超出范围
+4. **路线图** — 创建映射到需求的阶段
 
-You approve the roadmap. Now you're ready to build.
+你批准路线图。现在你准备好构建了。
 
-**Creates:** `PROJECT.md`, `REQUIREMENTS.md`, `ROADMAP.md`, `STATE.md`, `.planning/research/`
+**创建:** `PROJECT.md`、`REQUIREMENTS.md`、`ROADMAP.md`、`STATE.md`、`.planning/research/`
 
 ---
 
-### 2. Discuss Phase
+### 2. 讨论阶段
 
 ```
 /gsd:discuss-phase 1
 ```
 
-**This is where you shape the implementation.**
+**这是你塑造实现的地方。**
 
-Your roadmap has a sentence or two per phase. That's not enough context to build something the way *you* imagine it. This step captures your preferences before anything gets researched or planned.
+你的路线图每个阶段有一两句话。这不足以按照*你*想象的方式构建东西。这一步在研究或规划之前捕获你的偏好。
 
-The system analyzes the phase and identifies gray areas based on what's being built:
+系统分析阶段并根据正在构建的内容识别灰色区域:
 
-- **Visual features** → Layout, density, interactions, empty states
-- **APIs/CLIs** → Response format, flags, error handling, verbosity
-- **Content systems** → Structure, tone, depth, flow
-- **Organization tasks** → Grouping criteria, naming, duplicates, exceptions
+- **视觉功能** → 布局、密度、交互、空状态
+- **APIs/CLIs** → 响应格式、标志、错误处理、详细程度
+- **内容系统** → 结构、语气、深度、流程
+- **组织任务** → 分组标准、命名、重复项、例外
 
-For each area you select, it asks until you're satisfied. The output — `CONTEXT.md` — feeds directly into the next two steps:
+对于你选择的每个区域,它会一直提问直到你满意。输出 — `CONTEXT.md` — 直接输入到接下来的两个步骤:
 
-1. **Researcher reads it** — Knows what patterns to investigate ("user wants card layout" → research card component libraries)
-2. **Planner reads it** — Knows what decisions are locked ("infinite scroll decided" → plan includes scroll handling)
+1. **研究人员阅读它** — 知道要调查什么模式("用户想要卡片布局" → 调查卡片组件库)
+2. **规划人员阅读它** — 知道哪些决定已锁定("已决定无限滚动" → 规划包括滚动处理)
 
-The deeper you go here, the more the system builds what you actually want. Skip it and you get reasonable defaults. Use it and you get *your* vision.
+你在这里做得越深入,系统就越能构建你真正想要的东西。跳过它,你会得到合理的默认值。使用它,你会得到*你的*愿景。
 
-**Creates:** `{phase}-CONTEXT.md`
+**创建:** `{phase}-CONTEXT.md`
 
 ---
 
-### 3. Plan Phase
+### 3. 规划阶段
 
 ```
 /gsd:plan-phase 1
 ```
 
-The system:
+系统会:
 
-1. **Researches** — Investigates how to implement this phase, guided by your CONTEXT.md decisions
-2. **Plans** — Creates 2-3 atomic task plans with XML structure
-3. **Verifies** — Checks plans against requirements, loops until they pass
+1. **研究** — 调查如何实现这个阶段,由你的 CONTEXT.md 决策指导
+2. **规划** — 创建 2-3 个带有 XML 结构的原子任务计划
+3. **验证** — 对照需求检查计划,循环直到通过
 
-Each plan is small enough to execute in a fresh context window. No degradation, no "I'll be more concise now."
+每个计划都足够小,可以在全新的上下文窗口中执行。没有退化,没有"我现在会更简洁"。
 
-**Creates:** `{phase}-RESEARCH.md`, `{phase}-{N}-PLAN.md`
+**创建:** `{phase}-RESEARCH.md`、`{phase}-{N}-PLAN.md`
 
 ---
 
-### 4. Execute Phase
+### 4. 执行阶段
 
 ```
 /gsd:execute-phase 1
 ```
 
-The system:
+系统会:
 
-1. **Runs plans in waves** — Parallel where possible, sequential when dependent
-2. **Fresh context per plan** — 200k tokens purely for implementation, zero accumulated garbage
-3. **Commits per task** — Every task gets its own atomic commit
-4. **Verifies against goals** — Checks the codebase delivers what the phase promised
+1. **分波运行计划** — 尽可能并行,依赖时顺序
+2. **每个计划全新上下文** — 200k token 纯用于实现,零累积垃圾
+3. **每个任务提交** — 每个任务都有自己的原子提交
+4. **对照目标验证** — 检查代码库是否提供了阶段承诺的内容
 
-Walk away, come back to completed work with clean git history.
+走开,回到已完成的工作和干净的 git 历史。
 
-**Creates:** `{phase}-{N}-SUMMARY.md`, `{phase}-VERIFICATION.md`
+**创建:** `{phase}-{N}-SUMMARY.md`、`{phase}-VERIFICATION.md`
 
 ---
 
-### 5. Verify Work
+### 5. 验证工作
 
 ```
 /gsd:verify-work 1
 ```
 
-**This is where you confirm it actually works.**
+**这是你确认它真正有效的地方。**
 
-Automated verification checks that code exists and tests pass. But does the feature *work* the way you expected? This is your chance to use it.
+自动验证检查代码存在和测试通过。但功能是否按*你*预期的*方式*工作?这是你使用它的机会。
 
-The system:
+系统会:
 
-1. **Extracts testable deliverables** — What you should be able to do now
-2. **Walks you through one at a time** — "Can you log in with email?" Yes/no, or describe what's wrong
-3. **Diagnoses failures automatically** — Spawns debug agents to find root causes
-4. **Creates verified fix plans** — Ready for immediate re-execution
+1. **提取可测试的交付物** — 你现在应该能够做什么
+2. **逐一引导你** — "你能用电子邮件登录吗?" 是/否,或描述问题
+3. **自动诊断失败** — 生成调试代理以找到根本原因
+4. **创建经过验证的修复计划** — 准备立即重新执行
 
-If everything passes, you move on. If something's broken, you don't manually debug — you just run `/gsd:execute-phase` again with the fix plans it created.
+如果一切通过,你继续。如果出现问题,你不会手动调试 — 你只需使用它创建的修复计划再次运行 `/gsd:execute-phase`。
 
-**Creates:** `{phase}-UAT.md`, fix plans if issues found
+**创建:** `{phase}-UAT.md`,如果发现问题则创建修复计划
 
 ---
 
-### 6. Repeat → Complete → Next Milestone
+### 6. 重复 → 完成 → 下一个里程碑
 
 ```
 /gsd:discuss-phase 2
@@ -297,262 +297,262 @@ If everything passes, you move on. If something's broken, you don't manually deb
 /gsd:new-milestone
 ```
 
-Loop **discuss → plan → execute → verify** until milestone complete.
+循环 **讨论 → 规划 → 执行 → 验证** 直到里程碑完成。
 
-Each phase gets your input (discuss), proper research (plan), clean execution (execute), and human verification (verify). Context stays fresh. Quality stays high.
+每个阶段都会得到你的输入(discuss)、适当的研究(plan)、干净的执行(execute)和人工验证(verify)。上下文保持新鲜。质量保持高水准。
 
-When all phases are done, `/gsd:complete-milestone` archives the milestone and tags the release.
+当所有阶段完成时,`/gsd:complete-milestone` 会归档里程碑并标记版本。
 
-Then `/gsd:new-milestone` starts the next version — same flow as `new-project` but for your existing codebase. You describe what you want to build next, the system researches the domain, you scope requirements, and it creates a fresh roadmap. Each milestone is a clean cycle: define → build → ship.
+然后 `/gsd:new-milestone` 开始下一个版本 — 与 `new-project` 相同的流程,但针对你现有的代码库。你描述你接下来想要构建的东西,系统研究领域,你界定需求,它创建一个新的路线图。每个里程碑都是一个干净的循环:定义 → 构建 → 发布。
 
 ---
 
-### Quick Mode
+### 快速模式
 
 ```
 /gsd:quick
 ```
 
-**For ad-hoc tasks that don't need full planning.**
+**用于不需要完整规划的临时任务。**
 
-Quick mode gives you GSD guarantees (atomic commits, state tracking) with a faster path:
+快速模式为你提供 GSD 保证(原子提交、状态跟踪)和更快的路径:
 
-- **Same agents** — Planner + executor, same quality
-- **Skips optional steps** — No research, no plan checker, no verifier
-- **Separate tracking** — Lives in `.planning/quick/`, not phases
+- **相同的代理** — 规划器 + 执行器,相同的质量
+- **跳过可选步骤** — 无研究、无计划检查器、无验证器
+- **单独跟踪** — 存在于 `.planning/quick/`,而不是阶段
 
-Use for: bug fixes, small features, config changes, one-off tasks.
+用于:错误修复、小功能、配置更改、一次性任务。
 
 ```
 /gsd:quick
-> What do you want to do? "Add dark mode toggle to settings"
+> 你想做什么? "为设置添加深色模式切换"
 ```
 
-**Creates:** `.planning/quick/001-add-dark-mode-toggle/PLAN.md`, `SUMMARY.md`
+**创建:** `.planning/quick/001-add-dark-mode-toggle/PLAN.md`、`SUMMARY.md`
 
 ---
 
-## Why It Works
+## 为什么有效
 
-### Context Engineering
+### 上下文工程
 
-Claude Code is incredibly powerful *if* you give it the context it needs. Most people don't.
+Claude Code 非常强大*如果你*给它所需的上下文。大多数人不会。
 
-GSD handles it for you:
+GSD 为你处理:
 
-| File | What it does |
+| 文件 | 它的作用 |
 |------|--------------|
-| `PROJECT.md` | Project vision, always loaded |
-| `research/` | Ecosystem knowledge (stack, features, architecture, pitfalls) |
-| `REQUIREMENTS.md` | Scoped v1/v2 requirements with phase traceability |
-| `ROADMAP.md` | Where you're going, what's done |
-| `STATE.md` | Decisions, blockers, position — memory across sessions |
-| `PLAN.md` | Atomic task with XML structure, verification steps |
-| `SUMMARY.md` | What happened, what changed, committed to history |
-| `todos/` | Captured ideas and tasks for later work |
+| `PROJECT.md` | 项目愿景,始终加载 |
+| `research/` | 生态系统知识(技术栈、功能、架构、陷阱) |
+| `REQUIREMENTS.md` | 界定范围的 v1/v2 需求,具有阶段可追溯性 |
+| `ROADMAP.md` | 你要去哪里,完成了什么 |
+| `STATE.md` | 决策、阻塞因素、位置 — 跨会话记忆 |
+| `PLAN.md` | 带有 XML 结构的原子任务,验证步骤 |
+| `SUMMARY.md` | 发生了什么,改变了什么,提交到历史 |
+| `todos/` | 捕获的想法和任务,供以后工作 |
 
-Size limits based on where Claude's quality degrades. Stay under, get consistent excellence.
+基于 Claude 质量下降的位置的大小限制。保持在限制下,获得持续的优秀。
 
-### XML Prompt Formatting
+### XML 提示格式化
 
-Every plan is structured XML optimized for Claude:
+每个计划都是为 Claude 优化的结构化 XML:
 
 ```xml
 <task type="auto">
-  <name>Create login endpoint</name>
+  <name>创建登录端点</name>
   <files>src/app/api/auth/login/route.ts</files>
   <action>
-    Use jose for JWT (not jsonwebtoken - CommonJS issues).
-    Validate credentials against users table.
-    Return httpOnly cookie on success.
+    使用 jose 处理 JWT(不是 jsonwebtoken - CommonJS 问题)。
+    针对用户表验证凭据。
+    成功时返回 httpOnly cookie。
   </action>
-  <verify>curl -X POST localhost:3000/api/auth/login returns 200 + Set-Cookie</verify>
-  <done>Valid credentials return cookie, invalid return 401</done>
+  <verify>curl -X POST localhost:3000/api/auth/login 返回 200 + Set-Cookie</verify>
+  <done>有效凭据返回 cookie,无效凭据返回 401</done>
 </task>
 ```
 
-Precise instructions. No guessing. Verification built in.
+精确的指令。没有猜测。内置验证。
 
-### Multi-Agent Orchestration
+### 多代理编排
 
-Every stage uses the same pattern: a thin orchestrator spawns specialized agents, collects results, and routes to the next step.
+每个阶段使用相同的模式:一个轻量级编排器生成专门的代理,收集结果,并路由到下一步。
 
-| Stage | Orchestrator does | Agents do |
+| 阶段 | 编排器做什么 | 代理做什么 |
 |-------|------------------|-----------|
-| Research | Coordinates, presents findings | 4 parallel researchers investigate stack, features, architecture, pitfalls |
-| Planning | Validates, manages iteration | Planner creates plans, checker verifies, loop until pass |
-| Execution | Groups into waves, tracks progress | Executors implement in parallel, each with fresh 200k context |
-| Verification | Presents results, routes next | Verifier checks codebase against goals, debuggers diagnose failures |
+| 研究 | 协调,展示发现 | 4 个并行研究人员调查技术栈、功能、架构、陷阱 |
+| 规划 | 验证,管理迭代 | 规划器创建计划,检查器验证,循环直到通过 |
+| 执行 | 分组成波,跟踪进度 | 执行器并行实现,每个都有全新的 200k 上下文 |
+| 验证 | 展示结果,路由下一步 | 验证器对照目标检查代码库,调试器诊断失败 |
 
-The orchestrator never does heavy lifting. It spawns agents, waits, integrates results.
+编排器从不做繁重的工作。它生成代理,等待,整合结果。
 
-**The result:** You can run an entire phase — deep research, multiple plans created and verified, thousands of lines of code written across parallel executors, automated verification against goals — and your main context window stays at 30-40%. The work happens in fresh subagent contexts. Your session stays fast and responsive.
+**结果:** 你可以运行整个阶段 — 深入研究、多个计划创建和验证、跨并行执行器编写的数千行代码、对照目标的自动验证 — 而你的主上下文窗口保持在 30-40%。工作发生在全新的 subagent 上下文中。你的会话保持快速和响应。
 
-### Atomic Git Commits
+### 原子 Git 提交
 
-Each task gets its own commit immediately after completion:
+每个任务在完成后立即获得自己的提交:
 
 ```bash
-abc123f docs(08-02): complete user registration plan
-def456g feat(08-02): add email confirmation flow
-hij789k feat(08-02): implement password hashing
-lmn012o feat(08-02): create registration endpoint
+abc123f docs(08-02): 完成用户注册计划
+def456g feat(08-02): 添加电子邮件确认流程
+hij789k feat(08-02): 实现密码哈希
+lmn012o feat(08-02): 创建注册端点
 ```
 
 > [!NOTE]
-> **Benefits:** Git bisect finds exact failing task. Each task independently revertable. Clear history for Claude in future sessions. Better observability in AI-automated workflow.
+> **好处:** Git bisect 找到确切失败的任务。每个任务可独立回滚。为 Claude 在未来会话中提供清晰的历史记录。AI 自动化工作流中的更好可观察性。
 
-Every commit is surgical, traceable, and meaningful.
+每个提交都是精确的、可追溯的和有意义的。
 
-### Modular by Design
+### 模块化设计
 
-- Add phases to current milestone
-- Insert urgent work between phases
-- Complete milestones and start fresh
-- Adjust plans without rebuilding everything
+- 向当前里程碑添加阶段
+- 在阶段之间插入紧急工作
+- 完成里程碑并重新开始
+- 调整计划而无需重建一切
 
-You're never locked in. The system adapts.
-
----
-
-## Commands
-
-### Core Workflow
-
-| Command | What it does |
-|---------|--------------|
-| `/gsd:new-project [--auto]` | Full initialization: questions → research → requirements → roadmap |
-| `/gsd:discuss-phase [N]` | Capture implementation decisions before planning |
-| `/gsd:plan-phase [N]` | Research + plan + verify for a phase |
-| `/gsd:execute-phase <N>` | Execute all plans in parallel waves, verify when complete |
-| `/gsd:verify-work [N]` | Manual user acceptance testing ¹ |
-| `/gsd:audit-milestone` | Verify milestone achieved its definition of done |
-| `/gsd:complete-milestone` | Archive milestone, tag release |
-| `/gsd:new-milestone [name]` | Start next version: questions → research → requirements → roadmap |
-
-### Navigation
-
-| Command | What it does |
-|---------|--------------|
-| `/gsd:progress` | Where am I? What's next? |
-| `/gsd:help` | Show all commands and usage guide |
-| `/gsd:update` | Update GSD with changelog preview |
-| `/gsd:join-discord` | Join the GSD Discord community |
-
-### Brownfield
-
-| Command | What it does |
-|---------|--------------|
-| `/gsd:map-codebase` | Analyze existing codebase before new-project |
-
-### Phase Management
-
-| Command | What it does |
-|---------|--------------|
-| `/gsd:add-phase` | Append phase to roadmap |
-| `/gsd:insert-phase [N]` | Insert urgent work between phases |
-| `/gsd:remove-phase [N]` | Remove future phase, renumber |
-| `/gsd:list-phase-assumptions [N]` | See Claude's intended approach before planning |
-| `/gsd:plan-milestone-gaps` | Create phases to close gaps from audit |
-
-### Session
-
-| Command | What it does |
-|---------|--------------|
-| `/gsd:pause-work` | Create handoff when stopping mid-phase |
-| `/gsd:resume-work` | Restore from last session |
-
-### Utilities
-
-| Command | What it does |
-|---------|--------------|
-| `/gsd:settings` | Configure model profile and workflow agents |
-| `/gsd:set-profile <profile>` | Switch model profile (quality/balanced/budget) |
-| `/gsd:add-todo [desc]` | Capture idea for later |
-| `/gsd:check-todos` | List pending todos |
-| `/gsd:debug [desc]` | Systematic debugging with persistent state |
-| `/gsd:quick` | Execute ad-hoc task with GSD guarantees |
-
-<sup>¹ Contributed by reddit user OracleGreyBeard</sup>
+你永远不会被锁定。系统会适应。
 
 ---
 
-## Configuration
+## 命令
 
-GSD stores project settings in `.planning/config.json`. Configure during `/gsd:new-project` or update later with `/gsd:settings`.
+### 核心工作流
 
-### Core Settings
+| 命令 | 它的作用 |
+|---------|--------------|
+| `/gsd:new-project [--auto]` | 完整初始化:问题 → 研究 → 需求 → 路线图 |
+| `/gsd:discuss-phase [N]` | 在规划之前捕获实现决策 |
+| `/gsd:plan-phase [N]` | 为阶段进行研究 + 规划 + 验证 |
+| `/gsd:execute-phase <N>` | 在并行波中执行所有计划,完成时验证 |
+| `/gsd:verify-work [N]` | 手动用户验收测试 ¹ |
+| `/gsd:audit-milestone` | 验证里程碑是否实现了其完成定义 |
+| `/gsd:complete-milestone` | 归档里程碑,标记版本 |
+| `/gsd:new-milestone [name]` | 开始下一个版本:问题 → 研究 → 需求 → 路线图 |
 
-| Setting | Options | Default | What it controls |
+### 导航
+
+| 命令 | 它的作用 |
+|---------|--------------|
+| `/gsd:progress` | 我在哪里?接下来是什么? |
+| `/gsd:help` | 显示所有命令和使用指南 |
+| `/gsd:update` | 使用变更日志预览更新 GSD |
+| `/gsd:join-discord` | 加入 GSD Discord 社区 |
+
+### 现有项目
+
+| 命令 | 它的作用 |
+|---------|--------------|
+| `/gsd:map-codebase` | 在 new-project 之前分析现有代码库 |
+
+### 阶段管理
+
+| 命令 | 它的作用 |
+|---------|--------------|
+| `/gsd:add-phase` | 将阶段追加到路线图 |
+| `/gsd:insert-phase [N]` | 在阶段之间插入紧急工作 |
+| `/gsd:remove-phase [N]` | 删除未来阶段,重新编号 |
+| `/gsd:list-phase-assumptions [N]` | 在规划之前查看 Claude 的预期方法 |
+| `/gsd:plan-milestone-gaps` | 创建阶段以关闭审计中的差距 |
+
+### 会话
+
+| 命令 | 它的作用 |
+|---------|--------------|
+| `/gsd:pause-work` | 在阶段中途停止时创建交接 |
+| `/gsd:resume-work` | 从上次会话恢复 |
+
+### 工具
+
+| 命令 | 它的作用 |
+|---------|--------------|
+| `/gsd:settings` | 配置模型配置文件和工作流代理 |
+| `/gsd:set-profile <profile>` | 切换模型配置文件(质量/平衡/预算) |
+| `/gsd:add-todo [desc]` | 捕获想法以供后用 |
+| `/gsd:check-todos` | 列出待办事项 |
+| `/gsd:debug [desc]` | 使用持久状态进行系统调试 |
+| `/gsd:quick` | 使用 GSD 保证执行临时任务 |
+
+<sup>¹ 由 reddit 用户 OracleGreyBeard 贡献</sup>
+
+---
+
+## 配置
+
+GSD 在 `.planning/config.json` 中存储项目设置。在 `/gsd:new-project` 期间配置,或稍后使用 `/gsd:settings` 更新。
+
+### 核心设置
+
+| 设置 | 选项 | 默认 | 它控制什么 |
 |---------|---------|---------|------------------|
-| `mode` | `yolo`, `interactive` | `interactive` | Auto-approve vs confirm at each step |
-| `depth` | `quick`, `standard`, `comprehensive` | `standard` | Planning thoroughness (phases × plans) |
+| `mode` | `yolo`、`interactive` | `interactive` | 自动批准 vs 在每一步确认 |
+| `depth` | `quick`、`standard`、`comprehensive` | `standard` | 规划彻底性(阶段 × 计划) |
 
-### Model Profiles
+### 模型配置文件
 
-Control which Claude model each agent uses. Balance quality vs token spend.
+控制每个代理使用哪个 Claude 模型。平衡质量 vs token 支出。
 
-| Profile | Planning | Execution | Verification |
+| 配置文件 | 规划 | 执行 | 验证 |
 |---------|----------|-----------|--------------|
 | `quality` | Opus | Opus | Sonnet |
-| `balanced` (default) | Opus | Sonnet | Sonnet |
+| `balanced` (默认) | Opus | Sonnet | Sonnet |
 | `budget` | Sonnet | Sonnet | Haiku |
 
-Switch profiles:
+切换配置文件:
 ```
 /gsd:set-profile budget
 ```
 
-Or configure via `/gsd:settings`.
+或通过 `/gsd:settings` 配置。
 
-### Workflow Agents
+### 工作流代理
 
-These spawn additional agents during planning/execution. They improve quality but add tokens and time.
+这些在规划/执行期间生成额外的代理。它们提高质量但增加 token 和时间。
 
-| Setting | Default | What it does |
+| 设置 | 默认 | 它的作用 |
 |---------|---------|--------------|
-| `workflow.research` | `true` | Researches domain before planning each phase |
-| `workflow.plan_check` | `true` | Verifies plans achieve phase goals before execution |
-| `workflow.verifier` | `true` | Confirms must-haves were delivered after execution |
+| `workflow.research` | `true` | 在规划每个阶段之前研究领域 |
+| `workflow.plan_check` | `true` | 在执行之前验证计划是否实现阶段目标 |
+| `workflow.verifier` | `true` | 在执行之后确认必须交付的内容已交付 |
 
-Use `/gsd:settings` to toggle these, or override per-invocation:
+使用 `/gsd:settings` 切换这些,或每次调用时覆盖:
 - `/gsd:plan-phase --skip-research`
 - `/gsd:plan-phase --skip-verify`
 
-### Execution
+### 执行
 
-| Setting | Default | What it controls |
+| 设置 | 默认 | 它控制什么 |
 |---------|---------|------------------|
-| `parallelization.enabled` | `true` | Run independent plans simultaneously |
-| `planning.commit_docs` | `true` | Track `.planning/` in git |
+| `parallelization.enabled` | `true` | 同时运行独立计划 |
+| `planning.commit_docs` | `true` | 在 git 中跟踪 `.planning/` |
 
-### Git Branching
+### Git 分支
 
-Control how GSD handles branches during execution.
+控制 GSD 在执行期间如何处理分支。
 
-| Setting | Options | Default | What it does |
+| 设置 | 选项 | 默认 | 它的作用 |
 |---------|---------|---------|--------------|
-| `git.branching_strategy` | `none`, `phase`, `milestone` | `none` | Branch creation strategy |
-| `git.phase_branch_template` | string | `gsd/phase-{phase}-{slug}` | Template for phase branches |
-| `git.milestone_branch_template` | string | `gsd/{milestone}-{slug}` | Template for milestone branches |
+| `git.branching_strategy` | `none`、`phase`、`milestone` | `none` | 分支创建策略 |
+| `git.phase_branch_template` | string | `gsd/phase-{phase}-{slug}` | 阶段分支的模板 |
+| `git.milestone_branch_template` | string | `gsd/{milestone}-{slug}` | 里程碑分支的模板 |
 
-**Strategies:**
-- **`none`** — Commits to current branch (default GSD behavior)
-- **`phase`** — Creates a branch per phase, merges at phase completion
-- **`milestone`** — Creates one branch for entire milestone, merges at completion
+**策略:**
+- **`none`** — 提交到当前分支(默认 GSD 行为)
+- **`phase`** — 每个阶段创建一个分支,在阶段完成时合并
+- **`milestone`** — 为整个里程碑创建一个分支,在完成时合并
 
-At milestone completion, GSD offers squash merge (recommended) or merge with history.
+在里程碑完成时,GSD 提供 squash 合并(推荐)或带历史的合并。
 
 ---
 
-## Security
+## 安全
 
-### Protecting Sensitive Files
+### 保护敏感文件
 
-GSD's codebase mapping and analysis commands read files to understand your project. **Protect files containing secrets** by adding them to Claude Code's deny list:
+GSD 的代码库映射和分析命令读取文件以了解你的项目。**通过将包含机密的文件添加到 Claude Code 的拒绝列表来保护它们:**
 
-1. Open Claude Code settings (`.claude/settings.json` or global)
-2. Add sensitive file patterns to the deny list:
+1. 打开 Claude Code 设置(`.claude/settings.json` 或全局)
+2. 将敏感文件模式添加到拒绝列表:
 
 ```json
 {
@@ -569,68 +569,68 @@ GSD's codebase mapping and analysis commands read files to understand your proje
 }
 ```
 
-This prevents Claude from reading these files entirely, regardless of what commands you run.
+这会完全阻止 Claude 读取这些文件,无论你运行什么命令。
 
 > [!IMPORTANT]
-> GSD includes built-in protections against committing secrets, but defense-in-depth is best practice. Deny read access to sensitive files as a first line of defense.
+> GSD 包括内置的保护机制,防止提交机密,但纵深防御是最佳实践。拒绝读取敏感文件作为第一道防线。
 
 ---
 
-## Troubleshooting
+## 故障排除
 
-**Commands not found after install?**
-- Restart Claude Code to reload slash commands
-- Verify files exist in `~/.claude/commands/gsd/` (global) or `./.claude/commands/gsd/` (local)
+**安装后找不到命令?**
+- 重新启动 Claude Code 以重新加载斜杠命令
+- 验证文件存在于 `~/.claude/commands/gsd/`(全局)或 `./.claude/commands/gsd/`(本地)
 
-**Commands not working as expected?**
-- Run `/gsd:help` to verify installation
-- Re-run `npx get-shit-done-cc` to reinstall
+**命令未按预期工作?**
+- 运行 `/gsd:help` 验证安装
+- 重新运行 `npx get-shit-done-cc` 重新安装
 
-**Updating to the latest version?**
+**更新到最新版本?**
 ```bash
 npx get-shit-done-cc@latest
 ```
 
-**Using Docker or containerized environments?**
+**使用 Docker 或容器化环境?**
 
-If file reads fail with tilde paths (`~/.claude/...`), set `CLAUDE_CONFIG_DIR` before installing:
+如果文件读取因波浪号路径(`~/.claude/...`)而失败,请在安装前设置 `CLAUDE_CONFIG_DIR`:
 ```bash
 CLAUDE_CONFIG_DIR=/home/youruser/.claude npx get-shit-done-cc --global
 ```
-This ensures absolute paths are used instead of `~` which may not expand correctly in containers.
+这确保使用绝对路径而不是 `~`,后者可能无法在容器中正确扩展。
 
-### Uninstalling
+### 卸载
 
-To remove GSD completely:
+要完全删除 GSD:
 
 ```bash
-# Global installs
+# 全局安装
 npx get-shit-done-cc --claude --global --uninstall
 npx get-shit-done-cc --opencode --global --uninstall
 
-# Local installs (current project)
+# 本地安装(当前项目)
 npx get-shit-done-cc --claude --local --uninstall
 npx get-shit-done-cc --opencode --local --uninstall
 ```
 
-This removes all GSD commands, agents, hooks, and settings while preserving your other configurations.
+这会删除所有 GSD 命令、代理、钩子和设置,同时保留你的其他配置。
 
 ---
 
-## Community Ports
+## 社区移植
 
-OpenCode and Gemini CLI are now natively supported via `npx get-shit-done-cc`.
+OpenCode 和 Gemini CLI 现在通过 `npx get-shit-done-cc` 受到原生支持。
 
-These community ports pioneered multi-runtime support:
+这些社区移植率先支持多运行时:
 
-| Project | Platform | Description |
+| 项目 | 平台 | 描述 |
 |---------|----------|-------------|
-| [gsd-opencode](https://github.com/rokicool/gsd-opencode) | OpenCode | Original OpenCode adaptation |
-| gsd-gemini (archived) | Gemini CLI | Original Gemini adaptation by uberfuzzy |
+| [gsd-opencode](https://github.com/rokicool/gsd-opencode) | OpenCode | 原始 OpenCode 适配 |
+| gsd-gemini (已归档) | Gemini CLI | uberfuzzy 的原始 Gemini 适配 |
 
 ---
 
-## Star History
+## Star 历史
 
 <a href="https://star-history.com/#glittercowboy/get-shit-done&Date">
  <picture>
@@ -642,14 +642,14 @@ These community ports pioneered multi-runtime support:
 
 ---
 
-## License
+## 许可证
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT 许可证。详见 [LICENSE](LICENSE)。
 
 ---
 
 <div align="center">
 
-**Claude Code is powerful. GSD makes it reliable.**
+**Claude Code 很强大。GSD 使其可靠。**
 
 </div>
